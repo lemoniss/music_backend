@@ -1,0 +1,713 @@
+                 ### 회원가입
+POST http://localhost:3000/users
+Content-Type: application/json
+address: 0xe2b73c597bfa37eac2bdc452afbc3d0e60feec6a
+
+{
+  "address": "0x639565dfa7f24078e22ad30482b813694d4417d0",
+  "lang": "ko",
+  "nation": "kr"
+}
+
+### 사용자 정보수정
+PATCH https://45d9-121-134-235-75.jp.ngrok.io/users/1
+Content-Type: application/json
+address: 0x913c770f77f0aaae8ba94f29492a6784d16e1da1
+user_id: 1
+
+{
+  "nickname": "maxx",
+  "introduce": "내 소개글 입니다...\nqq\n2222",
+  "handle": "lemoniss",
+  "genreIds": [1, 5],
+  "userSnsModels": [{
+    "name": "twitter",
+    "snsHandle": "lemoniss"
+  }, {
+    "name": "instagram",
+    "snsHandle": "elliepritts"
+  }]
+}
+
+
+
+### 장르목록
+GET https://millimxappmain.millimx.com/genres
+address: 0x913c770f77f0aaae8ba94f29492a6784d16e1da1
+user_id: 2
+
+
+
+### 장르목록
+GET https://mainapp.millimx.com/genres
+address: 0xbA0D9c26D11a48cF87f8de128f24912f21B83B29
+user_id: 1
+
+
+###
+GET https://4578-121-134-235-75.jp.ngrok.io/genres
+address: address2
+user_id: 12
+
+### 사용자 상세
+GET https://4578-121-134-235-75.jp.ngrok.io/users/2
+address: 0x639565dfa7f24078e22ad30482b813694d4417d0
+user_id: 2
+
+
+### 음악 등록
+POST http://localhost:3000/musics/2
+Content-Type: application/json
+address: 0x639565dfa7f24078e22ad30482b813694d4417d0
+user_id: 2
+
+{
+  "title": "1324",
+  "name": "123455",
+  "artist": "9789",
+  "genreId": [1, 2, 5],
+  "description": "32ㄱㄷㄷㄷㄷ",
+  "musicFileId": 70,
+  "imgFileId": 71,
+  "playTime": 278
+}
+
+### 음악 수정
+PATCH http://localhost:3000/musics/24
+Content-Type: application/json
+address: 0x639565dfa7f24078e22ad30482b813694d4417d0
+user_id: 2
+
+{
+  "title": "앨범타이틀",
+  "name": "노래제목",
+  "artist": "아티스트",
+  "genreId": [1,2,3,4],
+  "description": "설명",
+  "musicFileId": 68,
+  "imgFileId": 69,
+  "playTime": 270
+}
+
+### {title: 앨범명, name: 노래제목, artist: 아티스트, genreId: [1, 2, 5, 9], description: 곡설명입니다., musicFileId: 68, imgFileId: 69, playTime: 278}
+
+### 음악 목록
+GET http://localhost:3000/musics/1?search=김
+address: 0x639565dfa7f24078e22ad30482b813694d4417d0
+user_id: 2
+
+### 음악 상세
+GET http://localhost:3000/musics/details/1
+address: 0x639565dfa7f24078e22ad30482b813694d4417d0
+user_id: 2
+
+
+### upload ipfs
+POST http://localhost:3000/uploads/ipfs/9
+Content-Type: application/json
+address: address
+user_id: 12
+
+
+### create nft mint
+POST http://localhost:3000/nfts/mint/1
+Content-Type: application/json
+address: 0x639565dfa7f24078e22ad30482b813694d4417d0
+user_id: 2
+
+{
+  "myMusicId": 6,
+  "address": "0x639565dfa7f24078e22ad30482b813694d4417d0"
+}
+
+### 음악검색 http://localhost:3000/dashboards/?=민
+GET http://localhost:3000/dashboards/
+Content-Type: application/json
+address: address2
+user_id: 12
+
+### 대길님 자리
+GET https://27f7-121-134-235-75.jp.ngrok.io/nfts/myNft/24
+address: address2
+user_id: 12
+
+### 음악 상세
+GET https://27f7-121-134-235-75.jp.ngrok.io/nfts/details/18
+address: address2
+user_id: 12
+
+### sort 곁들인 검색
+
+POST https://32ec-14-40-29-226.jp.ngrok.io/dashboards/
+Content-Type: application/json
+address: address2
+user_id: 12
+
+{
+  "sortType": "play_count",
+  "limitNumber": 0
+}
+
+### 좋아요 노래 리스트
+GET https://32ec-14-40-29-226.jp.ngrok.io/nfts/like/12?keyword=
+address: address2
+user_id: 12
+
+### 좋아요 노래 추가
+POST https://32ec-14-40-29-226.jp.ngrok.io/nfts/like/
+Content-Type: application/json
+address: address2
+user_id: 12
+
+{
+  "nftMusicId": 20,
+  "userId": 12
+}
+
+
+### etherscan
+GET https://api-goerli.etherscan.io/api?module=account&action=txlist&address=0x4d6B9F1fA7ED84E2A78d218B2b7f0FA46ecCf3ea&startblock=earliest&endblock=latest&page=1&offset=10000&sort=desc&apikey=29STGU5ZNVYR561N512Q4MN26M23BMSVE7
+
+
+###
+GET https://fd4b-211-206-10-200.jp.ngrok.io/genres
+address: 0x5ec021372594eb96bbb60950115bcf210c3a8c6a
+user_id: 46
+
+### showtime create ipfs
+POST https://fd4b-211-206-10-200.jp.ngrok.io/showtime/ipfs
+Content-Type: application/json
+address: address2
+user_id: 12
+
+{
+  "name": "노래제목",
+  "artist": "아티스트여",
+  "title": "앨범1번",
+  "genreIds": [10],
+  "description": "설명이 들어갑니다 :)",
+  "musicFileId": 867,
+  "playTime": 278,
+  "holicCount": 2,
+  "holicPrice": 0.1,
+  "holicImageFileId": 868,
+  "addictCount": 3,
+  "addictPrice": 0.3,
+  "addictImageFileId": 869,
+  "addictRares": [{
+    "no": 2,
+    "imageFileIds": [870]
+  }],
+  "junkieCount": 2,
+  "junkiePrice": 0.5,
+  "junkieImageFileId": 871,
+  "junkieRares": [{
+    "no": 1,
+    "imageFileIds": [872]
+  }],
+  "releaseAt": "2022-10-01 09:00:00",
+  "releaseYn": "N",
+  "distributors": [{
+    "distributorName": "최대길",
+    "distributorAddress": "0x1234567890",
+    "distributorPer": 11
+  }, {
+    "distributorName": "밀림엑스",
+    "distributorAddress": "0x98765432310",
+    "distributorPer": 89
+  }]
+}
+
+
+### showtime create data
+POST https://fd4b-211-206-10-200.jp.ngrok.io/showtime/data
+Content-Type: application/json
+address: address2
+user_id: 12
+
+{
+  "name": "노래제목",
+  "artist": "아티스트여",
+  "title": "앨범1번",
+  "genreIds": [10],
+  "description": "설명이 들어갑니다 :)",
+  "musicFileId": 867,
+  "playTime": 278,
+  "holicCount": 2,
+  "holicPrice": 0.1,
+  "holicImageFileId": 868,
+  "addictCount": 3,
+  "addictPrice": 0.3,
+  "addictImageFileId": 869,
+  "addictRares": [{
+    "no": 2,
+    "imageFileIds": [870]
+  }],
+  "junkieCount": 2,
+  "junkiePrice": 0.5,
+  "junkieImageFileId": 871,
+  "junkieRares": [{
+    "no": 1,
+    "imageFileIds": [872]
+  }],
+  "releaseAt": "2022-10-01 09:00:00",
+  "releaseYn": "N",
+  "distributors": [{
+    "distributorName": "최대길",
+    "distributorAddress": "0x1234567890",
+    "distributorPer": 11
+  }, {
+    "distributorName": "밀림엑스",
+    "distributorAddress": "0x98765432310",
+    "distributorPer": 89
+  }]
+}
+
+
+### showtime create data
+GET https://fd4b-211-206-10-200.jp.ngrok.io/showtime/upcoming/12
+address: address2
+user_id: 12
+
+### showtime create data
+GET https://fd4b-211-206-10-200.jp.ngrok.io/showtime/recents
+address: address2
+user_id: 12
+
+
+### showtime create data
+GET https://fd4b-211-206-10-200.jp.ngrok.io/showtime/recent/67/24
+Content-Type: application/json
+address: address2
+user_id: 12
+
+### showtime create data
+GET https://fd4b-211-206-10-200.jp.ngrok.io/showtime/artist/24/71
+Content-Type: application/json
+address: address2
+user_id: 12
+
+### showtime create data
+GET https://fd4b-211-206-10-200.jp.ngrok.io/showtime/tiers/Holic/68
+Content-Type: application/json
+address: address2
+user_id: 12
+
+###
+POST https://fd4b-211-206-10-200.jp.ngrok.io/nfts/like/24
+Content-Type: application/json
+address: address2
+user_id: 12
+
+{
+  "sortType": "play_count",
+  "userId": "24"
+}
+
+
+### batch start
+GET https://fd4b-211-206-10-200.jp.ngrok.io/showtime/servertime
+address: 0x913c770f77f0aaae8ba94f29492a6784d16e1da1
+user_id: 1
+
+
+
+###
+GET https://fd4b-211-206-10-200.jp.ngrok.io/musics/3
+address: 0x426db20f83545b6dcd9583bac3dc22b482151f02
+user_id: 3
+
+
+### artlist
+POST https://artlist.io/api/Song/List
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJiN2M3NWI1Ny05YjI3LTRmYTktOTgyNi0wNGE0MWNjYzYyMWQiLCJzdWIiOiIzMDk0MDU2IiwiZW1haWwiOiJtdXNpdGtvcmVhQGdtYWlsLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMzA5NDA1NiIsInVuaXF1ZV9uYW1lIjoibXVzaXRrb3JlYUBnbWFpbC5jb20iLCJnaXZlbl9uYW1lIjoiTG91aWUgIiwiaXNFeHRlcm5hbEJpbGxlZCI6IlRydWUiLCJzdWJzY3JpcHRpb25JZCI6IjQyNDgxMTMiLCJ0ZW5hbnRJZCI6ImFydGxpc3QiLCJleHAiOjE2NjQ0MjAyODF9.6XjLQPCLQcEA6Uu2DGNGNKePtnG6ehXxL97P4qfEvHs
+
+
+###
+GET https://cf71-121-134-235-75.jp.ngrok.io/users/handle/2
+
+
+###
+GET http://localhost:3000/showtime/test
+address: 0x913c770f77f0aaae8ba94f29492a6784d16e1da1
+user_id: 1
+
+###
+POST https://1e28-121-134-235-75.jp.ngrok.io/nfts/like/1
+Content-Type: application/json
+address: 0x913c770f77f0aaae8ba94f29492a6784d16e1da1
+user_id: 1
+
+{
+  "sortType": "id",
+  "userId" : "1"
+}
+
+###
+GET http://localhost:3000/showtime/getCoinCurrency
+address: 0x913c770f77f0aaae8ba94f29492a6784d16e1da1
+user_id: 1
+
+###
+GET http://localhost:3000/nfts/history/music/25
+address: 0x913c770f77f0aaae8ba94f29492a6784d16e1da1
+user_id: 1
+
+###
+GET http://localhost:3000/nfts/history/user/1
+address: 0x913c770f77f0aaae8ba94f29492a6784d16e1da1
+user_id: 1
+
+###
+POST https://1e28-121-134-235-75.jp.ngrok.io/nfts/history/save
+Content-Type: application/json
+address: 0x913c770f77f0aaae8ba94f29492a6784d16e1da1
+user_id: 1
+
+{
+  "txHash":"0x332948865569e989b827178d2a1a14836100b5413c90718c194dc687878441fa",
+  "status":"SUCCESS",
+  "blockNumber":"7721201",
+  "fromAddress":"0x913c770f77f0aaae8ba94f29492a6784d16e1da1",
+  "toAddress":"0xd7cc6fb28625d9eba50efd7a4e5d362435befe8a",
+  "symbol":"ETH",
+  "price":"230000000000000",
+  "method":"transfer"
+}
+
+
+###
+GET https://1e28-121-134-235-75.jp.ngrok.io/nfts/history/music/25
+address: 0x913c770f77f0aaae8ba94f29492a6784d16e1da1
+user_id: 1
+
+
+###
+GET https://devstage.millimx.com:444/nfts/history/user/0x913c770f77f0aaae8ba94f29492a6784d16e1da1
+address: 0x913c770f77f0aaae8ba94f29492a6784d16e1da1
+user_id: 1
+
+
+###
+GET https://devstage.millimx.com:444/exchange/details/89
+address: 0x913c770f77f0aaae8ba94f29492a6784d16e1da1
+user_id: 1
+
+
+###
+GET https://play.google.com/store/apps/details?id=io.musit.app.millimx&hl=ko
+
+###
+GET https://itunes.apple.com/lookup?bundleId=millimx
+
+###
+GET https://devstage.millimx.com:444/exchange/details/20
+address: 0x913c770f77f0aaae8ba94f29492a6784d16e1da1
+user_id: 1
+
+###
+GET https://devstage.millimx.com:444/nfts/history/music/8
+address: 0x913c770f77f0aaae8ba94f29492a6784d16e1da1
+user_id: 1
+
+###
+GET https://bc91-121-134-235-75.jp.ngrok.io/users/address/0x913c770f77f0aaae8ba94f29492a6784d16e1da1
+
+###
+GET http://localhost:13936/showtime/recent/ios/1/1
+auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA==
+
+###
+GET https://devstage.millimx.com:444/users/get/info
+Content-Type: application/json
+auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA==
+
+
+###
+POST http://localhost:13936/users/checkOtp
+Content-Type: application/json
+auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA==
+
+###
+POST https://de88-121-134-235-75.jp.ngrok.io/users/verifyOtp
+Content-Type: application/json
+auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA==
+
+{
+  "code": "470390"
+}
+
+
+###
+GET https://devapp.millimx.com:446
+auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA==
+
+
+
+###
+POST https://3c88-121-134-235-75.jp.ngrok.io/showtime/banner
+Content-Type: application/json
+auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA==
+
+{
+  "fileId":947,
+  "title": "쇼타임 1번 배너 한국어",
+  "lang": "ko",
+  "contents": "한국어 쇼타임 1번 배너 내용이 들어갑니다.\n 컴투스 형님들 제발 입금 해주세요",
+  "type":"",
+  "extra":""
+}
+
+###
+GET http://localhost:13936/showtime/banners/ko
+auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA==
+
+###
+GET https://3c88-121-134-235-75.jp.ngrok.io/showtime/banner/2/1
+auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA==
+
+###
+POST https://3c88-121-134-235-75.jp.ngrok.io/showtime/banner/patchLike
+Content-Type: application/json
+auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA==
+
+{
+  "bannerId": 2,
+  "userId": 1
+}
+
+
+###
+POST https://ff96-211-206-10-200.jp.ngrok.io/musics/1
+Content-Type: application/json
+auth_token: XyEFyH9Ghw3/+vIv2+zrf56G1MgaJGkD45bxDynF0cQcpqR1AShDVZVvNlqvpG7Du55KBWKyJJfM/K6NJUkrXAQCb9QgQq/nZfApMQL+B4BthBQ2GeI5cdG7oxrYL3y/avIquH1fe3NKTxl/IRRIlvKlCPCtJ8jbQVPISZYjtgI5mbgjF/8P1megQc0VwjlXS60o0RVj0oruMdzmTWFl5CW6IXTwh2IYY2QBDbObWix1W5maKkh3bO4itrwY4Z7/gd33dNBYd41bqMTuYqzWOq4kB8bJHKo8+bdQubw7Nnu1YHTHdlpSjnqpf3Uvz62XOnQEe+22bpzbQPy3t0zJbw==
+
+{
+"title": "adsf",
+  "name": "adsfsa",
+  "artist": "MAXX",
+  "handle": "maxx",
+  "genreIds": [1],
+  "description": "adsf",
+  "musicFileId": 8233,
+  "imgFileId": 8234,
+  "playTime": "289"
+}
+
+###
+GET https://d61d-121-134-235-75.jp.ngrok.io/exchange/details/token/1
+auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA==
+
+###
+GET https://d61d-121-134-235-75.jp.ngrok.io/exchange/details/1/1
+auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA==
+
+
+###
+GET http://localhost:13936/genres
+auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA==
+
+
+###디테일에서장르별검색
+POST https://ff96-211-206-10-200.jp.ngrok.io/nfts
+Content-Type: application/json
+auth_token: XyEFyH9Ghw3/+vIv2+zrf56G1MgaJGkD45bxDynF0cQcpqR1AShDVZVvNlqvpG7Du55KBWKyJJfM/K6NJUkrXAQCb9QgQq/nZfApMQL+B4BthBQ2GeI5cdG7oxrYL3y/avIquH1fe3NKTxl/IRRIlvKlCPCtJ8jbQVPISZYjtgI5mbgjF/8P1megQc0VwjlXS60o0RVj0oruMdzmTWFl5CW6IXTwh2IYY2QBDbObWix1W5maKkh3bO4itrwY4Z7/gd33dNBYd41bqMTuYqzWOq4kB8bJHKo8+bdQubw7Nnu1YHTHdlpSjnqpf3Uvz62XOnQEe+22bpzbQPy3t0zJbw==
+
+{   "sortType": "id",   "userId": "4",   "genreIds": [],   "keyword": "Why Can't I Say No" }
+
+
+
+### 장르목록
+GET https://millimxappmain.millimx.com/genres
+auth_token: ULWOzKipCVdixv0sZekzdoA8v0hRd0QSFxGrdIYwkxbOeSqCdXlC1Bp0FZ2DTAC0JRvfma1gRonRivkQp887l/OP6p5TOXdxhG56WK8aLx6Za0HczvHgMQjTEVbsiLkcHR0PUmDbARXtwXLWKc/8nOeo7uMvo7Rz%2BikhBXmGhC/kHcEfwe1DIouvPmyaoouRmlsGTojUU8l0jJRQoGJzcrr2u1LMZGzxN/y3ra1D01UTKelQL9pl1MqXcd3O6rrqpwSFTfgwRZPjgKY2Ha7kihXAwhvX51KtALR0aksZ1q5H9NDjDm22TOterYhjqOBKTEfq//8odRsPj5M2ZGm7aw==
+
+
+### metaboom
+GET https://api.fansi.me/ALBUM/1/4b314648e2f3fa96608a05ab5f449b24?expire=1669773969&partner=0
+
+### metaboom
+GET https://api.fansi.me/ALBUM/2/729032c4b8a47e786ab58a314985a47b?expire=1669773969&partner=0
+
+### upload ipfs mkdir + json upload
+POST http://localhost:13936/uploads/ipfs/mkdir/test
+auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA==
+
+
+###
+GET https://api.pinata.cloud/data/testAuthentication
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI2MDI4Y2ZhMS00MzY0LTQ2YzUtODY2OC0xYmZjZDg1MGEyZDUiLCJlbWFpbCI6ImxlbW9uaXNzQG5hdmVyLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiIzY2ZlYzgxMTQ2MWE5ZmZiMjlhMiIsInNjb3BlZEtleVNlY3JldCI6IjA5YWNkZDY5ZmQ4MTJlYTk1YjQzOWJhYzQxNmQyNzUxN2RkM2FjYjkxMzk5YjlmZTZhZDlkMTdjNWRlZTRkMDEiLCJpYXQiOjE2Njk5NDYwOTh9.pZWFPj50c5zO0iqogeYuW6ic_fFpveOuUd1MVL8G3Ok
+
+###
+POST https://api.pinata.cloud/pinning/pinJSONToIPFS
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI2MDI4Y2ZhMS00MzY0LTQ2YzUtODY2OC0xYmZjZDg1MGEyZDUiLCJlbWFpbCI6ImxlbW9uaXNzQG5hdmVyLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiIzY2ZlYzgxMTQ2MWE5ZmZiMjlhMiIsInNjb3BlZEtleVNlY3JldCI6IjA5YWNkZDY5ZmQ4MTJlYTk1YjQzOWJhYzQxNmQyNzUxN2RkM2FjYjkxMzk5YjlmZTZhZDlkMTdjNWRlZTRkMDEiLCJpYXQiOjE2Njk5NDYwOTh9.pZWFPj50c5zO0iqogeYuW6ic_fFpveOuUd1MVL8G3Ok
+
+{
+  "name": "Invisible Friends 3D #4041",
+  "description": "5,000 animated 3D Invisible Friends hiding in the metaverse. A collection by Nguyen Nhut, Markus Magnusson & Random Character Collective.",
+  "image": "https://rcc.mypinata.cloud/ipfs/QmTjpjbZamH2CHujagpeATNPyiZChEYHhFmebo7HGLvoz7/pre_reveal.gif",
+  "animation_url": "https://rcc.mypinata.cloud/ipfs/QmTjpjbZamH2CHujagpeATNPyiZChEYHhFmebo7HGLvoz7/pre_reveal.mp4"
+}
+
+
+### lastTokenId
+POST https://dc1e-121-134-235-75.jp.ngrok.io/showtime/lastShowTimeId
+auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA==
+
+
+### showtime bulk mint erc721a
+POST https://dc1e-121-134-235-75.jp.ngrok.io/showtime/data
+Content-Type: application/json
+auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA==
+
+{
+  "name": "mochilero, jaypark freestyle",
+  "artist": "Ja Mezz",
+  "title": "mochilero, jaypark freestyle",
+  "handle": "mezzryhere",
+  "genreIds": [
+    1,
+    2
+  ],
+  "lyrics": "\n내 Jansport backpack so heavy\n내 두 어깨에 둘러메는 책임\n나 돌아왔어 feelin like 새내기\n새로산 backpack에 다시 packin\n내 꿈을 담은 Jansport backpack so heavy\n이 가살 쓰고 이뤄진 게 대체 몇 갠지\n불편해 보이니까 제발 내려 놓으래지\n넌 여기 뭐가 들었는지 알면 놀래지 i got\nEastpack X Raf Simons\nPink Panther 액세서리 인형\n지금 난 닌자거북이 모드\n이 도시를 누벼 뚜벅이로\n서울시를 누벼 mochilero\n홍대 신사 압구정 이태원\n서울시를 누벼 mochilero\ndrip check 새로산 backpack을 메고\nbackpack swag\nbackpacker swagger\nbackpack swag\n새로산 backpack을 메고\nbackpack swag\nbackpacker swagger\nbackpack swag\n새로산 backpack을 메고\n난 다시 학생 또 배우려는 자세\n4000만 원짜리 종이 쪼가리 + knowledge\n그걸 종이로 환산할때쯤엔\n내 outfit이 fashion 잡지 1면에 실려 so stylish\n금요일 오후 재무관리 수업 갈 때 착장 그대로\nyou can see me hit the club\n토요일 밤 DJ EBONY tour 다닌 착장 그대로\nyou can see me at the church\nDJs B-boys & girls at the party\n거리에는 skateboarding graffiti artist\nold school new school 난 돌아왔어 college\n모두 각자의 삶의 무겔 메고 다니지\nEastpack X Raf Simons\nPink Panther 액세서리 인형\n여전히 쓰고다녀 벙거지모\n뒷모습만 봐도 알지 뭐\nJ A M E double Z 나지 뭐\n등산처럼 backpack메고 난 위로 \n\n재입학 재입학 재입학 재입학\n재입학 재입학 재입학 재입학\n재입학처럼 이렇게 다시 돌아올 줄 몰랐겠지\n지금 넌 나를 보면서 귀신 본 것 처럼 놀랐겠지\n재입학 재입학 재입학 재입학\n재입학 재입학 재입학 재입학\n하고 싶은거 다 해버리는 날 보며 약 올랐겠지\n넌 내가 끝났다 생각했지만 watch me come back b*tch\n\n너는 내가 뒈져버린줄 알았겠지\n아니 적어도 여기서 몇몇은 그러길 바랬겠지\n원래 인생은 내가 생각한대로 되는게 아니랬지\n그럼 이번에도 너가 원한대론 절대 안되겠지 난 다시 여깄어\n여전히 서있어 살아있네 아직 안죽었어\n이 말이 야하게 들렸다면 넌 제대로 들었어\nmetaphor 내 필력을 의심했다면 넌 랩알못\n내 16마디 metaverse stat check perfect pentagon\n내 능력치 다 상타치 like Jay Park\n팬톤 보다 다양한 음악 색깔\n비빔밥 처럼 mix it like K-pop\n교수 CEO 예술가 학생 뭐든다 되니까 그담엔 say what\n날 연예인으로 만들어준 scandal\n쇄도 하는 여대생들의 사진요청 on campus\n난 이제 대학 나온 여자가 더 좋아 높아진 내 standard\n내가 다시 돌아올 수 있게 도와준 가족과 친구 내 팬들 땡큐\n\n재입학 재입학 재입학 재입학\n재입학 재입학 재입학 재입학\n재입학처럼 이렇게 다시 돌아올줄 몰랐겠지\n지금 넌 나를 보면서 귀신 본것 처럼 놀랐겠지\n재입학 재입학 재입학 재입학\n재입학 재입학 재입학 재입학\n하고 싶은거 다 해버리는 날 보며 약 올랐겠지\n넌 내가 끝났다 생각했지만 watch me come back b*tch \n",
+  "description": "재입학 학교생활과 아티스트 활동을 병행하는 \n자메즈의 백패커 라이프스타일을 담은 곡입니다.\nThis song is about Ja Mezz’s backpacker lifestyle which combines his readmission school life and artist life.",
+  "musicFileId": 8315,
+  "playTime": 239,
+  "goldCount": 17,
+  "goldPrice": 0.06,
+  "goldImageFileId": 8316,
+  "goldDescription": "- 다음 발매할 음원 미리듣기\nExclusive access to the next music NFT",
+  "platinumCount": 3,
+  "platinumPrice": 0.15,
+  "platinumImageFileId": 8317,
+  "platinumDescription": "- 다음 발매할 음원 미리듣기\nExclusive access to the next music NFT\n- 친필 싸인 가방\nExclusive signed backpack by Ja Mezz",
+  "diamondCount": 2,
+  "diamondPrice": 0.18,
+  "diamondImageFileId": 8318,
+  "diamondDescription": "- 다음 발매할 음원 미리듣기\nExclusive access to the next music NFT\n- 친필 싸인 가방\nExclusive signed backpack by Ja Mezz\n- 파티 초대권\nFree ticket to Ja Mezz future party\n- 파티 시작전 자메즈와의 커피타임\nHave a pre-party tea time with Ja Mezz ",
+  "releaseStartAt": "2022-12-01 09:00:00",
+  "releaseEndAt": "2033-11-01 09:00:00",
+  "releaseYn": "N",
+  "distributors": [
+    {
+      "distributorName": "Ja Mezz",
+      "distributorAddress": "0x47ad9e54dba6023a875bb001aebf3999ced98a7d",
+      "distributorPer": 50
+    },
+    {
+      "distributorName": "Benny Bennefit",
+      "distributorAddress": "0xf1be2ea1d5a35b5235ba640dc5766e401776f3cd",
+      "distributorPer": 10
+    },
+    {
+      "distributorName": "Bangroz",
+      "distributorAddress": "0xf0f14b0c6012aca697e1b5582b8fee212da0e7b4",
+      "distributorPer": 10
+    },
+    {
+      "distributorName": "Loky Beatz",
+      "distributorAddress": "0xf23ab128eb0cc922dc0a6af2a4b3cfd6722789c3",
+      "distributorPer": 10
+    },
+    {
+      "distributorName": "민수 Min-su",
+      "distributorAddress": "0xe37197b2ffc58b7ef3b7259cba5db5bf7b5f54de",
+      "distributorPer": 10
+    },
+    {
+      "distributorName": "Ren",
+      "distributorAddress": "0x1b329d9f1f95ddc927fff9e3d312f4dc05a8bfbc",
+      "distributorPer": 10
+    }
+  ],
+  "tierType": [
+    0,
+    1,
+    2
+  ],
+  "mintCount": [
+    17,
+    3,
+    2
+  ],
+  "sellPrices": [
+    6000000,
+    15000000,
+    18000000
+  ],
+  "showTimeId": "1",
+  "startTokenId": "87",
+  "lastTokenId": "108",
+  "transactionHash": "0x11403a596d7340288fb537960f4a82b2172b2d1532e2d73e21ff63e5c3617433"
+}
+
+### corpWallet
+POST https://dc1e-121-134-235-75.jp.ngrok.io/users/corpWallet
+Content-Type: application/json
+auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA==
+
+{
+  "corp_wallet": "lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA=="
+}
+
+### /cnuts
+POST http://localhost:13936/cnuts
+Content-Type: application/json
+auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA==
+
+{
+  "userId": 21,
+  "code": "showtime_purchase",
+  "status": "used",
+  "price": -121,
+  "desc": "4 showtime purchase"
+}
+
+
+### opensea metadata force-update
+GET https://api.opensea.io/api/v1/asset/0x4243059e3d7591c371b3336b752fe4dd8072f938/20/?force_update=true
+
+
+###
+GET http://localhost:13936/cnuts/products/ios
+auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA==
+
+### event save
+POST https://d012-121-134-235-75.jp.ngrok.io/events
+Content-Type: application/json
+
+{
+  "userId": 24,
+  "code": "girin",
+  "name": "DJ Girin Event"
+}
+
+### event get
+GET https://devstage.millimx.com:444/events/girin/4
+
+### viewsong showtime
+GET https://devin.millimx.com:444/landing/showtime/11
+
+### viewsong catalog
+GET https://devin.millimx.com:444/landing/catalog/143
+
+### viewsong normal
+GET https://devin.millimx.com:444/landing/normal/157
+
+### landing get dev
+GET http://localhost:13936/landing
+
+### landing get dev
+GET http://localhost:13936/landing/artists?skip=5
+
+
+### landing get dev
+GET http://localhost:13936/landing/artist/fellaz/mezzryhere?skip=0
+
+### landing get dev
+GET http://localhost:13936/landing/artist/fellaz/mezzryhere?skip=5
+
+
+### 장르목록
+GET http://localhost:13936/genres
+auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA==

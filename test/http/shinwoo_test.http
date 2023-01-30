@@ -1,0 +1,150 @@
+### 음악검색 http://localhost:3000/dashboards/?=민
+GET http://localhost:3000/dashboards/
+Content-Type: application/json
+address: address2
+user_id: 12
+
+### 대길님 자리
+GET https://27f7-121-134-235-75.jp.ngrok.io/nfts/
+address: address2
+user_id: 12
+
+### 음악 상세
+GET https://27f7-121-134-235-75.jp.ngrok.io/nfts/details/18
+address: address2
+user_id: 12
+
+### 대시보드에서 sort 곁들인 검색
+
+POST https://devstage.millimx.com/dashboards/
+Content-Type: application/json
+address: 0x5cf1707fb6587cb94b8632e2de5d90d9f9a0b56a
+user_id: 1
+
+{
+  "sortType": "play_count",
+  "limitNumber":3
+}
+
+### 좋아요 노래 리스트
+GET https://f12e-121-134-235-75.ngrok.io/nfts/like/12?keyword=
+address: address2
+user_id: 12
+
+### 좋아요 노래 추가
+POST https://a6f0-121-134-235-75.ngrok.io/nfts/like
+Content-Type: application/json
+address: 0x913c770f77f0aaae8ba94f29492a6784d16e1da1
+user_id: 3
+
+{
+  "nftMusicId": 1,
+  "userId": 3
+}
+
+
+### nft음악 sort 곁들인 가져오기
+
+POST https://a6f0-121-134-235-75.ngrok.io/nfts/
+
+Content-Type: application/json
+address: 0xc378404dfe65c372d270ad65dfc27209914495bf
+user_id: 2
+
+{
+  "sortType": "play_count",
+  "userId" : "2"
+}
+
+### 해당 유저가 좋아요 한 음악만 검색해오기
+
+POST https://devstage.millimx.com:444/nfts/like/1
+Content-Type: application/json
+address: 0xcffd8b22343f04b7611f85ef04a90a64d4f35476
+user_id: 4
+
+{
+  "sortType": "id",
+  "userId" : "1",
+  "genreIds": []
+}
+
+### 특정 아티스트 노래 중 해당 유저가 좋아요 한 검색
+
+POST https://2a6a-220-117-107-151.jp.ngrok.io/nfts/findbyuserid
+Content-Type: application/json
+address: 0xcffd8b22343f04b7611f85ef04a90a64d4f35476
+user_id: 4
+
+{
+  "sortType": "id",
+  "userId" : "4",
+  "targetUserId": "1",
+  "genreIds": []
+}
+
+### nft음악 sort 곁들인 검색
+
+POST https://devstage.millimx.com:444/nfts/
+Content-Type: application/json
+address: 0xcffd8b22343f04b7611f85ef04a90a64d4f35476
+user_id: 4
+
+{
+  "sortType": "id",
+  "userId": "4"
+
+}
+
+### 마이뮤직 키워드 검색
+
+GET https://a6f0-121-134-235-75.ngrok.io/musics/1?keyword=h
+address: 0x5cf1707fb6587cb94b8632e2de5d90d9f9a0b56a
+user_id: 1
+
+{
+"sortType": "create_at",
+"userId": "1"
+}
+
+
+### 좋아요 순 정렬용
+
+POST https://7c12-121-134-235-75.ngrok.io/nfts/
+Content-Type: application/json
+address: 0xcffd8b22343f04b7611f85ef04a90a64d4f35476
+user_id: 1
+
+{
+  "sortType": "play_count",
+  "userId": "1",
+  "genreIds": [0,1,2]
+}
+
+
+### exchange detail 호출
+
+GET https://e879-121-134-235-75.ngrok.io/exchange/details/53
+address: 0xcffd8b22343f04b7611f85ef04a90a64d4f35476
+user_id: 4
+
+### wallet detail 호출
+
+GET https://e879-121-134-235-75.ngrok.io/nfts/details/normal/344
+address: 0xcffd8b22343f04b7611f85ef04a90a64d4f35476
+user_id: 4
+
+### tokenId 검색  a
+
+GET https://1e28-121-134-235-75.jp.ngrok.io/nfts/history/music/25
+address: 0xcffd8b22343f04b7611f85ef04a90a64d4f35476
+user_id: 4
+
+### 랜딩
+
+GET http://localhost:13936/landing
+
+### 랜딩 아티스트
+
+GET http://localhost:13936/landing/mezzryhere
+
