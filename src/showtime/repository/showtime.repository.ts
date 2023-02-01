@@ -20,7 +20,7 @@ import { ResponseSongInfoDto } from "../dto/response.songinfo.dto";
 import { ResponseNftInfoDto } from "../dto/response.nftinfo.dto";
 import { ResponseContractInfoDto } from "../dto/response.contractinfo.dto";
 import { ResponseSplitStructureDto } from "../dto/response.splitstructure.dto";
-import {ResponseArtistDetailDto} from "../../web_landing/dto/response.artistrelease.dto";
+import {ResponseArtistDetailDto} from "../../landing/dto/response.artistrelease.dto";
 import { BannerEntity } from "../entity/banner.entity";
 
 @EntityRepository(ShowtimeEntity)
@@ -367,7 +367,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
     return responseList;
   }
 
-  async getLandingRecents(): Promise<ResponseRecentListDto[]> {
+  async getLandingRecents(take: number): Promise<ResponseRecentListDto[]> {
     const recentList = await getRepository(ShowtimeEntity)
       .createQueryBuilder('s')
       .leftJoinAndSelect('s.showtimeCrewEntity', 'sc')
@@ -379,8 +379,11 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
       .leftJoinAndSelect('stf.fileEntity', 'f')
       .where('s.releaseYn = :releaseYn', {releaseYn: 'Y'})
       .andWhere('s.viewYn = :viewYn', {viewYn: 'Y'})
+      .take(take)
       .orderBy('s.id', 'DESC')
       .getMany();
+
+
     if (!recentList) {
       let responseList = [];
       const responseObj = new ResponseRecentListDto();

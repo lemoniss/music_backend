@@ -8,17 +8,12 @@ import { SortNftDto } from "../dto/sort.nft.dto";
 import { FindByUserNftDto } from "../dto/findbyuser.nft.dto";
 import { InfoFileDto } from "../../mymusic/dto/info.file.dto";
 import { NftMusicLikeEntity } from "../entity/nftmusic_like.entity";
-import { InfoStreamingTop10Dto } from "../../l2e/dto/info.streaming.top10.dto";
-import { LandingService } from "../../web_landing/landing.service";
 import { ResponseRecentWebDto } from "../../showtime/dto/response.recent_web.dto";
 import { ResponseUserInfoDto } from "../../showtime/dto/response.userinfo.dto";
 import { UserEntity } from "../entity/user.entity";
 import { ResponseSongInfoDto } from "../../showtime/dto/response.songinfo.dto";
 import { ResponseNftInfoDto } from "../../showtime/dto/response.nftinfo.dto";
 import { ResponseContractInfoDto } from "../../showtime/dto/response.contractinfo.dto";
-import { ResponseSplitStructureDto } from "../../showtime/dto/response.splitstructure.dto";
-import any = jasmine.any;
-import { MyMusicEntity } from "../../mymusic/entity/mymusic.entity";
 import { ShowtimeTierRepository } from "../../showtime/repository/showtime_tier.repository";
 
 @EntityRepository(NftMusicEntity)
@@ -393,6 +388,12 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       .where('ml.userEntity = :userId', {userId: sortNftDto.userId})
       .andWhere(typeof sortNftDto.keyword != 'undefined' ? '(m.name like :keyword or m.artist like :keyword)' : '1 = 1', {keyword: `%${sortNftDto.keyword}%`})
       .andWhere(typeof sortNftDto.device != 'undefined' && sortNftDto.device == 'ios' && 'm.viewYn = \'Y\' ')
+
+    if(typeof sortNftDto.take != 'undefined') {
+      nftList.take(sortNftDto.take);
+    }
+
+    const nftListResult = await nftList
       .orderBy('m.id', 'DESC')
       .getMany();
 
@@ -401,7 +402,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     }
     const infoNftDtos = [];
 
-    for(const nftEntity of nftList) {
+    for(const nftEntity of nftListResult) {
       const infoNftDto = new InfoNftDto();
 
       infoNftDto.nftMusicId = nftEntity.id;
@@ -662,7 +663,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       .execute();
   }
 
-  async findNftListTake30(): Promise<InfoNftDto[]> {
+  async findNftListTake(take: number): Promise<InfoNftDto[]> {
 
     const nftList = await getRepository(NftMusicEntity)
       .createQueryBuilder('m')
@@ -673,7 +674,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       .leftJoinAndSelect('m.nftMusicLikeEntity', 'ml')
       .leftJoinAndSelect('m.showtimeEntity', 's')
       .orderBy(`m.createdAt`, 'DESC')
-      .take(30)
+      .take(take)
       .getMany();
 
     if (!nftList) {

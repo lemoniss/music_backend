@@ -711,3 +711,8 @@ GET http://localhost:13936/landing/artist/fellaz/mezzryhere?skip=5
 ### 장르목록
 GET http://localhost:13936/genres
 auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU7RmMiAcstVuuDsQuE02LD2Tzg8g9HgdROWfnhIjqBVoUq8QsPblIgGE0BKTdBgaj3N9CLdmD41OIhfTspQU9me0cUQx8ZyRrnVjheusibwSXq42eDaow6wMCV7gc+jkpKng6mV6azC/mQ0Uq9ZzqKHbMRPQChe0LmHd3k8BUxickNKkARGzZy0afsgNMgCBQJ0WX400ADk4YOMV9kNCUU1Fu/boLbu/g0wiHLv3U79UsNb9LOQIW5cK2qm9s+a695mLFYjRGrQxWx2YGrA==
+
+
+###
+GET http://localhost:23936/main
+auth_token: adf

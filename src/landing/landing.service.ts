@@ -1,20 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from '@nestjs/typeorm';
 import { ShowtimeRepository } from "../showtime/repository/showtime.repository";
 import { L2eRepository } from "../l2e/repository/l2e.repository";
 import { NftMusicRepository } from "../nftmusic/repository/nftmusic.repository";
 import { ShowtimeCrewRepository } from "../showtime/repository/showtime_crew.repository";
-import { ResponseLandingDto } from "./dto/response.landing.dto";
-import { InfoStreamingTop10Dto } from "../l2e/dto/info.streaming.top10.dto";
 import { SortNftDto } from "../nftmusic/dto/sort.nft.dto";
 import { UserRepository } from "../user/repository/user.repository";
 import { ShowtimeHolderRepository } from "../showtime/repository/showtime_holder.repository";
-import { ShowtimeEntity } from "../showtime/entity/showtime.entity";
-import { L2eEntity } from "../l2e/entity/l2e.entity";
-import { NftMusicEntity } from "../nftmusic/entity/nftmusic.entity";
-import { ShowtimeCrewEntity } from "../showtime/entity/showtime_crew.entity";
-import { UserEntity } from "../user/entity/user.entity";
-import { ShowtimeHolderEntity } from "../showtime/entity/showtime_holder.entity";
 
 @Injectable()
 export class LandingService {
@@ -31,19 +22,19 @@ export class LandingService {
 
     let response: any = {};
 
-    const streamingTop10 = [];
+    const streamingTop15 = [];
 
-    const l2eTop10 = await this.l2eRepository.getStreamingTop10();
-    for(const l2eInfo of l2eTop10) {
+    const l2eTop15 = await this.l2eRepository.getStreamingTop(15);
+    for(const l2eInfo of l2eTop15) {
       const info = await this.nftMusicRepository.findNftToTokenIdAndSource(l2eInfo.tokenId, l2eInfo.source, l2eInfo.totalSecond);
-      streamingTop10.push(info);
+      streamingTop15.push(info);
     }
 
     response.showtimeCovers = await this.showtimeRepository.getLandingCovers();
-    response.showtimePresents = await this.showtimeRepository.getLandingRecents();
-    response.streamingTop10 = streamingTop10;
-    response.newRelease30 = await this.nftMusicRepository.findNftListTake30();
-    response.showtimeArtists = await this.userRepository.getArtists(0);
+    response.showtimePresents = await this.showtimeRepository.getLandingRecents(15);
+    response.streamingTop = streamingTop15;
+    response.newRelease = await this.nftMusicRepository.findNftListTake(15);
+    response.showtimeArtists = await this.userRepository.getArtists(0, 20);
     response.serverTime = await this.showtimeRepository.getServertime();
     return response;
   }
@@ -52,7 +43,7 @@ export class LandingService {
 
     let response: any = {};
 
-    response.showtimeArtists = await this.userRepository.getArtists(skip);
+    response.showtimeArtists = await this.userRepository.getArtists(skip, 20);
     return response;
   }
 

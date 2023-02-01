@@ -39,12 +39,14 @@ export class AuthGuard implements CanActivate {
       // const utcMilllisecondsSinceEpoch = now.getTime() + (now.getTimezoneOffset() * 60 * 1000)
       // const serverTime = Math.round(utcMilllisecondsSinceEpoch / 1000)
 
-      const authInfo = await this.userService.findByIdAndAddress(Number(map.get('userId')), map.get('address').toString());
+      // const authInfo = await this.userService.findByIdAndAddress(Number(map.get('userId')), map.get('address').toString());
+
+      const authInfo = await this.userService.findByAddress(map.get('address').toString());
 
 
       console.log()
 
-      if (!authInfo) {
+      if (authInfo.id == 0) {
         return false;
         // throw new UnauthorizedException();
       }

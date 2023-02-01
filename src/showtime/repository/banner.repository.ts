@@ -57,12 +57,51 @@ export class BannerRepository extends Repository<BannerEntity> {
     }
   }
 
+  async getLaunchAppBanners(lang: string): Promise<ResponseBannerDataDto[]> {
+    const bannerList = await getRepository(BannerEntity)
+      .createQueryBuilder('b')
+      .leftJoinAndSelect('b.bannerFileEntity', 'bf')
+      .leftJoinAndSelect('bf.fileEntity', 'f')
+      .where('b.viewYn = :viewYn', {viewYn: 'Y'})
+      .andWhere('b.type in (:bannerType)' , {bannerType: ['W', 'M']})
+      .andWhere('b.lang = :lang', {lang: lang})
+      .orderBy('b.order', 'ASC')
+      .getMany();
+    if (!bannerList) {
+      let responseList = [];
+      const responseObj = new ResponseBannerDataDto();
+      responseList.push(responseObj);
+      return responseList;
+    }
+
+    let responseList = [];
+    for(const banner of bannerList) {
+      const responseBannerDataDto = new ResponseBannerDataDto();
+
+      responseBannerDataDto.id = Number(banner.id);
+      responseBannerDataDto.lang = banner.lang;
+      responseBannerDataDto.title = banner.title;
+      responseBannerDataDto.subTitle = banner.subTitle;
+      responseBannerDataDto.contents = banner.contents;
+      responseBannerDataDto.fileUrl = banner.bannerFileEntity[0].fileEntity.url;
+      responseBannerDataDto.host = banner.host;
+      responseBannerDataDto.eventAt = banner.eventAt;
+      responseBannerDataDto.location = banner.location;
+      responseBannerDataDto.btnText = banner.btnText;
+      responseBannerDataDto.type = banner.type;
+      responseBannerDataDto.extra = banner.extra;
+      responseList.push(responseBannerDataDto);
+    }
+    return responseList;
+  }
+
   async getBanners(lang: string): Promise<ResponseBannerDataDto[]> {
     const bannerList = await getRepository(BannerEntity)
       .createQueryBuilder('b')
       .leftJoinAndSelect('b.bannerFileEntity', 'bf')
       .leftJoinAndSelect('bf.fileEntity', 'f')
       .where('b.viewYn = :viewYn', {viewYn: 'Y'})
+      .andWhere('b.type not in (:bannerType)' , {bannerType: ['W', 'M']})
       .andWhere('b.lang = :lang', {lang: lang})
       .orderBy('b.order', 'ASC')
       .getMany();

@@ -44,4 +44,7 @@ export class SortNftDto {
 
   @IsOptional()
   device: string;  // device
+
+  @IsOptional()
+  take: number;
 }

@@ -23,8 +23,9 @@ import { ShowtimeModule } from "./showtime/showtime.module";
 import { ShowtimeController } from "./showtime/showtime.controller";
 import { EventModule } from "./event/event.module";
 import { EventController } from "./event/event.controller";
-import { LandingModule } from "./web_landing/landing.module";
-import { LandingController } from "./web_landing/landing.controller";
+import { LandingModule } from "./landing/landing.module";
+import { LandingController } from "./landing/landing.controller";
+import { MainModule } from "./main/main.module";
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { LandingController } from "./web_landing/landing.controller";
     ShowtimeModule,
     EventModule,
     LandingModule,
+    MainModule,
   ],
   controllers: [],
   providers: [],
@@ -74,7 +76,7 @@ export class AppModule implements NestModule {
         ExchangeController,
         ShowtimeController,
         // ItemController,
-        // LandingController,
+        // MainController,
       );
   }
 }

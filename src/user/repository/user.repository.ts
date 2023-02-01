@@ -246,7 +246,7 @@ export class UserRepository extends Repository<UserEntity> {
         pad(pureDate.getSeconds());
   }
 
-  async getArtists(skip: number) : Promise<ResponseArtistDto[]> {
+  async getArtists(skip: number, take: number) : Promise<ResponseArtistDto[]> {
     const artistList = await getRepository(UserEntity)
       .createQueryBuilder('u')
       .innerJoinAndSelect('u.userArtistEntity', 'ua')
@@ -255,7 +255,7 @@ export class UserRepository extends Repository<UserEntity> {
       .leftJoinAndSelect('u.userGenreEntity', 'ug')
       .leftJoinAndSelect('ug.genreEntity', 'g')
       .orderBy('ua.order', 'ASC')
-      .take(20)
+      .take(take)
       .skip(skip)
       .getManyAndCount();
 

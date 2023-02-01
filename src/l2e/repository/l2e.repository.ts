@@ -2,8 +2,7 @@ import { EntityRepository, getConnection, getManager, Repository } from "typeorm
 import { RuntimeException } from "@nestjs/core/errors/exceptions/runtime.exception";
 import { L2eEntity } from "../entity/l2e.entity";
 import { CreateL2eDto } from "../../nftmusic/dto/create.l2e.dto";
-import { InfoStreamingTop10Dto } from "../dto/info.streaming.top10.dto";
-import { UserExchangeEntity } from "../../exchange/entity/user_exchange.entity";
+import { InfoStreamingTopDto } from "../dto/info.streaming.top.dto";
 
 @EntityRepository(L2eEntity)
 export class L2eRepository extends Repository<L2eEntity> {
@@ -38,7 +37,7 @@ export class L2eRepository extends Repository<L2eEntity> {
     }
   }
 
-  async getStreamingTop10(): Promise<InfoStreamingTop10Dto[]> {
+  async getStreamingTop(limit: number): Promise<InfoStreamingTopDto[]> {
     const entityManager = getManager();
     const l2eObj = await entityManager.query(
       'select t.token_id as tokenId, t.totalSecond, t.source ' +
@@ -49,17 +48,46 @@ export class L2eRepository extends Repository<L2eEntity> {
       ' group by token_id, source' +
       ') t ' +
       'order by t.totalSecond desc ' +
-      'limit 10 ' );
+      'limit ? ', [limit] );
 
     const response = [];
 
     if(l2eObj.length > 0) {
       for(let i= 0; i< l2eObj.length; i++) {
-        const infoStreamingTop10Dto = new InfoStreamingTop10Dto();
-        infoStreamingTop10Dto.tokenId = l2eObj[i].tokenId;
-        infoStreamingTop10Dto.totalSecond = l2eObj[i].totalSecond;
-        infoStreamingTop10Dto.source = l2eObj[i].source;
-        response.push(infoStreamingTop10Dto);
+        const infoStreamingTopDto = new InfoStreamingTopDto();
+        infoStreamingTopDto.tokenId = l2eObj[i].tokenId;
+        infoStreamingTopDto.totalSecond = l2eObj[i].totalSecond;
+        infoStreamingTopDto.source = l2eObj[i].source;
+        response.push(infoStreamingTopDto);
+      }
+    }
+
+    return response;
+  }
+
+  async getRecentPlayed(userId: number, limit: number): Promise<InfoStreamingTopDto[]> {
+    const entityManager = getManager();
+    const l2eObj = await entityManager.query(
+      'select t.token_id as tokenId, t.totalSecond, t.source, t.id ' +
+      'from ( ' +
+      ' select token_id, source, sum(total_second) as totalSecond, max(id) as id ' +
+      ' from l2e ' +
+      ' where user_id = ? ' +
+      ' and source != \'myMusic\' ' +
+      ' group by token_id, source' +
+      ') t ' +
+      'order by t.id desc ' +
+      'limit ? ', [userId, limit] );
+
+    const response = [];
+
+    if(l2eObj.length > 0) {
+      for(let i= 0; i< l2eObj.length; i++) {
+        const infoStreamingTopDto = new InfoStreamingTopDto();
+        infoStreamingTopDto.tokenId = l2eObj[i].tokenId;
+        infoStreamingTopDto.totalSecond = l2eObj[i].totalSecond;
+        infoStreamingTopDto.source = l2eObj[i].source;
+        response.push(infoStreamingTopDto);
       }
     }
 

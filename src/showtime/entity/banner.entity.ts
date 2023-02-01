@@ -45,7 +45,7 @@ export class BannerEntity extends BaseEntity {
   @Column({ type: 'varchar', name: 'btn_text', length: 50, comment: '버튼문구' })
   btnText: string;
 
-  @Column({ type: 'char', name: 'type', nullable: true, length: 1, comment: 'I: 내부링크, O: 외부링크' })
+  @Column({ type: 'char', name: 'type', nullable: true, length: 1, comment: 'I: 내부링크, O: 외부링크, E: 이벤트, W: whos hot, M: most liked' })
   type: string;
 
   @Column({ type: 'varchar', name: 'extra', nullable: true, length: 100, comment: '내부파라미터 or 외부링크URL' })

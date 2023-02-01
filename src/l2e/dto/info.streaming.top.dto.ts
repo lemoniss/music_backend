@@ -1,4 +1,4 @@
-export class InfoStreamingTop10Dto {
+export class InfoStreamingTopDto {
   tokenId: string;
   totalSecond: number;
   source: string;
