@@ -18,19 +18,9 @@ export class UserRepository extends Repository<UserEntity> {
    * 사용자 정보 생성
    * @param createUserDto
    */
-  async createUser(createUserDto: CreateUserDto): Promise<number> {
+  async createUser(createUserDto: CreateUserDto) {
     try {
-      // const user = await this.save({
-      //   address: createUserDto.address,
-      //   nickname: 'NONAME',
-      //   introduce: '',
-      //   handle: createUserDto.handle,
-      //   lang: createUserDto.lang,
-      //   nation: createUserDto.nation,
-      //   device: typeof createUserDto.device == 'undefined' || createUserDto.device == '' ? 'android' : createUserDto.device,
-      // });
-
-      const user = await getConnection()
+      await getConnection()
         .createQueryBuilder()
         .insert()
         .into(UserEntity)
@@ -44,8 +34,6 @@ export class UserRepository extends Repository<UserEntity> {
           device: typeof createUserDto.device == 'undefined' || createUserDto.device == '' ? 'android' : createUserDto.device,
         })
         .execute();
-
-      return user.raw.insertId;
     } catch (e) {
       throw new RuntimeException('Server Error. Please try again later.');
     }

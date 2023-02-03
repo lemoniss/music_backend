@@ -30,37 +30,21 @@ export class UserService {
     private userOtpRepository: UserOtpRepository,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<number> {
-    // return await this.userRepository.createUser(createUserDto).then(async (userId) => {
-    //   const updateUserDto = new UpdateUserDto();
-    //   updateUserDto.genreIds = createUserDto.genreIds;
-    //
-    //   if(updateUserDto.genreIds.length > 0) {
-    //     await this.userGenreRepository.createUserGenre(userId, updateUserDto);
-    //   }
-    //
-    //   if(typeof createUserDto.fileId != 'undefined') {
-    //     updateUserDto.fileId = createUserDto.fileId;
-    //     await this.userFileRepository.createUserFile(userId, updateUserDto);
-    //   }
-    //
-    //   if(updateUserDto.userSnsModels.length > 0) {
-    //     await this.userSnsRepository.createUserSns(userId, updateUserDto);
-    //   }
-    //
-    //   return userId;
-    // });
+  async createUser(createUserDto: CreateUserDto) {
 
-    while (true) {
-      const handle = this.makeHandle();
-      const result = await this.userRepository.isExistHandle(handle);
-      if(result) {
-        createUserDto.handle = handle;
-        break;
+    const userInfo = await this.userRepository.findByAddress(createUserDto.address);
+
+    if(userInfo.id == 0) {
+      while (true) {
+        const handle = this.makeHandle();
+        const result = await this.userRepository.isExistHandle(handle);
+        if(result) {
+          createUserDto.handle = handle;
+          break;
+        }
       }
+      await this.userRepository.createUser(createUserDto);
     }
-
-    return await this.userRepository.createUser(createUserDto);
   }
 
   async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<boolean> {

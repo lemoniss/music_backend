@@ -26,6 +26,7 @@ import { EventController } from "./event/event.controller";
 import { LandingModule } from "./landing/landing.module";
 import { LandingController } from "./landing/landing.controller";
 import { MainModule } from "./main/main.module";
+import { RsaModule } from "./util/rsa.module";
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { MainModule } from "./main/main.module";
     EventModule,
     LandingModule,
     MainModule,
+    RsaModule,
   ],
   controllers: [],
   providers: [],
@@ -65,7 +67,8 @@ export class AppModule implements NestModule {
       //exclude 함수는 제외 하고싶은 라우터를 등록합니다.
       .exclude({ path: 'users/address/(.*)', method: RequestMethod.GET }, { path: 'users/handle/(.*)', method: RequestMethod.GET }, { path: 'users', method: RequestMethod.POST }
         , { path: 'events/(.*)', method: RequestMethod.GET }, { path: 'events', method: RequestMethod.POST } // event 생성
-        , { path: 'landing/(.*)', method: RequestMethod.GET }) // landing
+        , { path: 'landing/(.*)', method: RequestMethod.GET } // landing
+        , { path: 'exchange', method: RequestMethod.POST }, { path: 'exchange/details/(.*)', method: RequestMethod.GET })
       // .exclude({ path: 'user/user_all', method: RequestMethod.GET }) // 유저 전체 조회
       .forRoutes(
         UserController,
