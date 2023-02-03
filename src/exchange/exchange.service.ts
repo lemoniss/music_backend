@@ -11,6 +11,9 @@ import { SearchExchangeDto } from "./dto/search.exchange.dto";
 import { ItemExchangeDto } from "./dto/item.exchange.dto";
 import { ShowtimeService } from "../showtime/showtime.service";
 
+const crypto = require("crypto");
+const fs = require('fs');
+
 @Injectable()
 export class ExchangeService {
   constructor(
@@ -47,8 +50,25 @@ export class ExchangeService {
     }
   }
 
-  async findExchangeList(searchExchangeDto: SearchExchangeDto): Promise<InfoExchangeDto[]> {
-    return await this.exchangeRepository.findExchangeList(searchExchangeDto);
+  async findExchangeList(searchExchangeDto: SearchExchangeDto): Promise<any> {
+
+    const privateKey = fs.readFileSync('./private_key.pem', {encoding: 'utf-8'});
+    const decryptToken = crypto.privateDecrypt(
+      {
+        key: privateKey,
+        padding: crypto.constants.RSA_PKCS1_PADDING,
+      }, Buffer.from(searchExchangeDto.authToken, 'base64')
+    );
+    const decryptAddress = Buffer.from(decryptToken.buffer).toString();
+
+    let response: any = {};
+
+    const exchangeList = await this.exchangeRepository.findExchangeList(searchExchangeDto);
+
+    response.myAddress = decryptAddress;
+    response.exchangeList = exchangeList;
+
+    return response;
   }
 
   async findExchangeInfo(exchangeId: number, userId: number): Promise<InfoExchangeDto> {

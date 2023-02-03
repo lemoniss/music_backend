@@ -22,4 +22,6 @@ export class SearchExchangeDto {
   @IsOptional()
   genreIds: number[];  // 장르ID
 
+  @IsOptional()
+  authToken: string;
 }

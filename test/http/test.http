@@ -692,7 +692,7 @@ GET https://devin.millimx.com:444/landing/showtime/11
 GET https://devin.millimx.com:444/landing/catalog/143
 
 ### viewsong normal
-GET https://devin.millimx.com:444/landing/normal/157
+GET https://devin.millimx.com:446/landing/normal/157
 
 ### landing get dev
 GET http://localhost:13936/landing
@@ -714,5 +714,16 @@ auth_token: lUqhsnojVwiaimtqkkVAoojTgTT3YIVRPjgJL4o+uibAXp+Zlq3t6nTrcs2wvcxRDVMU
 
 
 ###
-GET http://localhost:23936/main
+GET https://devin.millimx.com:446/main
 auth_token: adf
+
+
+###
+POST http://localhost:23936/exchange
+auth_token: encryptWalletAddress
+Content-Type: application/json
+
+{
+  "keyword": "com",
+  "genreIds": [1,2,3]
+}

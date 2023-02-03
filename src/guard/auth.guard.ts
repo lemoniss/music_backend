@@ -20,18 +20,16 @@ export class AuthGuard implements CanActivate {
 
   async validateRequest(request: Request) {
     try {
-      const headerAuthToken = request.header('auth_token');
+      const headerAuthToken = request.header('auth_token').toString();
+      console.log(headerAuthToken);
       const privateKey = fs.readFileSync('./private_key.pem', {encoding: 'utf-8'});
       const decryptToken = crypto.privateDecrypt(
         {
           key: privateKey,
-          padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-          oaepHash: 'sha256',
-          oaepLabel: 'millim-x',
+          padding: crypto.constants.RSA_PKCS1_PADDING,
         }, Buffer.from(headerAuthToken, 'base64')
       );
-      const decryptTokenStr = Buffer.from(decryptToken.buffer).toString();
-      const map = new Map(Object.entries(JSON.parse(decryptTokenStr)));
+      const decryptAddress = Buffer.from(decryptToken.buffer).toString();
 
       // const serverTime = Math.round(new Date().getTime() / 1000);
 
@@ -41,7 +39,7 @@ export class AuthGuard implements CanActivate {
 
       // const authInfo = await this.userService.findByIdAndAddress(Number(map.get('userId')), map.get('address').toString());
 
-      const authInfo = await this.userService.findByAddress(map.get('address').toString());
+      const authInfo = await this.userService.findByAddress(decryptAddress.toString());
 
 
       console.log()
@@ -53,8 +51,19 @@ export class AuthGuard implements CanActivate {
 
       return true;
     } catch (e) {
+      console.log(e);
       return false;
     }
 
   }
+
+  // function strToab(encText) {
+  //   let buf = new ArrayBuffer(encText.length*2); // 2 bytes for each char
+  //   let bufView = new Uint8Array(buf);
+  //   for (let i=0, strLen=encText.length; i < strLen; i++) {
+  //     bufView[i] = encText.charCodeAt(i);
+  //   }
+  //   return buf;
+  // }
+
 }

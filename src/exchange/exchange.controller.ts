@@ -1,7 +1,7 @@
 import {
   Body,
   Controller,
-  Get,
+  Get, Headers,
   Param,
   ParseIntPipe,
   Post, UseGuards
@@ -43,8 +43,10 @@ export class ExchangeController {
    */
   @Post()
   @ApiOperation({summary: '거래소 리스트'})
-  findExchangeList(@Body() searchExchangeDto: SearchExchangeDto)
-    : Promise<InfoExchangeDto[]> {
+  findExchangeList(@Headers("auth_token") authToken: string,
+                   @Body() searchExchangeDto: SearchExchangeDto)
+    : Promise<any> {
+    searchExchangeDto.authToken = authToken;
     return this.exchangeService.findExchangeList(searchExchangeDto);
   }
 

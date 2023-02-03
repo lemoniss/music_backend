@@ -88,7 +88,7 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
       .leftJoinAndSelect('eu.userEntity', 'u')
       .innerJoinAndSelect('eg.genreEntity', 'g')
       .where(typeof searchExchangeDto.keyword != 'undefined' ? '(e.name like :keyword or e.artist like :keyword)' : '1 = 1', {keyword: `%${searchExchangeDto.keyword}%`})
-      .andWhere(searchExchangeDto.genreIds.length > 0 ? 'eg.genre_id in (:genreIds)' : '1 = 1', {genreIds: searchExchangeDto.genreIds})
+      .andWhere(typeof searchExchangeDto.genreIds != 'undefined' && searchExchangeDto.genreIds.length > 0 ? 'eg.genre_id in (:genreIds)' : '1 = 1', {genreIds: searchExchangeDto.genreIds})
       .orderBy('e.id', 'DESC')
       .getMany();
     if (!exchangeList) {
