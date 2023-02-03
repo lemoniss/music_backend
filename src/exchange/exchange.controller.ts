@@ -56,18 +56,12 @@ export class ExchangeController {
    * 거래소 상세
    * @param nftMusicId
    */
-  @Get("/details/:exchangeId/:userId")
+  @Get("/details/:exchangeId")
   @ApiOperation({summary: '거래소 상세'})
-  findExchangeInfo(@Param("exchangeId") exchangeId: string,
-                   @Param("userId", ParseIntPipe) userId: number)
-    : Promise<InfoExchangeDto> {
-
-    if(exchangeId == 'token') {
-      return this.exchangeService.findExchangeInfoByTokenId(userId);
-    } else {
-      return this.exchangeService.findExchangeInfo(Number(exchangeId), userId);
-    }
-
+  findExchangeInfo(@Headers("auth_token") authToken: string,
+                   @Param("exchangeId") exchangeId: number)
+    : Promise<any> {
+    return this.exchangeService.findExchangeInfo(exchangeId, authToken);
   }
 
   /**
@@ -88,11 +82,11 @@ export class ExchangeController {
    */
   @ApiOperation({summary: '거래소 구매'})
   @UseGuards(AuthGuard)
-  @Post('/purchase/:userId')
-  purchase(@Param("userId", ParseIntPipe) userId: number,
+  @Post('/purchase')
+  purchase(@Headers("auth_token") authToken: string,
            @Body() itemExchangeDto: ItemExchangeDto)
     : Promise<boolean> {
-    return this.exchangeService.purchase(userId, itemExchangeDto);
+    return this.exchangeService.purchase(authToken, itemExchangeDto);
   }
 
   /**

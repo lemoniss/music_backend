@@ -159,7 +159,7 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
    * 거래소 음악 상세
    * @param id
    */
-  async findExchangeInfo(exchangeId: number, userId: number): Promise<InfoExchangeDto> {
+  async findExchangeInfo(exchangeId: number, address: string): Promise<InfoExchangeDto> {
 
     const exchangeInfo = await getRepository(ExchangeEntity)
       .createQueryBuilder('e')
@@ -253,8 +253,9 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
 
     const nftLikeInfo = await getRepository(NftMusicLikeEntity)
       .createQueryBuilder('nl')
+      .leftJoinAndSelect('nl.userEntity', 'u')
       .where('nl.nftMusicEntity = :nftMusicId', {nftMusicId: exchangeInfo.nftMusicId})
-      .andWhere('nl.userEntity = :userId', {userId: userId})
+      .andWhere('u.address = :address', {address: address})
       .getOne()
 
     if (!nftLikeInfo) {

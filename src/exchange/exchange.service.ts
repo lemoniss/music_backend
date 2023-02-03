@@ -11,9 +11,8 @@ import { SearchExchangeDto } from "./dto/search.exchange.dto";
 import { ItemExchangeDto } from "./dto/item.exchange.dto";
 import { ShowtimeService } from "../showtime/showtime.service";
 import { Rsa } from "../util/rsa";
-
-const crypto = require("crypto");
-const fs = require('fs');
+import { GenreService } from "../genre/genre.service";
+import { UserRepository } from "../user/repository/user.repository";
 
 @Injectable()
 export class ExchangeService {
@@ -22,8 +21,10 @@ export class ExchangeService {
     private exchangeGenreRepository: ExchangeGenreRepository,
     private exchangeFileRepository: ExchangeFileRepository,
     private userExchangeRepository: UserExchangeRepository,
+    private userRepository: UserRepository,
     private nftMusicService: NftMusicService,
     private showtimeService: ShowtimeService,
+    private genreService: GenreService,
   ) {}
 
   async registerExchangeItem(userId: number, createExchangeDto: CreateExchangeDto): Promise<boolean> {
@@ -61,27 +62,40 @@ export class ExchangeService {
     const exchangeList = await this.exchangeRepository.findExchangeList(searchExchangeDto);
 
     response.exchangeList = exchangeList;
+    response.genreList = await this.genreService.getGenreAll();
 
     return response;
   }
 
-  async findExchangeInfo(exchangeId: number, userId: number): Promise<InfoExchangeDto> {
-    return await this.exchangeRepository.findExchangeInfo(exchangeId, userId);
+  async findExchangeInfo(exchangeId: number, authToken: string): Promise<any> {
+
+    let response: any = {};
+
+    if(typeof authToken != 'undefined') {
+      response.myAddress = Rsa.decryptAddress(authToken);
+    }
+
+    response.exchangeInfo = await this.exchangeRepository.findExchangeInfo(exchangeId, response.myAddress);
+
+    return response;
   }
 
   async findExchangeInfoByTokenId(tokenId: number): Promise<InfoExchangeDto> {
     return await this.exchangeRepository.findExchangeInfoByTokenId(tokenId);
   }
 
-  async purchase(userId: number, itemExchangeDto: ItemExchangeDto): Promise<boolean> {
+  async purchase(authToken: string, itemExchangeDto: ItemExchangeDto): Promise<boolean> {
     try {
-      const exchangeInfo = await this.exchangeRepository.findExchangeInfo(itemExchangeDto.exchangeId, userId);
+
+      const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+
+      // const exchangeInfo = await this.exchangeRepository.findExchangeInfo(itemExchangeDto.exchangeId, userId);
 
       await this.nftMusicService.patchOnSale(itemExchangeDto.nftMusicId, itemExchangeDto.source, 'N');
       if(itemExchangeDto.source == 'showtime') {
-        await this.showtimeService.replaceHolderShowtime(userId, itemExchangeDto.nftMusicId);
+        await this.showtimeService.replaceHolderShowtime(userInfo.id, itemExchangeDto.nftMusicId);
       } else {
-        await this.nftMusicService.replaceUserNft(userId, itemExchangeDto.nftMusicId);
+        await this.nftMusicService.replaceUserNft(userInfo.id, itemExchangeDto.nftMusicId);
       }
       await this.exchangeFileRepository.deleteExchangeFile(itemExchangeDto.exchangeId).then(async () => {
         await this.exchangeGenreRepository.deleteExchangeGenre(itemExchangeDto.exchangeId).then(async () => {

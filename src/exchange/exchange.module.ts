@@ -13,15 +13,15 @@ import { ExchangeEntity } from "./entity/exchange.entity";
 import { ExchangeGenreEntity } from "./entity/exchange_genre.entity";
 import { ExchangeFileEntity } from "./entity/exchange_file.entity";
 import { UserExchangeEntity } from "./entity/user_exchange.entity";
-import { NftMusicService } from "../nftmusic/nftmusic.service";
-import { ShowtimeService } from "../showtime/showtime.service";
-import { NftMusicRepository } from "../nftmusic/repository/nftmusic.repository";
+import { GenreModule } from "../genre/genre.module";
+import { UserRepository } from "../user/repository/user.repository";
 
 @Module({
   imports: [
     UserModule,
     NftMusicModule,
     ShowtimeModule,
+    GenreModule,
     TypeOrmModule.forFeature([
       ExchangeEntity,
       ExchangeGenreEntity,
@@ -36,8 +36,10 @@ import { NftMusicRepository } from "../nftmusic/repository/nftmusic.repository";
     ExchangeGenreRepository,
     ExchangeFileRepository,
     UserExchangeRepository,
+    UserRepository,
     NftMusicModule,
     ShowtimeModule,
+    GenreModule,
   ],
   exports: [TypeOrmModule, ExchangeService]
 })
