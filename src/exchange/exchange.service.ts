@@ -57,7 +57,7 @@ export class ExchangeService {
     let response: any = {};
 
     if(typeof searchExchangeDto.authToken != 'undefined') {
-      response.myAddress = Rsa.decryptAddress(searchExchangeDto.authToken);
+      response.connectorInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(searchExchangeDto.authToken));
     }
     const exchangeList = await this.exchangeRepository.findExchangeList(searchExchangeDto);
 
@@ -72,7 +72,7 @@ export class ExchangeService {
     let response: any = {};
 
     if(typeof authToken != 'undefined') {
-      response.myAddress = Rsa.decryptAddress(authToken);
+      response.connectorInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
     }
 
     response.exchangeInfo = await this.exchangeRepository.findExchangeInfo(exchangeId, response.myAddress);
