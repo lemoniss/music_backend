@@ -274,6 +274,8 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
     const nftInfoDto = new ResponseNftInfoDto();
     const contractInfoDto = new ResponseContractInfoDto();
 
+    exchangeInfo.price = (Number(exchangeInfo.price) / 10**18).toString();
+
     if(exchangeInfo.source == 'showtime') {
 
       const recentLikeInfo = await getRepository(ShowtimeEntity)
@@ -335,8 +337,6 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
           }
         }
       }
-
-      exchangeInfo.price = (Number(exchangeInfo.price) / 10**18).toString();
 
       nftInfoDto.leftAmount = (goldTotalCount-goldGrabCount) + (platinumTotalCount-platinumGrabCount) + (diamondTotalCount-diamondGrabCount);
       nftInfoDto.totalAmount = recentInfo.showtimeTierEntity.length;
