@@ -27,8 +27,8 @@ export class UserController {
    */
   @ApiOperation({summary: '유저 정보 등록'})
   @Post()
-  createUser(@Body() createUserDto: CreateUserDto) {
-    this.userService.createUser(createUserDto).then();
+  createUser(@Body() createUserDto: CreateUserDto) : Promise<InfoUserDto> {
+    return this.userService.createUser(createUserDto);
   }
 
   /**

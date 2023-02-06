@@ -30,7 +30,7 @@ export class UserService {
     private userOtpRepository: UserOtpRepository,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto) {
+  async createUser(createUserDto: CreateUserDto): Promise<InfoUserDto> {
 
     const userInfo = await this.userRepository.findByAddress(createUserDto.address);
 
@@ -43,7 +43,11 @@ export class UserService {
           break;
         }
       }
-      await this.userRepository.createUser(createUserDto);
+      return await this.userRepository.createUser(createUserDto).then(async () => {
+        return await this.userRepository.findByAddress(createUserDto.address);
+      });
+    } else {
+      return userInfo;
     }
   }
 
