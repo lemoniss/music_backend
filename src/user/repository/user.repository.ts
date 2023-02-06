@@ -155,8 +155,10 @@ export class UserRepository extends Repository<UserEntity> {
   async findByAddress(address: string): Promise<InfoUserDto> {
     console.log(address)
     const user = await getRepository(UserEntity)
-      .createQueryBuilder('user')
-      .where('user.address = :address', {address: address})
+      .createQueryBuilder('u')
+      .leftJoinAndSelect('u.userFileEntity', 'uf')
+      .leftJoinAndSelect('uf.fileEntity', 'f')
+      .where('u.address = :address', {address: address})
       .getOne();
     console.log(user)
 
@@ -171,7 +173,7 @@ export class UserRepository extends Repository<UserEntity> {
       infoUserDto.nickname = user.nickname;
       infoUserDto.handle = user.handle;
       infoUserDto.introduce = user.introduce;
-      infoUserDto.profileImgUrl = typeof user.userFileEntity == 'undefined' || user.userFileEntity.length == 0 ? '' : user.userFileEntity[0].fileEntity.url;
+      infoUserDto.profileImgUrl = typeof user.userFileEntity == 'undefined' || user.userFileEntity.length == 0 ? 'noImage' : user.userFileEntity[0].fileEntity.url;
     }
     return infoUserDto;
   }
@@ -179,8 +181,10 @@ export class UserRepository extends Repository<UserEntity> {
   // 최초 사용자데이터 존재여부 검색시 사용
   async findByHandle(handle: string): Promise<InfoUserDto> {
     const user = await getRepository(UserEntity)
-      .createQueryBuilder('user')
-      .where('user.handle = :handle', {handle: handle})
+      .createQueryBuilder('u')
+      .leftJoinAndSelect('u.userFileEntity', 'uf')
+      .leftJoinAndSelect('uf.fileEntity', 'f')
+      .where('u.handle = :handle', {handle: handle})
       .getOne();
 
     const infoUserDto = new InfoUserDto();

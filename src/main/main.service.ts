@@ -7,6 +7,7 @@ import { SortNftDto } from "../nftmusic/dto/sort.nft.dto";
 import { UserRepository } from "../user/repository/user.repository";
 import { ShowtimeHolderRepository } from "../showtime/repository/showtime_holder.repository";
 import { BannerRepository } from "../showtime/repository/banner.repository";
+import { Rsa } from "../util/rsa";
 
 const crypto = require("crypto");
 const fs = require('fs');
@@ -46,15 +47,17 @@ export class MainService {
         /**
          * TODO : react에서 rsa암호화를 해서 주소를 보내주면 윗 주석으로 처리하자
          */
-        const userInfo = await this.userRepository.findByAddress('0x6bb48e350fb163450a8639b311f5e4d9e290c0ae');
-
+        // const userInfo = await this.userRepository.findByAddress('0x6bb48e350fb163450a8639b311f5e4d9e290c0ae');
+        const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
 
         if(userInfo.id == 0) {
           throw new ForbiddenException();
           return false;
         }
 
-        response.newRelease = await this.nftMusicRepository.findNftListTake(5);
+        response.connectorInfo = userInfo;
+
+          response.newRelease = await this.nftMusicRepository.findNftListTake(5);
         const sortNftDto = new SortNftDto();
         sortNftDto.userId = userInfo.id.toString();
         sortNftDto.take = 7;
