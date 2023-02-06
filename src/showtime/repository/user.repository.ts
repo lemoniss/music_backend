@@ -4,6 +4,7 @@ import { ResponseArtistDto } from "../dto/response.artist.dto";
 import { ResponseArtistSongDto } from "../dto/response.artistsong.dto";
 import { ResponseArtistHomieDto } from "../dto/response.artisthomie.dto";
 import { ResponseArtistFollowerDto } from "../dto/response.artistfollower.dto";
+import { Formatter } from "src/util/formatter";
 
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {
@@ -43,7 +44,7 @@ export class UserRepository extends Repository<UserEntity> {
     responseArtistDto.nickname = artistInfo.nickname;
     responseArtistDto.handle = artistInfo.handle;
     responseArtistDto.address = artistInfo.address;
-    responseArtistDto.createAt = this.dateFormatter(artistInfo.createdAt);
+    responseArtistDto.createAt = Formatter.dateFormatter(artistInfo.createdAt);
     responseArtistDto.isFollower = false;
     responseArtistDto.genres = [];
     for(const genre of artistInfo.userGenreEntity) {
@@ -69,8 +70,8 @@ export class UserRepository extends Repository<UserEntity> {
       songDto.artist = userShowtime.showtimeEntity.artist;
       songDto.title = userShowtime.showtimeEntity.title;
       songDto.lyrics = userShowtime.showtimeEntity.lyrics;
-      songDto.releaseStartAt = this.dateFormatter(userShowtime.showtimeEntity.releaseStartAt);
-      songDto.releaseEndAt = this.dateFormatter(userShowtime.showtimeEntity.releaseEndAt);
+      songDto.releaseStartAt = Formatter.dateFormatter(userShowtime.showtimeEntity.releaseStartAt);
+      songDto.releaseEndAt = Formatter.dateFormatter(userShowtime.showtimeEntity.releaseEndAt);
       songDto.playTime = userShowtime.showtimeEntity.playTime;
       if(userShowtime.showtimeEntity.releaseYn == 'Y') {
         songDto.isAvailable = true;
@@ -125,15 +126,5 @@ export class UserRepository extends Repository<UserEntity> {
     }
 
     return responseArtistDto;
-  }
-
-  dateFormatter(pureDate) {
-    function pad(n) { return n<10 ? "0"+n : n }
-    return pureDate.getFullYear()+"-"+
-      pad(pureDate.getMonth()+1)+"-"+
-      pad(pureDate.getDate())+" "+
-      pad(pureDate.getHours())+":"+
-      pad(pureDate.getMinutes())+":"+
-      pad(pureDate.getSeconds());
   }
 }

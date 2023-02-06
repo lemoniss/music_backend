@@ -7,6 +7,12 @@ import { InfoNftDto } from "../../nftmusic/dto/info.nft.dto";
 import { SearchExchangeDto } from "../dto/search.exchange.dto";
 import { NftMusicLikeEntity } from "../../nftmusic/entity/nftmusic_like.entity";
 import { UserEntity } from "../../user/entity/user.entity";
+import { ResponseContractInfoDto } from "../../showtime/dto/response.contractinfo.dto";
+import { Formatter } from "../../util/formatter";
+import { ResponseSongInfoDto } from "../../showtime/dto/response.songinfo.dto";
+import { ResponseNftInfoDto } from "../../showtime/dto/response.nftinfo.dto";
+import { ShowtimeEntity } from "../../showtime/entity/showtime.entity";
+import { NftMusicEntity } from "../../nftmusic/entity/nftmusic.entity";
 
 @EntityRepository(ExchangeEntity)
 export class ExchangeRepository extends Repository<ExchangeEntity> {
@@ -121,7 +127,7 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
       infoExchangeDto.handle = exchangeEntity.handle;
       infoExchangeDto.description = exchangeEntity.description;
       infoExchangeDto.playTime = Number(exchangeEntity.playTime);
-      infoExchangeDto.price = exchangeEntity.price;
+      infoExchangeDto.price = (Number(exchangeEntity.price) / 10**18).toString();
       infoExchangeDto.seller = exchangeEntity.seller;
       infoExchangeDto.source = exchangeEntity.source;
       infoExchangeDto.tier = exchangeEntity.tier;
@@ -159,7 +165,7 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
    * 거래소 음악 상세
    * @param id
    */
-  async findExchangeInfo(exchangeId: number, userId: number): Promise<InfoExchangeDto> {
+  async findExchangeInfo(exchangeId: number, address: string): Promise<InfoExchangeDto> {
 
     const exchangeInfo = await getRepository(ExchangeEntity)
       .createQueryBuilder('e')
@@ -186,7 +192,7 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
     infoExchangeDto.handle = exchangeInfo.handle;
     infoExchangeDto.description = exchangeInfo.description;
     infoExchangeDto.playTime = exchangeInfo.playTime;
-    infoExchangeDto.price = exchangeInfo.price;
+    infoExchangeDto.price = (Number(exchangeInfo.price) / 10**18).toString();
     infoExchangeDto.seller = exchangeInfo.seller;
     infoExchangeDto.nftMusicId = Number(exchangeInfo.nftMusicId);
     // infoExchangeDto.userId = exchangeInfo.userExchangeEntity[0].userEntity.id;
@@ -253,8 +259,9 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
 
     const nftLikeInfo = await getRepository(NftMusicLikeEntity)
       .createQueryBuilder('nl')
+      .leftJoinAndSelect('nl.userEntity', 'u')
       .where('nl.nftMusicEntity = :nftMusicId', {nftMusicId: exchangeInfo.nftMusicId})
-      .andWhere('nl.userEntity = :userId', {userId: userId})
+      .andWhere('u.address = :address', {address: address})
       .getOne()
 
     if (!nftLikeInfo) {
@@ -263,7 +270,121 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
       infoExchangeDto.isLike = true;
     }
 
-    console.log(typeof infoExchangeDto.userId)
+    const songInfoDto = new ResponseSongInfoDto();
+    const nftInfoDto = new ResponseNftInfoDto();
+    const contractInfoDto = new ResponseContractInfoDto();
+
+    if(exchangeInfo.source == 'showtime') {
+
+      const recentLikeInfo = await getRepository(ShowtimeEntity)
+        .createQueryBuilder('s')
+        .leftJoinAndSelect('s.showtimeLikeEntity', 'sl')
+        .leftJoinAndSelect('s.showtimeTierEntity', 'st')
+        .where('st.id = :tierId', {tierId: exchangeInfo.nftMusicId})
+        .getOne();
+
+      const streamObj = await entityManager.query(
+        'select ceil(ifnull(sum(total_second)/?, 0)) as totalStreams from l2e where token_id in ' +
+        '( ' +
+        'select token_id from showtime_tier where showtime_id = ? ' +
+        ')'
+        , [Number(exchangeInfo.playTime), exchangeInfo.nftMusicId]);
+
+      songInfoDto.streams = streamObj[0].totalStreams;
+      songInfoDto.likes = recentLikeInfo.showtimeLikeEntity.length;
+      songInfoDto.origin = 'showtime';
+
+      const recentInfo = await getRepository(ShowtimeEntity)
+        .createQueryBuilder('s')
+        .leftJoinAndSelect('s.showtimeTierEntity', 'st')
+        .where('s.id = :showtimeId', {showtimeId: recentLikeInfo.id})
+        .getOne();
+
+      const coinObj = await entityManager.query(
+        'select rate from coin_marketrate where name = \'ethereum\' ');
+      let coinToUsd = Number(coinObj[0].rate);
+
+      let goldTotalCount = 0;
+      let goldGrabCount = 0;
+      let goldPrice = 0;
+      let platinumTotalCount = 0;
+      let platinumGrabCount = 0;
+      let platinumPrice = 0;
+      let diamondTotalCount = 0;
+      let diamondGrabCount = 0;
+      let diamondPrice = 0;
+
+      for(const obj of recentInfo.showtimeTierEntity) {
+        if(obj.tier == 'Gold') {
+          goldTotalCount++;
+          goldPrice = Number(obj.price);
+          if(obj.purchaseYn == 'Y') {
+            goldGrabCount++;
+          }
+        } else if(obj.tier == 'Platinum') {
+          platinumTotalCount++;
+          platinumPrice = Number(obj.price);
+          if(obj.purchaseYn == 'Y') {
+            platinumGrabCount++;
+          }
+        } else if(obj.tier == 'Diamond') {
+          diamondTotalCount++;
+          diamondPrice = Number(obj.price);
+          if (obj.purchaseYn == 'Y') {
+            diamondGrabCount++;
+          }
+        }
+      }
+
+      exchangeInfo.price = (Number(exchangeInfo.price) / 10**18).toString();
+
+      nftInfoDto.leftAmount = (goldTotalCount-goldGrabCount) + (platinumTotalCount-platinumGrabCount) + (diamondTotalCount-diamondGrabCount);
+      nftInfoDto.totalAmount = recentInfo.showtimeTierEntity.length;
+      nftInfoDto.price = Number(exchangeInfo.price);
+      nftInfoDto.cnutAmount = Math.ceil(coinToUsd * 10 * Number(exchangeInfo.price));
+
+      contractInfoDto.releaseDate = Formatter.dateFormatter(recentInfo.createdAt);
+
+    } else {
+
+      const nftInfo = await getRepository(NftMusicEntity)
+        .createQueryBuilder('n')
+        .leftJoinAndSelect('n.nftMusicLikeEntity', 'nl')
+        .where('n.id = :nftMusicId', {nftMusicId: exchangeInfo.nftMusicId})
+        .getOne();
+
+      const streamObj = await entityManager.query(
+        'select ceil(ifnull(sum(total_second)/?, 0)) as totalStreams from l2e where token_id in ' +
+        '( ' +
+        'select token_id from nft_music where id = ? ' +
+        ')'
+        , [Number(exchangeInfo.playTime), exchangeInfo.nftMusicId]);
+
+      songInfoDto.streams = streamObj[0].totalStreams;
+      songInfoDto.likes = nftInfo.nftMusicLikeEntity.length;
+      songInfoDto.origin = nftInfo.source;
+
+      const coinObj = await entityManager.query(
+        'select rate from coin_marketrate where name = \'ethereum\' ');
+      let coinToUsd = Number(coinObj[0].rate);
+
+      nftInfoDto.leftAmount = 1;
+      nftInfoDto.totalAmount = 1;
+      nftInfoDto.price = Number(exchangeInfo.price);
+      nftInfoDto.cnutAmount = Math.ceil(coinToUsd * 10 * Number(exchangeInfo.price));
+
+      contractInfoDto.releaseDate = Formatter.dateFormatter(nftInfo.createdAt);
+    }
+
+    infoExchangeDto.songInfo = songInfoDto;
+    infoExchangeDto.nftInfo = nftInfoDto;
+
+    contractInfoDto.address = process.env.MILLIMX_NFT_CONTRACT;
+    contractInfoDto.tokenId = exchangeInfo.tokenId;
+    contractInfoDto.tokenStandard = 'ERC721';
+    contractInfoDto.blockchain = 'Ethereum';
+    infoExchangeDto.contractInfo = contractInfoDto;
+
     return infoExchangeDto;
   }
 

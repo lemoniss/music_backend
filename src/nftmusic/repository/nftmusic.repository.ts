@@ -15,6 +15,7 @@ import { ResponseSongInfoDto } from "../../showtime/dto/response.songinfo.dto";
 import { ResponseNftInfoDto } from "../../showtime/dto/response.nftinfo.dto";
 import { ResponseContractInfoDto } from "../../showtime/dto/response.contractinfo.dto";
 import { ShowtimeTierRepository } from "../../showtime/repository/showtime_tier.repository";
+import { Formatter } from "../../util/formatter";
 
 @EntityRepository(NftMusicEntity)
 export class NftMusicRepository extends Repository<NftMusicEntity> {
@@ -849,7 +850,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     responseRecentWebDto.fellaz = Array.from(fellazList);
 
     const contractInfoDto = new ResponseContractInfoDto();
-    contractInfoDto.releaseDate = this.dateFormatter(nftInfo.createdAt);
+    contractInfoDto.releaseDate = Formatter.dateFormatter(nftInfo.createdAt);
     contractInfoDto.address = process.env.MILLIMX_NFT_CONTRACT;
     contractInfoDto.tokenId = nftInfo.tokenId;
     contractInfoDto.tokenStandard = 'ERC721';
@@ -870,16 +871,6 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     responseRecentWebDto.contractInfo = contractInfoDto;
 
     return responseRecentWebDto;
-  }
-
-  dateFormatter(pureDate) {
-    function pad(n) { return n<10 ? "0"+n : n }
-    return pureDate.getFullYear()+"-"+
-      pad(pureDate.getMonth()+1)+"-"+
-      pad(pureDate.getDate())+" "+
-      pad(pureDate.getHours())+":"+
-      pad(pureDate.getMinutes())+":"+
-      pad(pureDate.getSeconds());
   }
 }
 

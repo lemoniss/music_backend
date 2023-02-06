@@ -8,6 +8,7 @@ import { InfoNftHistoryDto } from "../dto/info.nfthistory.dto";
 import { InfoNftDto } from "../dto/info.nft.dto";
 import { NftProvenanceDto } from "../dto/nft.provenance.dto";
 import { L2eEntity } from "../../l2e/entity/l2e.entity";
+import { Formatter } from "../../util/formatter";
 
 @EntityRepository(NftHistoryEntity)
 export class NftHistoryRepository extends Repository<NftHistoryEntity> {
@@ -106,7 +107,7 @@ export class NftHistoryRepository extends Repository<NftHistoryEntity> {
         nftProvenanceDto.userHandle = provenances[i].userHandle;
         nftProvenanceDto.method = provenances[i].method;
         nftProvenanceDto.price = provenances[i].price;
-        nftProvenanceDto.boughtAt = this.dateFormatter(provenances[i].boughtAt);
+        nftProvenanceDto.boughtAt = Formatter.dateFormatter(provenances[i].boughtAt);
         nftProvenanceDto.symbol = provenances[i].symbol;
         nftProvenanceDtos.push(nftProvenanceDto);
       }
@@ -207,7 +208,7 @@ export class NftHistoryRepository extends Repository<NftHistoryEntity> {
         infoNftHistoryDto.price = historyList[i].price;
         infoNftHistoryDto.fromAddress = historyList[i].fromAddress;
         infoNftHistoryDto.toAddress = historyList[i].toAddress;
-        infoNftHistoryDto.timestamp = this.dateFormatter(historyList[i].createdAt);
+        infoNftHistoryDto.timestamp = Formatter.dateFormatter(historyList[i].createdAt);
         infoNftHistoryDto.txHash = historyList[i].txHash;
         infoNftHistoryDto.status = historyList[i].status;
         infoNftHistoryDto.blockNumber = historyList[i].blockNumber;
@@ -307,7 +308,7 @@ export class NftHistoryRepository extends Repository<NftHistoryEntity> {
       infoNftHistoryDto.price = history[0].price;
       infoNftHistoryDto.fromAddress = history[0].fromAddress;
       infoNftHistoryDto.toAddress = history[0].toAddress;
-      infoNftHistoryDto.timestamp = this.dateFormatter(history[0].createdAt);
+      infoNftHistoryDto.timestamp = Formatter.dateFormatter(history[0].createdAt);
       infoNftHistoryDto.txHash = history[0].txHash;
       infoNftHistoryDto.status = history[0].status;
       infoNftHistoryDto.blockNumber = history[0].blockNumber;
@@ -319,15 +320,5 @@ export class NftHistoryRepository extends Repository<NftHistoryEntity> {
     } catch (e) {
       throw new RuntimeException('Server Error. Please try again later.');
     }
-  }
-
-  dateFormatter(pureDate) {
-    function pad(n) { return n<10 ? "0"+n : n }
-    return pureDate.getFullYear()+"-"+
-      pad(pureDate.getMonth()+1)+"-"+
-      pad(pureDate.getDate())+" "+
-      pad(pureDate.getHours())+":"+
-      pad(pureDate.getMinutes())+":"+
-      pad(pureDate.getSeconds());
   }
 }

@@ -720,10 +720,31 @@ auth_token: adf
 
 ###
 POST http://localhost:23936/exchange
-auth_token: encryptWalletAddress
+auth_token: HRKMeWYyLXnETKoiU9OczRFXkCXRShWAAt7sEvd+sNkGtTrFb64WIygvHl2KjNna67BI/46B9zRqEkO+7ZwD9s1qMhmgM3/GI9M+d+eiClVGzNTLOmL2+5ZLPqR4sGub6C6eeH+gmwMFpWCQx3UZHrcRqqao3aIWOxVN7yMJ/Twtrmt80eMxnXvlIJlnSIOXEIH6PqtPZtDzxjzHdA2ur2/e7kuF90v8QqhnHcmJ3RzHiwm71vYLLqY6QZh9xbiC/zWzRBBhfV+p2lwDq0UJoPJkudyCANxzwvrD0+I5wmN8VnwiaW8YYFORjKaBNspp39mtzMG6HyTXNjtHV71ZSQ==
 Content-Type: application/json
 
 {
-  "keyword": "com",
+  "keyword": "c",
   "genreIds": [1,2,3]
+}
+
+
+### exchangeList
+POST http://localhost:23936/exchange
+auth_token: HRKMeWYyLXnETKoiU9OczRFXkCXRShWAAt7sEvd+sNkGtTrFb64WIygvHl2KjNna67BI/46B9zRqEkO+7ZwD9s1qMhmgM3/GI9M+d+eiClVGzNTLOmL2+5ZLPqR4sGub6C6eeH+gmwMFpWCQx3UZHrcRqqao3aIWOxVN7yMJ/Twtrmt80eMxnXvlIJlnSIOXEIH6PqtPZtDzxjzHdA2ur2/e7kuF90v8QqhnHcmJ3RzHiwm71vYLLqY6QZh9xbiC/zWzRBBhfV+p2lwDq0UJoPJkudyCANxzwvrD0+I5wmN8VnwiaW8YYFORjKaBNspp39mtzMG6HyTXNjtHV71ZSQ==
+
+### exchangeDetail
+GET http://localhost:23936/exchange/details/47
+auth_token: HRKMeWYyLXnETKoiU9OczRFXkCXRShWAAt7sEvd+sNkGtTrFb64WIygvHl2KjNna67BI/46B9zRqEkO+7ZwD9s1qMhmgM3/GI9M+d+eiClVGzNTLOmL2+5ZLPqR4sGub6C6eeH+gmwMFpWCQx3UZHrcRqqao3aIWOxVN7yMJ/Twtrmt80eMxnXvlIJlnSIOXEIH6PqtPZtDzxjzHdA2ur2/e7kuF90v8QqhnHcmJ3RzHiwm71vYLLqY6QZh9xbiC/zWzRBBhfV+p2lwDq0UJoPJkudyCANxzwvrD0+I5wmN8VnwiaW8YYFORjKaBNspp39mtzMG6HyTXNjtHV71ZSQ==
+
+
+### 회원가입
+POST http://localhost:23936/users
+Content-Type: application/json
+
+{
+  "address": "0x1234",
+  "lang": "ko",
+  "nation": "KR",
+  "device": "web"
 }

@@ -18,7 +18,7 @@ import { ItemExchangeDto } from "./dto/item.exchange.dto";
   name: 'auth_token',
   description: 'your auth_token'
 })
-@UseGuards(AuthGuard)
+
 @Controller("/exchange")
 export class ExchangeController {
 
@@ -29,6 +29,7 @@ export class ExchangeController {
    * @param createMusicDto
    */
   @ApiOperation({summary: '거래소 등록'})
+  @UseGuards(AuthGuard)
   @Post('/register/:userId')
   registerExchangeItem(@Param("userId", ParseIntPipe) userId: number,
     @Body() createExchangeDto: CreateExchangeDto)
@@ -46,7 +47,7 @@ export class ExchangeController {
   findExchangeList(@Headers("auth_token") authToken: string,
                    @Body() searchExchangeDto: SearchExchangeDto)
     : Promise<any> {
-    searchExchangeDto.authToken = authToken;
+    if(typeof authToken != 'undefined') searchExchangeDto.authToken = authToken;
     return this.exchangeService.findExchangeList(searchExchangeDto);
   }
 
@@ -55,18 +56,12 @@ export class ExchangeController {
    * 거래소 상세
    * @param nftMusicId
    */
-  @Get("/details/:exchangeId/:userId")
+  @Get("/details/:exchangeId")
   @ApiOperation({summary: '거래소 상세'})
-  findExchangeInfo(@Param("exchangeId") exchangeId: string,
-                   @Param("userId", ParseIntPipe) userId: number)
-    : Promise<InfoExchangeDto> {
-
-    if(exchangeId == 'token') {
-      return this.exchangeService.findExchangeInfoByTokenId(userId);
-    } else {
-      return this.exchangeService.findExchangeInfo(Number(exchangeId), userId);
-    }
-
+  findExchangeInfo(@Headers("auth_token") authToken: string,
+                   @Param("exchangeId") exchangeId: number)
+    : Promise<any> {
+    return this.exchangeService.findExchangeInfo(exchangeId, authToken);
   }
 
   /**
@@ -85,12 +80,13 @@ export class ExchangeController {
    * @param userId
    * @param purchaseExchangeDto
    */
-  @Post('/purchase/:userId')
   @ApiOperation({summary: '거래소 구매'})
-  purchase(@Param("userId", ParseIntPipe) userId: number,
+  @UseGuards(AuthGuard)
+  @Post('/purchase')
+  purchase(@Headers("auth_token") authToken: string,
            @Body() itemExchangeDto: ItemExchangeDto)
     : Promise<boolean> {
-    return this.exchangeService.purchase(userId, itemExchangeDto);
+    return this.exchangeService.purchase(authToken, itemExchangeDto);
   }
 
   /**
@@ -98,8 +94,9 @@ export class ExchangeController {
    * @param userId
    * @param purchaseExchangeDto
    */
+  @ApiOperation({summary: '거래소 상품 삭제'})
   @Post('/remove/:exchangeId')
-  @ApiOperation({summary: '거래소 구매'})
+  @UseGuards(AuthGuard)
   remove(@Param("exchangeId", ParseIntPipe) exchangeId: number)
     : Promise<boolean> {
     return this.exchangeService.remove(exchangeId);
@@ -110,8 +107,9 @@ export class ExchangeController {
    * @param userId
    * @param purchaseExchangeDto
    */
-  @Post('/cancel/:userId')
   @ApiOperation({summary: '거래소 등록취소'})
+  @Post('/cancel/:userId')
+  @UseGuards(AuthGuard)
   cancel(@Param("userId", ParseIntPipe) userId: number,
          @Body() itemExchangeDto: ItemExchangeDto)
     : Promise<boolean> {

@@ -10,6 +10,7 @@ import { ResponseArtistDto } from "../../showtime/dto/response.artist.dto";
 import { ShowtimeCrewEntity } from "../../showtime/entity/showtime_crew.entity";
 import { UserFileEntity } from "../entity/user_file.entity";
 import { UserShowtimeEntity } from "../../showtime/entity/user_showtime.entity";
+import { Formatter } from "../../util/formatter";
 
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {
@@ -18,19 +19,9 @@ export class UserRepository extends Repository<UserEntity> {
    * 사용자 정보 생성
    * @param createUserDto
    */
-  async createUser(createUserDto: CreateUserDto): Promise<number> {
+  async createUser(createUserDto: CreateUserDto) {
     try {
-      // const user = await this.save({
-      //   address: createUserDto.address,
-      //   nickname: 'NONAME',
-      //   introduce: '',
-      //   handle: createUserDto.handle,
-      //   lang: createUserDto.lang,
-      //   nation: createUserDto.nation,
-      //   device: typeof createUserDto.device == 'undefined' || createUserDto.device == '' ? 'android' : createUserDto.device,
-      // });
-
-      const user = await getConnection()
+      await getConnection()
         .createQueryBuilder()
         .insert()
         .into(UserEntity)
@@ -44,8 +35,6 @@ export class UserRepository extends Repository<UserEntity> {
           device: typeof createUserDto.device == 'undefined' || createUserDto.device == '' ? 'android' : createUserDto.device,
         })
         .execute();
-
-      return user.raw.insertId;
     } catch (e) {
       throw new RuntimeException('Server Error. Please try again later.');
     }
@@ -137,7 +126,7 @@ export class UserRepository extends Repository<UserEntity> {
     infoUserDto.handle = userEntity.handle;
     infoUserDto.introduce = userEntity.introduce;
     infoUserDto.profileImgUrl = typeof userEntity.userFileEntity == 'undefined' || userEntity.userFileEntity.length == 0 ? '' : userEntity.userFileEntity[0].fileEntity.url;
-    infoUserDto.createAt = this.dateFormatter(userEntity.createdAt);
+    infoUserDto.createAt = Formatter.dateFormatter(userEntity.createdAt);
     // responseArtistDto.createAt = this.dateFormatter(artistInfo.createdAt);
     let genres = '';
     let genreIds = [];
@@ -238,16 +227,6 @@ export class UserRepository extends Repository<UserEntity> {
     }
   }
 
-  dateFormatter(pureDate) {
-    function pad(n) { return n<10 ? "0"+n : n }
-    return pureDate.getFullYear()+"-"+
-        pad(pureDate.getMonth()+1)+"-"+
-        pad(pureDate.getDate())+" "+
-        pad(pureDate.getHours())+":"+
-        pad(pureDate.getMinutes())+":"+
-        pad(pureDate.getSeconds());
-  }
-
   async getArtists(skip: number, take: number) : Promise<ResponseArtistDto[]> {
     const artistList = await getRepository(UserEntity)
       .createQueryBuilder('u')
@@ -276,7 +255,7 @@ export class UserRepository extends Repository<UserEntity> {
       responseArtistDto.nickname = artistInfo.nickname;
       responseArtistDto.handle = artistInfo.handle;
       responseArtistDto.address = artistInfo.address;
-      responseArtistDto.createAt = this.dateFormatter(artistInfo.createdAt);
+      responseArtistDto.createAt = Formatter.dateFormatter(artistInfo.createdAt);
       responseArtistDto.isFollower = false;
       responseArtistDto.genres = [];
       responseArtistDto.isComingsoon = artistInfo.userArtistEntity[0].isComingsoon == 'Y' ? true : false;
