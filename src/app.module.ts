@@ -26,7 +26,7 @@ import { EventController } from "./event/event.controller";
 import { LandingModule } from "./landing/landing.module";
 import { LandingController } from "./landing/landing.controller";
 import { MainModule } from "./main/main.module";
-import { RsaModule } from "./util/rsa.module";
+import { UtilModule } from "./util/util.module";
 
 @Module({
   imports: [
@@ -55,7 +55,7 @@ import { RsaModule } from "./util/rsa.module";
     EventModule,
     LandingModule,
     MainModule,
-    RsaModule,
+    UtilModule,
   ],
   controllers: [],
   providers: [],

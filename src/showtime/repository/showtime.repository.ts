@@ -22,6 +22,7 @@ import { ResponseContractInfoDto } from "../dto/response.contractinfo.dto";
 import { ResponseSplitStructureDto } from "../dto/response.splitstructure.dto";
 import {ResponseArtistDetailDto} from "../../landing/dto/response.artistrelease.dto";
 import { BannerEntity } from "../entity/banner.entity";
+import { Formatter } from "../../util/formatter";
 
 @EntityRepository(ShowtimeEntity)
 export class ShowtimeRepository extends Repository<ShowtimeEntity> {
@@ -233,8 +234,8 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
     responseUpcomingDto.nftDrops = upcomingInfo.showtimeTierEntity.length;
     responseUpcomingDto.dropType = new Set(dropTypes).size;
     responseUpcomingDto.releaseYn = upcomingInfo.releaseYn;
-    responseUpcomingDto.releaseStartAt = this.dateFormatter(upcomingInfo.releaseStartAt);
-    responseUpcomingDto.releaseEndAt = this.dateFormatter(upcomingInfo.releaseEndAt);
+    responseUpcomingDto.releaseStartAt = Formatter.dateFormatter(upcomingInfo.releaseStartAt);
+    responseUpcomingDto.releaseEndAt = Formatter.dateFormatter(upcomingInfo.releaseEndAt);
 
     let memberships = [];
     const goldMembershipDto = new ResponseMembershipDto();
@@ -345,8 +346,8 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
       responseRecentDto.albumImage = diamondImage;
       responseRecentDto.musicFileUrl = musicFileUrl;
       responseRecentDto.releaseYn = recent.releaseYn;
-      responseRecentDto.releaseStartAt = this.dateFormatter(recent.releaseStartAt);
-      responseRecentDto.releaseEndAt = this.dateFormatter(recent.releaseEndAt);
+      responseRecentDto.releaseStartAt = Formatter.dateFormatter(recent.releaseStartAt);
+      responseRecentDto.releaseEndAt = Formatter.dateFormatter(recent.releaseEndAt);
       responseRecentDto.soldoutYn = 'Y';
       responseRecentDto.playTime = recent.playTime;
       responseRecentDto.lyrics = recent.lyrics;
@@ -594,8 +595,8 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
     responseRecentDto.nftDrops = recentInfo.showtimeTierEntity.length;
     responseRecentDto.dropType = new Set(dropTypes).size;
 
-    responseRecentDto.releaseStartAt = this.dateFormatter(recentInfo.releaseStartAt);
-    responseRecentDto.releaseEndAt = this.dateFormatter(recentInfo.releaseEndAt);
+    responseRecentDto.releaseStartAt = Formatter.dateFormatter(recentInfo.releaseStartAt);
+    responseRecentDto.releaseEndAt = Formatter.dateFormatter(recentInfo.releaseEndAt);
 
     let memberships = [];
     const goldMembershipDto = new ResponseMembershipDto();
@@ -646,7 +647,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
         purchaseHistory.userId = Number(purchase.userEntity.id);
         purchaseHistory.boughtTier = showtimeTier.tier;
         purchaseHistory.boughtPrice = Number(showtimeTier.price);
-        purchaseHistory.boughtAt = this.dateFormatter(purchase.createdAt);
+        purchaseHistory.boughtAt = Formatter.dateFormatter(purchase.createdAt);
         purchaseHistory.userHandle = purchase.userEntity.handle;
         purchaseHistory.userImage = purchase.userEntity.userFileEntity.length == 0 ? '' : purchase.userEntity.userFileEntity[0].fileEntity.url;
         purchaseHistory.symbol = purchase.symbol;
@@ -712,8 +713,8 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
     responseRecentWebDto.description = recentInfo.description;
     responseRecentWebDto.lyrics = recentInfo.lyrics;
     responseRecentWebDto.releaseYn = recentInfo.releaseYn;
-    responseRecentWebDto.releaseStartAt = this.dateFormatter(recentInfo.releaseStartAt);
-    responseRecentWebDto.releaseEndAt = this.dateFormatter(recentInfo.releaseEndAt);
+    responseRecentWebDto.releaseStartAt = Formatter.dateFormatter(recentInfo.releaseStartAt);
+    responseRecentWebDto.releaseEndAt = Formatter.dateFormatter(recentInfo.releaseEndAt);
 
     for(const file of recentInfo.showtimeTierEntity[0].showtimeFileEntity) {
       if(file.fileType == 'IMAGE') {
@@ -886,7 +887,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
     }, []);
 
     const contractInfoDto = new ResponseContractInfoDto();
-    contractInfoDto.releaseDate = this.dateFormatter(recentInfo.releaseStartAt);
+    contractInfoDto.releaseDate = Formatter.dateFormatter(recentInfo.releaseStartAt);
     contractInfoDto.address = process.env.MILLIMX_NFT_CONTRACT;
     contractInfoDto.tokenId = tokenIds;
     contractInfoDto.tokenStandard = 'ERC721';
@@ -1002,8 +1003,8 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
       responseCoversDto.nftGrabs = goldGrabCount + platinumGrabCount + diamondGrabCount;
 
       responseCoversDto.releaseYn = cover.releaseYn;
-      responseCoversDto.releaseStartAt = this.dateFormatter(cover.releaseStartAt);
-      responseCoversDto.releaseEndAt = this.dateFormatter(cover.releaseEndAt);
+      responseCoversDto.releaseStartAt = Formatter.dateFormatter(cover.releaseStartAt);
+      responseCoversDto.releaseEndAt = Formatter.dateFormatter(cover.releaseEndAt);
 
       responseCoversDto.musicFileUrl = musicFileUrl;
       responseCoversDto.imgFileUrl = diamondImage;
@@ -1184,17 +1185,6 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
     const nowTime = await entityManager.query(
       'select now() as nowTime');
 
-    return this.dateFormatter(nowTime[0].nowTime);
-  }
-
-
-  dateFormatter(pureDate) {
-    function pad(n) { return n<10 ? "0"+n : n }
-    return pureDate.getFullYear()+"-"+
-      pad(pureDate.getMonth()+1)+"-"+
-      pad(pureDate.getDate())+" "+
-      pad(pureDate.getHours())+":"+
-      pad(pureDate.getMinutes())+":"+
-      pad(pureDate.getSeconds());
+    return Formatter.dateFormatter(nowTime[0].nowTime);
   }
 }

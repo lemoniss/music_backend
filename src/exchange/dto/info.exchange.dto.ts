@@ -1,3 +1,7 @@
+import { ResponseSongInfoDto } from "../../showtime/dto/response.songinfo.dto";
+import { ResponseNftInfoDto } from "../../showtime/dto/response.nftinfo.dto";
+import { ResponseContractInfoDto } from "../../showtime/dto/response.contractinfo.dto";
+
 export class InfoExchangeDto {
 
   exchangeId: number;  // 음악생성 식별자
@@ -49,4 +53,10 @@ export class InfoExchangeDto {
   isLike: boolean;
 
   showTimeId: number;
+
+  songInfo: ResponseSongInfoDto;
+
+  nftInfo: ResponseNftInfoDto;
+
+  contractInfo: ResponseContractInfoDto;
 }
