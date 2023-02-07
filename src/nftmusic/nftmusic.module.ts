@@ -23,6 +23,7 @@ import { L2eEntity } from "../l2e/entity/l2e.entity";
 import { MyMusicService } from "../mymusic/mymusic.service";
 import { UploadService } from "../upload/upload.service";
 import { ShowtimeService } from "../showtime/showtime.service";
+import { UserRepository } from "../user/repository/user.repository";
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { ShowtimeService } from "../showtime/showtime.service";
     UserNftMusicRepository,
     NftMusicLikeRepository,
     NftHistoryRepository,
+    UserRepository,
     L2eRepository,
     MyMusicModule,
     UploadModule,

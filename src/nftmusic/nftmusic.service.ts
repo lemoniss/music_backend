@@ -29,6 +29,8 @@ import { NftMusicFileEntity } from "./entity/nftmusic_file.entity";
 import { UserNftMusicEntity } from "./entity/user_nftmusic.entity";
 import { NftMusicLikeEntity } from "./entity/nftmusic_like.entity";
 import { NftHistoryEntity } from "./entity/nfthistory.entity";
+import { UserRepository } from "../user/repository/user.repository";
+import { Rsa } from "../util/rsa";
 @Injectable()
 export class NftMusicService {
   constructor(
@@ -42,6 +44,7 @@ export class NftMusicService {
     private myMusicService: MyMusicService,
     private uploadService: UploadService,
     private showtimeService: ShowtimeService,
+    private userRepository: UserRepository,
   ) {}
 
 
@@ -96,9 +99,12 @@ export class NftMusicService {
     }
   }
 
-  async findMyNftList(userId: number): Promise<InfoNftDto[]> {
-    const showtimeList = await this.showtimeService.getHolderShowtimes(userId);
-    const nftList = await this.nftMusicRepository.findMyNftList(userId);
+  async findMyNftList(authToken: string): Promise<InfoNftDto[]> {
+
+    const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+
+    const showtimeList = await this.showtimeService.getHolderShowtimes(userInfo.id);
+    const nftList = await this.nftMusicRepository.findMyNftList(userInfo.id);
     return showtimeList.concat(nftList);
   }
 
@@ -114,11 +120,14 @@ export class NftMusicService {
     return await this.nftMusicRepository.findNftLikeList(sortNftDto);
   }
 
-  async findNftInfo(source: string, nftMusicId: number, userId: number): Promise<InfoNftDto> {
+  async findNftInfo(source: string, nftMusicId: number, authToken: string): Promise<InfoNftDto> {
+
+    const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+
     if(source == 'showtime') {
-      return await this.showtimeService.getHolderShowtime(nftMusicId, userId);
+      return await this.showtimeService.getHolderShowtime(nftMusicId, userInfo.id);
     } else {
-      return await this.nftMusicRepository.findNftInfo(nftMusicId, userId);
+      return await this.nftMusicRepository.findNftInfo(nftMusicId, userInfo.id);
     }
   }
 

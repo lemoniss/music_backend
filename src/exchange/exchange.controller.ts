@@ -30,11 +30,11 @@ export class ExchangeController {
    */
   @ApiOperation({summary: '거래소 등록'})
   @UseGuards(AuthGuard)
-  @Post('/register/:userId')
-  registerExchangeItem(@Param("userId", ParseIntPipe) userId: number,
+  @Post('/register')
+  registerExchangeItem(@Headers("auth_token") authToken: string,
     @Body() createExchangeDto: CreateExchangeDto)
     : Promise<boolean> {
-    return this.exchangeService.registerExchangeItem(userId, createExchangeDto);
+    return this.exchangeService.registerExchangeItem(authToken, createExchangeDto);
   }
 
   /**

@@ -27,14 +27,17 @@ export class ExchangeService {
     private genreService: GenreService,
   ) {}
 
-  async registerExchangeItem(userId: number, createExchangeDto: CreateExchangeDto): Promise<boolean> {
+  async registerExchangeItem(authToken: string, createExchangeDto: CreateExchangeDto): Promise<boolean> {
     try {
-      const infoNftMusicDto = await this.nftMusicService.findNftInfo(createExchangeDto.source, createExchangeDto.nftMusicId, userId);
+
+      const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+
+      const infoNftMusicDto = await this.nftMusicService.findNftInfo(createExchangeDto.source, createExchangeDto.nftMusicId, authToken);
 
       await this.exchangeRepository.registerExchangeItem(createExchangeDto, infoNftMusicDto).then(async (exchangeId) => {
           await this.exchangeGenreRepository.registerExchangeGenre(exchangeId, infoNftMusicDto);
           await this.exchangeFileRepository.registerExchangeFile(exchangeId, infoNftMusicDto);
-          await this.userExchangeRepository.registerUserExchange(userId, exchangeId);
+          await this.userExchangeRepository.registerUserExchange(userInfo.id, exchangeId);
       });
 
       // const nftHistoryDto = new NftHistoryDto();
