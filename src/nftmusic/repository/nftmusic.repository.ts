@@ -832,10 +832,13 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       'select rate from coin_marketrate where name = \'ethereum\' ');
     let coinToUsd = Number(coinObj[0].rate);
 
+    // infoExchangeDto.price = (Number(exchangeEntity.price) / 10**18).toString();
+
     nftInfoDto.leftAmount = 1;
     nftInfoDto.totalAmount = 1;
-    if(exchangeObj.length > 0) nftInfoDto.price = exchangeObj[0].price;
-    if(exchangeObj.length > 0) nftInfoDto.cnutAmount = Math.ceil(coinToUsd * 10 * Number(exchangeObj[0].price));
+    // if(exchangeObj.length > 0) nftInfoDto.price = exchangeObj[0].price;
+    if(exchangeObj.length > 0) nftInfoDto.price = Number((Number(exchangeObj[0].price) / 10 ** 18).toString());
+    if(exchangeObj.length > 0) nftInfoDto.cnutAmount = Math.ceil(coinToUsd * 10 * Number(nftInfoDto.price));
     responseRecentWebDto.nftInfo = nftInfoDto;
 
     const fellazList = new Set<ResponseUserInfoDto>();
