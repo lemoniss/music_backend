@@ -37,25 +37,25 @@ export class MainController {
     return this.mainService.getLandingArtistsDatas(isNaN(skip) ? 0 : skip);
   }
 
-  // @ApiOperation({summary: 'landing view song data'})
-  // @Get('/viewsong/:source/:musicId')
-  // getLandingViewsong(@Param("source") source: string,
-  //                    @Param("musicId", ParseIntPipe) musicId: number,) : Promise<any> {
-  //   return this.landingService.getLandingViewsong(source, musicId);
-  // }
+  @ApiOperation({summary: 'landing view song data'})
+  @Get('/viewsong/:source/:musicId')
+  getLandingViewsong(@Param("source") source: string,
+                     @Param("musicId", ParseIntPipe) musicId: number,) : Promise<any> {
+    return this.mainService.getLandingViewsong(source, musicId);
+  }
 
-  // @ApiOperation({summary: 'landing artist page data'})
-  // @Get('/artist/:handle')
-  // getLandingArtistInfo(@Param("handle") handle: string,) : Promise<any> {
-  //   return this.landingService.getLandingArtistInfo(handle);
-  // }
+  @ApiOperation({summary: 'landing artist page data'})
+  @Get('/artist/:handle')
+  getLandingArtistInfo(@Param("handle") handle: string,) : Promise<any> {
+    return this.mainService.getLandingArtistInfo(handle);
+  }
 
-  // @ApiOperation({summary: 'landing getLandingFellazByArtist data'})
-  // @Get('/artist/fellaz/:handle/')
-  // getLandingFellazByArtist(@Param("handle") handle: string,
-  //                          @Query('skip') skip: number) : Promise<any> {
-  //   return this.landingService.getLandingFellazByArtist(handle, skip);
-  // }
+  @ApiOperation({summary: 'landing getLandingFellazByArtist data'})
+  @Get('/artist/fellaz/:handle/')
+  getLandingFellazByArtist(@Param("handle") handle: string,
+                           @Query('skip') skip: number) : Promise<any> {
+    return this.mainService.getLandingFellazByArtist(handle, skip);
+  }
 
 }
 

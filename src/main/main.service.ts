@@ -25,7 +25,6 @@ export class MainService {
   ) {}
 
   async getMainDatas(authToken: string): Promise<any> {
-
     let response: any = {};
 
     if(typeof authToken != 'undefined') {   // header 에 값이 있다. 로그인 검증해야함
