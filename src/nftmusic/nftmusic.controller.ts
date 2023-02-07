@@ -1,7 +1,7 @@
 import {
   Body,
   Controller, Delete,
-  Get,
+  Get, Headers,
   Param,
   ParseIntPipe, Patch,
   Post, UseGuards
@@ -58,10 +58,10 @@ export class NftMusicController {
    * @param createMusicDto
    */
   @ApiOperation({summary: '내 NFT 리스트'})
-  @Get('/myNft/:userId')
-  findMyNftList(@Param("userId", ParseIntPipe) userId: number)
+  @Get('/myNft')
+  findMyNftList(@Headers("auth_token") authToken: string)
     : Promise<InfoNftDto[]> {
-    return this.nftMusicService.findMyNftList(userId);
+    return this.nftMusicService.findMyNftList(authToken);
   }
 
   /**
@@ -127,13 +127,13 @@ export class NftMusicController {
    * 음악 상세
    * @param nftMusicId
    */
-  @Get("/details/:source/:nftMusicId/:userId")
+  @Get("/details/:source/:nftMusicId")
   @ApiOperation({summary: 'NFT 음악 상세'})
-  findNftInfo(@Param("source") source: string,
-              @Param("nftMusicId", ParseIntPipe) nftMusicId: number,
-              @Param("userId", ParseIntPipe) userId: number,)
+  findNftInfo(@Headers("auth_token") authToken: string,
+              @Param("source") source: string,
+              @Param("nftMusicId", ParseIntPipe) nftMusicId: number)
     : Promise<InfoNftDto> {
-    return this.nftMusicService.findNftInfo(source, nftMusicId, userId);
+    return this.nftMusicService.findNftInfo(source, nftMusicId, authToken);
   }
 
   /**

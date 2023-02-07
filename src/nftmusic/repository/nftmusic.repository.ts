@@ -603,6 +603,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     infoNftDto.description = nftInfo.description;
     infoNftDto.lyrics = nftInfo.lyrics;
     infoNftDto.playCount = Math.ceil(totalSecond / nftInfo.playTime);
+    infoNftDto.playTime = nftInfo.playTime;
     infoNftDto.isLike = false;
     infoNftDto.tokenId = nftInfo.tokenId;
     infoNftDto.source = nftInfo.source;
