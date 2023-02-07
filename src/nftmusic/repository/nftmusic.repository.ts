@@ -110,7 +110,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       infoNftDto.tokenId = nftEntity.tokenId;
       infoNftDto.isOnSale = nftEntity.isOnSale;
 
-      if(exchangeObj.length > 0) infoNftDto.price = exchangeObj[0].price;
+      if(exchangeObj.length > 0) infoNftDto.price = (Number(exchangeObj[0].price) / 10 ** 18).toString();
 
       for(const nftFileEntity of nftEntity.nftMusicFileEntity) {
         switch (nftFileEntity.fileType) {
