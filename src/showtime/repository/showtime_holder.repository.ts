@@ -91,9 +91,10 @@ export class ShowtimeHolderRepository extends Repository<ShowtimeHolderEntity> {
       // infoNftDto.price = holderEntity.showtimeTierEntity.price;
       infoNftDto.rareYn = holderEntity.showtimeTierEntity.rareYn;
       infoNftDto.tier = holderEntity.showtimeTierEntity.tier;
+      infoNftDto.handle = holderEntity.showtimeTierEntity[0].showtimeEntity.handle;
       infoNftDto.rareImgFileUrl = [];
 
-      if(exchangeObj.length > 0) infoNftDto.price = exchangeObj[0].price;
+      if(exchangeObj.length > 0) infoNftDto.price = (Number(exchangeObj[0].price) / 10 ** 18).toString();
 
       for(const fileEntity of holderEntity.showtimeTierEntity.showtimeFileEntity) {
         switch (fileEntity.fileType) {
