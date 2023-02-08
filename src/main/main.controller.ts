@@ -37,12 +37,12 @@ export class MainController {
     return this.mainService.getLandingArtistsDatas(isNaN(skip) ? 0 : skip);
   }
 
-  // @ApiOperation({summary: 'landing view song data'})
-  // @Get('/viewsong/:source/:musicId')
-  // getLandingViewsong(@Param("source") source: string,
-  //                    @Param("musicId", ParseIntPipe) musicId: number,) : Promise<any> {
-  //   return this.landingService.getLandingViewsong(source, musicId);
-  // }
+  @ApiOperation({summary: 'landing view song data'})
+  @Get('/viewsong/:source/:musicId')
+  getLandingViewsong(@Param("source") source: string,
+                     @Param("musicId", ParseIntPipe) musicId: number,) : Promise<any> {
+    return this.mainService.getLandingViewsong(source, musicId);
+  }
 
   // @ApiOperation({summary: 'landing artist page data'})
   // @Get('/artist/:handle')

@@ -122,13 +122,17 @@ export class NftMusicService {
 
   async findNftInfo(source: string, nftMusicId: number, authToken: string): Promise<InfoNftDto> {
 
-    const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+    let response: any = {};
+
+    response.connectorInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
 
     if(source == 'showtime') {
-      return await this.showtimeService.getHolderShowtime(nftMusicId, userInfo.id);
+      response.myNftInfo = await this.showtimeService.getHolderShowtime(nftMusicId, response.connectorInfo.id);
     } else {
-      return await this.nftMusicRepository.findNftInfo(nftMusicId, userInfo.id);
+      response.myNftInfo = await this.nftMusicRepository.findNftInfo(nftMusicId, response.connectorInfo.id);
     }
+
+    return response;
   }
 
   async createNftLike(nftLikeDto: NftLikeDto): Promise<boolean> {
