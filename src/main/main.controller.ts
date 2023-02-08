@@ -44,18 +44,18 @@ export class MainController {
     return this.mainService.getLandingViewsong(source, musicId);
   }
 
-  // @ApiOperation({summary: 'landing artist page data'})
-  // @Get('/artist/:handle')
-  // getLandingArtistInfo(@Param("handle") handle: string,) : Promise<any> {
-  //   return this.landingService.getLandingArtistInfo(handle);
-  // }
+  @ApiOperation({summary: 'landing artist page data'})
+  @Get('/artist/:handle')
+  getLandingArtistInfo(@Param("handle") handle: string,) : Promise<any> {
+    return this.mainService.getLandingArtistInfo(handle);
+  }
 
-  // @ApiOperation({summary: 'landing getLandingFellazByArtist data'})
-  // @Get('/artist/fellaz/:handle/')
-  // getLandingFellazByArtist(@Param("handle") handle: string,
-  //                          @Query('skip') skip: number) : Promise<any> {
-  //   return this.landingService.getLandingFellazByArtist(handle, skip);
-  // }
+  @ApiOperation({summary: 'landing getLandingFellazByArtist data'})
+  @Get('/artist/fellaz/:handle/')
+  getLandingFellazByArtist(@Param("handle") handle: string,
+                           @Query('skip') skip: number) : Promise<any> {
+    return this.mainService.getLandingFellazByArtist(handle, skip);
+  }
 
 }
 

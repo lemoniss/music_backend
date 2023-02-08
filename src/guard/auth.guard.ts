@@ -21,7 +21,7 @@ export class AuthGuard implements CanActivate {
   async validateRequest(request: Request) {
     try {
       const headerAuthToken = request.header('auth_token').toString();
-      console.log(headerAuthToken);
+
       const privateKey = fs.readFileSync('./private_key.pem', {encoding: 'utf-8'});
       const decryptToken = crypto.privateDecrypt(
         {
