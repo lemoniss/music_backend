@@ -8,6 +8,12 @@ import { InfoNftDto } from "../../nftmusic/dto/info.nft.dto";
 import { InfoFileDto } from "../../mymusic/dto/info.file.dto";
 import { NftMusicLikeEntity } from "../../nftmusic/entity/nftmusic_like.entity";
 import { ResponseUserInfoDto } from "../dto/response.userinfo.dto";
+import { ShowtimeEntity } from "../entity/showtime.entity";
+import { ResponseSongInfoDto } from "../dto/response.songinfo.dto";
+import { ResponseNftInfoDto } from "../dto/response.nftinfo.dto";
+import { ResponseSplitStructureDto } from "../dto/response.splitstructure.dto";
+import { ResponseContractInfoDto } from "../dto/response.contractinfo.dto";
+import { Formatter } from "../../util/formatter";
 
 @EntityRepository(ShowtimeHolderEntity)
 export class ShowtimeHolderRepository extends Repository<ShowtimeHolderEntity> {
@@ -295,13 +301,173 @@ export class ShowtimeHolderRepository extends Repository<ShowtimeHolderEntity> {
       }
     }
 
+
+    // const fellazList = [];
+    // const fellazInfoDto = new ResponseUserInfoDto();
+    // fellazInfoDto.userId = holderShowtime.userEntity.id;
+    // fellazInfoDto.imgFileUrl = holderShowtime.userEntity.userFileEntity.length == 0 ? '' : holderShowtime.userEntity.userFileEntity[0].fileEntity.url;
+    // fellazInfoDto.handle = holderShowtime.userEntity.handle;
+    // fellazList.push(fellazInfoDto);
+    // infoNftDto.fellaz = fellazList;
+
+
+    const recentInfo = await getRepository(ShowtimeEntity)
+      .createQueryBuilder('s')
+      .leftJoinAndSelect('s.showtimeCrewEntity', 'sc')
+      .leftJoinAndSelect('sc.userEntity', 'u')
+      .leftJoinAndSelect('u.userFileEntity', 'uf')
+      .leftJoinAndSelect('uf.fileEntity', 'ff')
+      .leftJoinAndSelect('u.userFollowerEntity', 'ufw')
+      .leftJoinAndSelect('s.showtimeLikeEntity', 'sl')
+      .leftJoinAndSelect('sl.userEntity', 'ul')
+      .leftJoinAndSelect('s.showtimeGenreEntity', 'sg')
+      .leftJoinAndSelect('sg.genreEntity', 'g')
+      .leftJoinAndSelect('s.showtimeTierEntity', 'st')
+      .leftJoinAndSelect('st.showtimeFileEntity', 'stf')
+      .leftJoinAndSelect('stf.fileEntity', 'f')
+      .leftJoinAndSelect('st.showtimeHolderEntity', 'sth')
+      .leftJoinAndSelect('sth.userEntity', 'sthu')
+      .leftJoinAndSelect('sthu.userFileEntity', 'sthuf')
+      .leftJoinAndSelect('sthuf.fileEntity', 'fff')
+      .leftJoinAndSelect('s.nftMusicEntity', 'n')
+      .leftJoinAndSelect('s.showtimeMovieEntity', 'smv')
+      .leftJoinAndSelect('smv.fileEntity', 'smvf')
+      .leftJoinAndSelect('s.showtimeDistributorEntity', 'sdb')
+      .where('s.id = :showtimeId', {showtimeId: holderShowtime.showtimeTierEntity.showtimeEntity.id})
+      .getOne();
+
+    let goldTotalCount = 0;
+    let goldGrabCount = 0;
+    let goldPrice = 0;
+    let goldImage = '';
+    let goldDescription = '';
+    let platinumTotalCount = 0;
+    let platinumGrabCount = 0;
+    let platinumPrice = 0;
+    let platinumImage = '';
+    let platinumDescription = '';
+    let diamondTotalCount = 0;
+    let diamondGrabCount = 0;
+    let diamondPrice = 0;
+    let diamondImage = '';
+    let diamondDescription = '';
+    let dropTypes = [];
+    let floorPrice = 0;
+    let ipfsHash = '';
+    for(const obj of recentInfo.showtimeTierEntity) {
+      dropTypes.push(obj.tier);
+      if(obj.tier == 'Gold') {
+        goldTotalCount++;
+        goldPrice = Number(obj.price);
+        floorPrice = Number(obj.price);
+        ipfsHash = obj.ipfsHash;
+        for(const sf of obj.showtimeFileEntity) {
+          if(sf.fileType == 'IMAGE') {
+            goldImage = sf.fileEntity.url;
+            break;
+          }
+        }
+        goldDescription = obj.description;
+        if(obj.purchaseYn == 'Y') {
+          goldGrabCount++;
+        }
+      } else if(obj.tier == 'Platinum') {
+        platinumTotalCount++;
+        platinumPrice = Number(obj.price);
+        for(const sf of obj.showtimeFileEntity) {
+          if(sf.fileType == 'IMAGE') {
+            platinumImage = sf.fileEntity.url;
+            break;
+          }
+        }
+        platinumDescription = obj.description;
+        if(obj.purchaseYn == 'Y') {
+          platinumGrabCount++;
+        }
+      } else if(obj.tier == 'Diamond') {
+        diamondTotalCount++;
+        diamondPrice = Number(obj.price);
+        for(const sf of obj.showtimeFileEntity) {
+          if(sf.fileType == 'IMAGE') {
+            diamondImage = sf.fileEntity.url;
+            break;
+          }
+        }
+        diamondDescription = obj.description;
+        if (obj.purchaseYn == 'Y') {
+          diamondGrabCount++;
+        }
+      }
+    }
+
+    const streamObj = await entityManager.query(
+      'select ceil(ifnull(sum(total_second)/?, 0)) as totalStreams from l2e where token_id in ' +
+      '( ' +
+      'select token_id from showtime_tier where showtime_id = ? ' +
+      ')'
+      , [Number(recentInfo.playTime), holderShowtime.showtimeTierEntity.showtimeEntity.id]);
+    const songInfoDto = new ResponseSongInfoDto();
+    songInfoDto.streams = streamObj[0].totalStreams;
+    songInfoDto.likes = recentInfo.showtimeLikeEntity.length;
+    songInfoDto.origin = 'showtime';
+    infoNftDto.songInfo = songInfoDto;
+
+    const nftInfoDto = new ResponseNftInfoDto();
+    const coinObj = await entityManager.query(
+      'select rate from coin_marketrate where name = \'ethereum\' ');
+    let coinToUsd = Number(coinObj[0].rate);
+
+    nftInfoDto.leftAmount = (goldTotalCount-goldGrabCount) + (platinumTotalCount-platinumGrabCount) + (diamondTotalCount-diamondGrabCount);
+    nftInfoDto.totalAmount = recentInfo.showtimeTierEntity.length;
+    nftInfoDto.price = floorPrice;
+    nftInfoDto.cnutAmount = Math.ceil(coinToUsd * 10 * Number(floorPrice));
+    infoNftDto.nftInfo = nftInfoDto;
+
     const fellazList = [];
-    const fellazInfoDto = new ResponseUserInfoDto();
-    fellazInfoDto.userId = holderShowtime.userEntity.id;
-    fellazInfoDto.imgFileUrl = holderShowtime.userEntity.userFileEntity.length == 0 ? '' : holderShowtime.userEntity.userFileEntity[0].fileEntity.url;
-    fellazInfoDto.handle = holderShowtime.userEntity.handle;
-    fellazList.push(fellazInfoDto);
-    infoNftDto.fellaz = fellazList;
+
+    let tokenIds = '';
+    let i = 0;
+    for(const tier of recentInfo.showtimeTierEntity) {
+      for(const holder of tier.showtimeHolderEntity) {
+        const fellazInfoDto = new ResponseUserInfoDto();
+        fellazInfoDto.userId = holder.userEntity.id;
+        fellazInfoDto.imgFileUrl = holder.userEntity.userFileEntity.length == 0 ? '' : holder.userEntity.userFileEntity[0].fileEntity.url;
+        fellazInfoDto.handle = holder.userEntity.handle;
+        fellazList.push(fellazInfoDto);
+      }
+      if(i == 0) {
+        tokenIds = tokenIds + tier.tokenId + ' ~ ';
+      } else if(i == recentInfo.showtimeTierEntity.length-1) {
+        tokenIds = tokenIds + tier.tokenId;
+      }
+      i++;
+
+    }
+    infoNftDto.fellaz = fellazList.reduce(function(acc, current) {
+      if (acc.findIndex(({ userId }) => userId === current.userId) === -1) {
+        acc.push(current);
+      }
+      return acc;
+    }, []);
+
+    const contractInfoDto = new ResponseContractInfoDto();
+    contractInfoDto.releaseDate = Formatter.dateFormatter(recentInfo.releaseStartAt);
+    contractInfoDto.address = process.env.MILLIMX_NFT_CONTRACT;
+    contractInfoDto.tokenId = tokenIds;
+    contractInfoDto.tokenStandard = 'ERC721';
+    contractInfoDto.blockchain = 'Ethereum';
+
+    const splits = [];
+
+    for(const distributor of recentInfo.showtimeDistributorEntity) {
+      const splitStructureDto = new ResponseSplitStructureDto();
+      splitStructureDto.address = distributor.address;
+      splitStructureDto.percent = distributor.percent;
+      splits.push(splitStructureDto);
+    }
+
+    contractInfoDto.splitStructure = splits;
+    infoNftDto.contractInfo = contractInfoDto;
 
     infoNftDto.rareImgFileUrl = [];
 

@@ -2,6 +2,7 @@ import { InfoFileDto } from "../../mymusic/dto/info.file.dto";
 import { ResponseSongInfoDto } from "../../showtime/dto/response.songinfo.dto";
 import { ResponseNftInfoDto } from "../../showtime/dto/response.nftinfo.dto";
 import { ResponseUserInfoDto } from "../../showtime/dto/response.userinfo.dto";
+import { ResponseContractInfoDto } from "../../showtime/dto/response.contractinfo.dto";
 
 export class InfoNftDto {
 
@@ -74,4 +75,6 @@ export class InfoNftDto {
   producers: ResponseUserInfoDto[];
 
   fellaz: ResponseUserInfoDto[];
+
+  contractInfo: ResponseContractInfoDto;
 }

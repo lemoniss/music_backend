@@ -756,7 +756,7 @@ auth_token: HRKMeWYyLXnETKoiU9OczRFXkCXRShWAAt7sEvd+sNkGtTrFb64WIygvHl2KjNna67BI
 
 
 ### myNftDetail
-GET http://localhost:23936/nfts/details/normal/1975
+GET http://localhost:23936/nfts/details/showtime/331
 auth_token: HRKMeWYyLXnETKoiU9OczRFXkCXRShWAAt7sEvd+sNkGtTrFb64WIygvHl2KjNna67BI/46B9zRqEkO+7ZwD9s1qMhmgM3/GI9M+d+eiClVGzNTLOmL2+5ZLPqR4sGub6C6eeH+gmwMFpWCQx3UZHrcRqqao3aIWOxVN7yMJ/Twtrmt80eMxnXvlIJlnSIOXEIH6PqtPZtDzxjzHdA2ur2/e7kuF90v8QqhnHcmJ3RzHiwm71vYLLqY6QZh9xbiC/zWzRBBhfV+p2lwDq0UJoPJkudyCANxzwvrD0+I5wmN8VnwiaW8YYFORjKaBNspp39mtzMG6HyTXNjtHV71ZSQ==
 
 

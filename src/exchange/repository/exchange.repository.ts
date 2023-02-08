@@ -15,6 +15,7 @@ import { ShowtimeEntity } from "../../showtime/entity/showtime.entity";
 import { NftMusicEntity } from "../../nftmusic/entity/nftmusic.entity";
 import { ResponseUserInfoDto } from "../../showtime/dto/response.userinfo.dto";
 import { ResponseRecentWebDto } from "../../showtime/dto/response.recent_web.dto";
+import { ResponseSplitStructureDto } from "../../showtime/dto/response.splitstructure.dto";
 
 @EntityRepository(ExchangeEntity)
 export class ExchangeRepository extends Repository<ExchangeEntity> {
@@ -354,6 +355,7 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
       const recentInfo = await getRepository(ShowtimeEntity)
         .createQueryBuilder('s')
         .leftJoinAndSelect('s.showtimeTierEntity', 'st')
+        .leftJoinAndSelect('s.showtimeDistributorEntity', 'sdb')
         .where('s.id = :showtimeId', {showtimeId: recentLikeInfo.id})
         .getOne();
 
@@ -400,6 +402,16 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
 
       contractInfoDto.releaseDate = Formatter.dateFormatter(recentInfo.createdAt);
 
+      const splits = [];
+
+      for(const distributor of recentInfo.showtimeDistributorEntity) {
+        const splitStructureDto = new ResponseSplitStructureDto();
+        splitStructureDto.address = distributor.address;
+        splitStructureDto.percent = distributor.percent;
+        splits.push(splitStructureDto);
+      }
+
+      contractInfoDto.splitStructure = splits;
     } else {
 
       const nftInfo = await getRepository(NftMusicEntity)
@@ -472,6 +484,19 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
       nftInfoDto.cnutAmount = Math.ceil(coinToUsd * 10 * Number(exchangeInfo.price));
 
       contractInfoDto.releaseDate = Formatter.dateFormatter(nftInfo.createdAt);
+
+      // TODO : 현재 일반 민팅시 split 내용을 디비에 저장하지 않고 있음
+      // TODO : 나중에 작업해야함
+      const splits = [];
+      //
+      // for(const distributor of nftInfo.) {
+      //   const splitStructureDto = new ResponseSplitStructureDto();
+      //   splitStructureDto.address = distributor.address;
+      //   splitStructureDto.percent = distributor.percent;
+      //   splits.push(splitStructureDto);
+      // }
+      //
+      contractInfoDto.splitStructure = splits;
     }
 
     infoExchangeDto.songInfo = songInfoDto;
