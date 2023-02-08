@@ -381,6 +381,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
   async findNftLikeList(sortNftDto: SortNftDto): Promise<InfoNftDto[]> {
     const nftList = await getRepository(NftMusicEntity)
       .createQueryBuilder('m')
+      .leftJoinAndSelect('m.showtimeEntity', 's')
       .leftJoinAndSelect('m.nftMusicFileEntity', 'mf')
       .innerJoinAndSelect('mf.fileEntity', 'f')
       .leftJoinAndSelect('m.nftMusicGenreEntity', 'mg')
@@ -416,6 +417,10 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       infoNftDto.playTime = nftEntity.playTime;
       infoNftDto.tokenId = nftEntity.tokenId;
       infoNftDto.source = nftEntity.source;
+
+      if(infoNftDto.source == 'showtime') {
+        infoNftDto.nftMusicId = nftEntity.showtimeEntity.id;
+      }
 
       for(const nftFileEntity of nftEntity.nftMusicFileEntity) {
         switch (nftFileEntity.fileType) {

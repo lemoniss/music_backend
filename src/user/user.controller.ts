@@ -52,6 +52,17 @@ export class UserController {
   }
 
   /**
+   * 내 정보 조회(param: 핸들)
+   * @param handle
+   */
+  @ApiOperation({summary: '유저 정보 조회 (param: 지갑주소)'})
+  @UseGuards(AuthGuard)
+  @Get("/me")
+  findMyInfo(@Headers("auth_token") authToken: string) : Promise<any> {
+    return this.userService.findMyInfo(authToken);
+  }
+
+  /**
    * 사용자 정보 수정
    * @param updateUserDto
    */

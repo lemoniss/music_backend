@@ -17,6 +17,11 @@ import { UserOtpEntity } from "./entity/user_otp.entity";
 import { UserFileEntity } from "./entity/user_file.entity";
 import { UserGenreEntity } from "./entity/user_genre.entity";
 import { UserSnsEntity } from "./entity/user_sns.entity";
+import { Rsa } from "../util/rsa";
+import { SortNftDto } from "../nftmusic/dto/sort.nft.dto";
+import { ShowtimeRepository } from "../showtime/repository/showtime.repository";
+import { ShowtimeHolderRepository } from "../showtime/repository/showtime_holder.repository";
+import { NftMusicRepository } from "../nftmusic/repository/nftmusic.repository";
 const crypto = require("crypto");
 const fs = require('fs');
 
@@ -28,6 +33,9 @@ export class UserService {
     private userGenreRepository: UserGenreRepository,
     private userSnsRepository: UserSnsRepository,
     private userOtpRepository: UserOtpRepository,
+    private showtimeRepository: ShowtimeRepository,
+    private showtimeHolderRepository: ShowtimeHolderRepository,
+    private nftMusicRepository: NftMusicRepository,
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<InfoUserDto> {
@@ -87,6 +95,28 @@ export class UserService {
   async findByHandle(handle: string) : Promise<InfoUserDto> {
     return await this.userRepository.findByHandle(handle);
   }
+
+  async findMyInfo(authToken: string) : Promise<any> {
+    const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+
+    let response: any = {};
+
+    const userId = userInfo.id;
+    response.userInfo = await this.userRepository.findById(userId);
+    response.userSnsInfo = await this.userSnsRepository.findById(userId);
+    response.followingInfo = {following: "N/A", follower: "N/A"};
+
+    response.releases = await this.showtimeRepository.getLandingRecentByArtist(userId);
+    response.fellaz = await this.showtimeRepository.getLandingFellazByArtist(userId, 0);
+
+    const showtimeList = await this.showtimeHolderRepository.getLandingHolderShowtimes(userId);
+    const nftList = await this.nftMusicRepository.getLandingMyNftList(userId); //TODO: playCount 수정
+    response.collection = showtimeList.concat(nftList);
+
+    return response;
+    // return await this.userRepository.findMyInfo(userInfo.id);
+  }
+
 
   async findByIdAndAddress(id: number, address: string) : Promise<UserEntity> {
     return await this.userRepository.findByIdAndAddress(id, address);

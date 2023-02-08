@@ -203,6 +203,8 @@ export class UserRepository extends Repository<UserEntity> {
     return infoUserDto;
   }
 
+  findMyInfo
+
   // header 검증용. 결과없으면 여기서 짤라버림
   async findByIdAndAddress(id:number, address: string): Promise<UserEntity> {
     const user = await getRepository(UserEntity)

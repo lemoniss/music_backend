@@ -12,6 +12,9 @@ import { UserFileEntity } from "./entity/user_file.entity";
 import { UserGenreEntity } from "./entity/user_genre.entity";
 import { UserSnsEntity } from "./entity/user_sns.entity";
 import { UserOtpEntity } from "./entity/user_otp.entity";
+import { ShowtimeRepository } from "../showtime/repository/showtime.repository";
+import { ShowtimeHolderRepository } from "../showtime/repository/showtime_holder.repository";
+import { NftMusicRepository } from "../nftmusic/repository/nftmusic.repository";
 
 @Module({
   imports: [TypeOrmModule.forFeature([
@@ -29,6 +32,9 @@ import { UserOtpEntity } from "./entity/user_otp.entity";
     UserGenreRepository,
     UserSnsRepository,
     UserOtpRepository,
+    ShowtimeRepository,
+    ShowtimeHolderRepository,
+    NftMusicRepository,
   ],
   exports: [TypeOrmModule, UserService],
 })
