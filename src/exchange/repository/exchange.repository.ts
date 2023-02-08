@@ -13,6 +13,8 @@ import { ResponseSongInfoDto } from "../../showtime/dto/response.songinfo.dto";
 import { ResponseNftInfoDto } from "../../showtime/dto/response.nftinfo.dto";
 import { ShowtimeEntity } from "../../showtime/entity/showtime.entity";
 import { NftMusicEntity } from "../../nftmusic/entity/nftmusic.entity";
+import { ResponseUserInfoDto } from "../../showtime/dto/response.userinfo.dto";
+import { ResponseRecentWebDto } from "../../showtime/dto/response.recent_web.dto";
 
 @EntityRepository(ExchangeEntity)
 export class ExchangeRepository extends Repository<ExchangeEntity> {
@@ -282,8 +284,61 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
         .createQueryBuilder('s')
         .leftJoinAndSelect('s.showtimeLikeEntity', 'sl')
         .leftJoinAndSelect('s.showtimeTierEntity', 'st')
+        .leftJoinAndSelect('s.showtimeCrewEntity', 'sc')
+        .leftJoinAndSelect('sc.userEntity', 'u')
+        .leftJoinAndSelect('u.userFileEntity', 'uf')
+        .leftJoinAndSelect('uf.fileEntity', 'ff')
+        .leftJoinAndSelect('st.showtimeHolderEntity', 'sth')
+        .leftJoinAndSelect('sth.userEntity', 'sthu')
+        .leftJoinAndSelect('sthu.userFileEntity', 'sthuf')
+        .leftJoinAndSelect('sthuf.fileEntity', 'fff')
+        .leftJoinAndSelect('u.userFollowerEntity', 'ufw')
         .where('st.id = :tierId', {tierId: exchangeInfo.nftMusicId})
         .getOne();
+
+      infoExchangeDto.artists = [];
+      infoExchangeDto.producers = [];
+      for(const crew of recentLikeInfo.showtimeCrewEntity) {
+        const userInfoDto = new ResponseUserInfoDto();
+        userInfoDto.userId = crew.userEntity.id;
+        userInfoDto.handle = crew.userEntity.handle;
+        userInfoDto.name = crew.userEntity.nickname;
+        userInfoDto.address = crew.userEntity.address;
+        userInfoDto.imgFileUrl = crew.userEntity.userFileEntity.length == 0 ? '' : crew.userEntity.userFileEntity[0].fileEntity.url;
+        userInfoDto.followerCount = crew.userEntity.userFollowerEntity.length;
+        if(crew.name == 'A') {
+          infoExchangeDto.artists.push(userInfoDto);
+        } else if(crew.name == 'P') {
+          infoExchangeDto.producers.push(userInfoDto);
+        }
+      }
+
+      const fellazList = [];
+
+      let tokenIds = '';
+      let i = 0;
+      for(const tier of recentLikeInfo.showtimeTierEntity) {
+        for(const holder of tier.showtimeHolderEntity) {
+          const fellazInfoDto = new ResponseUserInfoDto();
+          fellazInfoDto.userId = holder.userEntity.id;
+          fellazInfoDto.imgFileUrl = holder.userEntity.userFileEntity.length == 0 ? '' : holder.userEntity.userFileEntity[0].fileEntity.url;
+          fellazInfoDto.handle = holder.userEntity.handle;
+          fellazList.push(fellazInfoDto);
+        }
+        if(i == 0) {
+          tokenIds = tokenIds + tier.tokenId + ' ~ ';
+        } else if(i == recentLikeInfo.showtimeTierEntity.length-1) {
+          tokenIds = tokenIds + tier.tokenId;
+        }
+        i++;
+
+      }
+      infoExchangeDto.fellaz = fellazList.reduce(function(acc, current) {
+        if (acc.findIndex(({ userId }) => userId === current.userId) === -1) {
+          acc.push(current);
+        }
+        return acc;
+      }, []);
 
       const streamObj = await entityManager.query(
         'select ceil(ifnull(sum(total_second)/?, 0)) as totalStreams from l2e where token_id in ' +
@@ -349,9 +404,52 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
 
       const nftInfo = await getRepository(NftMusicEntity)
         .createQueryBuilder('n')
+        .leftJoinAndSelect('n.nftMusicFileEntity', 'nf')
+        .leftJoinAndSelect('nf.fileEntity', 'f')
         .leftJoinAndSelect('n.nftMusicLikeEntity', 'nl')
+        .leftJoinAndSelect('n.nftMusicGenreEntity', 'ng')
+        .leftJoinAndSelect('ng.genreEntity', 'g')
+        .leftJoinAndSelect('n.userNftMusicEntity', 'nun')
+        .leftJoinAndSelect('nun.userEntity', 'u')
+        .leftJoinAndSelect('u.userFileEntity', 'uf')
+        .leftJoinAndSelect('uf.fileEntity', 'ff')
         .where('n.id = :nftMusicId', {nftMusicId: exchangeInfo.nftMusicId})
         .getOne();
+
+      infoExchangeDto.artists = [];
+
+      if(nftInfo.source != 'catalog') {
+        const userInfo = await getRepository(UserEntity)
+          .createQueryBuilder('u')
+          .leftJoinAndSelect('u.userFileEntity', 'uf')
+          .leftJoinAndSelect('uf.fileEntity', 'ff')
+          .where('u.handle = :handle', {handle: nftInfo.handle})
+          .getOne();
+        if (!userInfo) {
+          return new InfoExchangeDto();
+        }
+
+        const userInfoDto = new ResponseUserInfoDto();
+        userInfoDto.userId = userInfo.id;
+        userInfoDto.handle = userInfo.handle;
+        userInfoDto.name = userInfo.nickname
+        userInfoDto.address = userInfo.address
+        userInfoDto.imgFileUrl = userInfo.userFileEntity.length == 0 ? '' : userInfo.userFileEntity[0].fileEntity.url;
+
+        infoExchangeDto.artists.push(userInfoDto);
+      }
+
+      const fellazList = new Set<ResponseUserInfoDto>();
+
+      for(const holder of nftInfo.userNftMusicEntity) {
+        const fellazInfoDto = new ResponseUserInfoDto();
+        fellazInfoDto.userId = holder.userEntity.id;
+        fellazInfoDto.handle = holder.userEntity.handle;
+        fellazInfoDto.imgFileUrl = holder.userEntity.userFileEntity.length == 0 ? '' : holder.userEntity.userFileEntity[0].fileEntity.url;
+        fellazList.add(fellazInfoDto);
+      }
+
+      infoExchangeDto.fellaz = Array.from(fellazList);
 
       const streamObj = await entityManager.query(
         'select ceil(ifnull(sum(total_second)/?, 0)) as totalStreams from l2e where token_id in ' +

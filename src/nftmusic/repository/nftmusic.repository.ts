@@ -457,6 +457,11 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       .leftJoinAndSelect('n.nftMusicGenreEntity', 'ng')
       .leftJoinAndSelect('ng.genreEntity', 'g')
       .leftJoinAndSelect('n.userNftMusicEntity', 'nun')
+      .leftJoinAndSelect('nun.userEntity', 'u')
+      .leftJoinAndSelect('u.userFileEntity', 'uf')
+      .leftJoinAndSelect('uf.fileEntity', 'ff')
+      .leftJoinAndSelect('n.nftMusicLikeEntity', 'nl')
+      .leftJoinAndSelect('nl.userEntity', 'nlu')
       .where('n.id = :nftMusicId', {nftMusicId: nftMusicId})
       .getOne();
     if (!nftInfo) {
@@ -507,6 +512,29 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     } else {
       infoNftDto.source = 'normal';
     }
+
+    infoNftDto.artists = [];
+    if(nftInfo.source != 'catalog') {
+      const userInfo = await getRepository(UserEntity)
+        .createQueryBuilder('u')
+        .leftJoinAndSelect('u.userFileEntity', 'uf')
+        .leftJoinAndSelect('uf.fileEntity', 'ff')
+        .where('u.handle = :handle', {handle: nftInfo.handle})
+        .getOne();
+      if (!userInfo) {
+        return new InfoNftDto();
+      }
+
+      const userInfoDto = new ResponseUserInfoDto();
+      userInfoDto.userId = userInfo.id;
+      userInfoDto.handle = userInfo.handle;
+      userInfoDto.name = userInfo.nickname
+      userInfoDto.address = userInfo.address
+      userInfoDto.imgFileUrl = userInfo.userFileEntity.length == 0 ? '' : userInfo.userFileEntity[0].fileEntity.url;
+
+      infoNftDto.artists.push(userInfoDto);
+    }
+
     let fileInfos = [];
 
     for(const nftFileEntity of nftInfo.nftMusicFileEntity) {
@@ -549,6 +577,44 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     } else {
       infoNftDto.isLike = true;
     }
+
+    const streamObj = await entityManager.query(
+      'select ceil(ifnull(sum(total_second)/?, 0)) as totalStreams from l2e where token_id in ' +
+      '( ' +
+      'select token_id from nft_music where id = ? ' +
+      ')'
+      , [Number(nftInfo.playTime), nftMusicId]);
+    const songInfoDto = new ResponseSongInfoDto();
+    songInfoDto.streams = streamObj[0].totalStreams;
+    songInfoDto.likes = nftInfo.nftMusicLikeEntity.length;
+    songInfoDto.origin = nftInfo.source;
+    infoNftDto.songInfo = songInfoDto;
+
+    const nftInfoDto = new ResponseNftInfoDto();
+    const coinObj = await entityManager.query(
+      'select rate from coin_marketrate where name = \'ethereum\' ');
+    let coinToUsd = Number(coinObj[0].rate);
+
+    // infoExchangeDto.price = (Number(exchangeEntity.price) / 10**18).toString();
+
+    nftInfoDto.leftAmount = 1;
+    nftInfoDto.totalAmount = 1;
+    // if(exchangeObj.length > 0) nftInfoDto.price = exchangeObj[0].price;
+    if(exchangeObj.length > 0) nftInfoDto.price = Number((Number(exchangeObj[0].price) / 10 ** 18).toString());
+    if(exchangeObj.length > 0) nftInfoDto.cnutAmount = Math.ceil(coinToUsd * 10 * Number(nftInfoDto.price));
+    infoNftDto.nftInfo = nftInfoDto;
+
+    const fellazList = new Set<ResponseUserInfoDto>();
+
+    for(const holder of nftInfo.userNftMusicEntity) {
+      const fellazInfoDto = new ResponseUserInfoDto();
+      fellazInfoDto.userId = holder.userEntity.id;
+      fellazInfoDto.handle = holder.userEntity.handle;
+      fellazInfoDto.imgFileUrl = holder.userEntity.userFileEntity.length == 0 ? '' : holder.userEntity.userFileEntity[0].fileEntity.url;
+      fellazList.add(fellazInfoDto);
+    }
+
+    infoNftDto.fellaz = Array.from(fellazList);
 
     return infoNftDto;
   }

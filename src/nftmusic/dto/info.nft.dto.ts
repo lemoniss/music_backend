@@ -1,4 +1,7 @@
 import { InfoFileDto } from "../../mymusic/dto/info.file.dto";
+import { ResponseSongInfoDto } from "../../showtime/dto/response.songinfo.dto";
+import { ResponseNftInfoDto } from "../../showtime/dto/response.nftinfo.dto";
+import { ResponseUserInfoDto } from "../../showtime/dto/response.userinfo.dto";
 
 export class InfoNftDto {
 
@@ -61,4 +64,14 @@ export class InfoNftDto {
   totalLikeCount: number;
 
   showtimeId: number;
+
+  songInfo: ResponseSongInfoDto;
+
+  nftInfo: ResponseNftInfoDto;
+
+  artists: ResponseUserInfoDto[];
+
+  producers: ResponseUserInfoDto[];
+
+  fellaz: ResponseUserInfoDto[];
 }

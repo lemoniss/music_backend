@@ -7,6 +7,7 @@ import { ShowtimeHolderEntity } from "../entity/showtime_holder.entity";
 import { InfoNftDto } from "../../nftmusic/dto/info.nft.dto";
 import { InfoFileDto } from "../../mymusic/dto/info.file.dto";
 import { NftMusicLikeEntity } from "../../nftmusic/entity/nftmusic_like.entity";
+import { ResponseUserInfoDto } from "../dto/response.userinfo.dto";
 
 @EntityRepository(ShowtimeHolderEntity)
 export class ShowtimeHolderRepository extends Repository<ShowtimeHolderEntity> {
@@ -209,12 +210,19 @@ export class ShowtimeHolderRepository extends Repository<ShowtimeHolderEntity> {
     const holderShowtime = await getRepository(ShowtimeHolderEntity)
       .createQueryBuilder('sh')
       .leftJoinAndSelect('sh.userEntity', 'shu')
+      .leftJoinAndSelect('shu.userFileEntity', 'shuf')
+      .leftJoinAndSelect('shuf.fileEntity', 'shff')
       .leftJoinAndSelect('sh.showtimeTierEntity', 'st')
       .leftJoinAndSelect('st.showtimeFileEntity', 'stf')
       .leftJoinAndSelect('stf.fileEntity', 'f')
       .leftJoinAndSelect('st.showtimeEntity', 's')
       .leftJoinAndSelect('s.showtimeGenreEntity', 'sg')
       .leftJoinAndSelect('sg.genreEntity', 'g')
+      .leftJoinAndSelect('s.showtimeCrewEntity', 'sc')
+      .leftJoinAndSelect('sc.userEntity', 'u')
+      .leftJoinAndSelect('u.userFileEntity', 'uf')
+      .leftJoinAndSelect('uf.fileEntity', 'ff')
+      .leftJoinAndSelect('u.userFollowerEntity', 'ufw')
       .leftJoinAndSelect('s.nftMusicEntity', 'nft')
       .where('sh.showtimeTierEntity = :tierId', {tierId: tierId})
       .getOne();
@@ -269,6 +277,31 @@ export class ShowtimeHolderRepository extends Repository<ShowtimeHolderEntity> {
     } else {
       infoNftDto.source = 'showtime';
     }
+
+    infoNftDto.artists = [];
+    infoNftDto.producers = [];
+    for(const crew of holderShowtime.showtimeTierEntity.showtimeEntity.showtimeCrewEntity) {
+      const userInfoDto = new ResponseUserInfoDto();
+      userInfoDto.userId = crew.userEntity.id;
+      userInfoDto.handle = crew.userEntity.handle;
+      userInfoDto.name = crew.userEntity.nickname;
+      userInfoDto.address = crew.userEntity.address;
+      userInfoDto.imgFileUrl = crew.userEntity.userFileEntity.length == 0 ? '' : crew.userEntity.userFileEntity[0].fileEntity.url;
+      userInfoDto.followerCount = crew.userEntity.userFollowerEntity.length;
+      if(crew.name == 'A') {
+        infoNftDto.artists.push(userInfoDto);
+      } else if(crew.name == 'P') {
+        infoNftDto.producers.push(userInfoDto);
+      }
+    }
+
+    const fellazList = [];
+    const fellazInfoDto = new ResponseUserInfoDto();
+    fellazInfoDto.userId = holderShowtime.userEntity.id;
+    fellazInfoDto.imgFileUrl = holderShowtime.userEntity.userFileEntity.length == 0 ? '' : holderShowtime.userEntity.userFileEntity[0].fileEntity.url;
+    fellazInfoDto.handle = holderShowtime.userEntity.handle;
+    fellazList.push(fellazInfoDto);
+    infoNftDto.fellaz = fellazList;
 
     infoNftDto.rareImgFileUrl = [];
 
