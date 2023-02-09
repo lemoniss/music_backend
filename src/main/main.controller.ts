@@ -47,8 +47,9 @@ export class MainController {
 
   @ApiOperation({summary: 'landing artist page data'})
   @Get('/artist/:handle')
-  getLandingArtistInfo(@Param("handle") handle: string,) : Promise<any> {
-    return this.mainService.getLandingArtistInfo(handle);
+  getMainArtistInfo(@Headers("auth_token") authToken: string,
+                    @Param("handle") handle: string,) : Promise<any> {
+    return this.mainService.getMainArtistInfo(authToken, handle);
   }
 
   @ApiOperation({summary: 'landing getLandingFellazByArtist data'})

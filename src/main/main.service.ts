@@ -180,8 +180,24 @@ export class MainService {
     return response;
   }
 
-  async getLandingArtistInfo(handle: string): Promise<any> {
+  async getMainArtistInfo(authToken: string, handle: string): Promise<any> {
     let response: any = {};
+
+    if(typeof authToken != 'undefined') {   // header 에 값이 있다. 로그인 검증해야함
+      try {
+        const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+
+        if(userInfo.id == 0) {
+          throw new ForbiddenException();
+          return false;
+        }
+
+        response.connectorInfo = userInfo;
+      } catch (e) {
+        throw new ForbiddenException();
+        return false;
+      }
+    }
 
     const handleResponse = await this.userRepository.findByHandle(handle);
     const userId = handleResponse.id;
