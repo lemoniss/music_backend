@@ -103,7 +103,6 @@ export class UserService {
 
     const userId = userInfo.id;
     response.userInfo = await this.userRepository.findById(userId);
-    response.userSnsInfo = await this.userSnsRepository.findById(userId);
     response.followingInfo = {following: "N/A", follower: "N/A"};
 
     response.releases = await this.showtimeRepository.getLandingRecentByArtist(userId);
