@@ -42,4 +42,6 @@ export class ResponseRecentWebDto {
   imgFileUrl: string;
 
   musicFileUrl: string;
+
+  isOnSale: string;
 }

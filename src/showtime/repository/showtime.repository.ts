@@ -759,6 +759,9 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
     let dropTypes = [];
     let floorPrice = 0;
     let ipfsHash = '';
+
+    responseRecentWebDto.isOnSale = 'N';
+
     for(const obj of recentInfo.showtimeTierEntity) {
       dropTypes.push(obj.tier);
       if(obj.tier == 'Gold') {
@@ -775,6 +778,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
         goldDescription = obj.description;
         if(obj.purchaseYn == 'Y') {
           goldGrabCount++;
+          responseRecentWebDto.isOnSale = 'Y';
         }
       } else if(obj.tier == 'Platinum') {
         platinumTotalCount++;
@@ -788,6 +792,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
         platinumDescription = obj.description;
         if(obj.purchaseYn == 'Y') {
           platinumGrabCount++;
+          responseRecentWebDto.isOnSale = 'Y';
         }
       } else if(obj.tier == 'Diamond') {
         diamondTotalCount++;
@@ -801,6 +806,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
         diamondDescription = obj.description;
         if (obj.purchaseYn == 'Y') {
           diamondGrabCount++;
+          responseRecentWebDto.isOnSale = 'Y';
         }
       }
     }

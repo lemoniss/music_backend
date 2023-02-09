@@ -39,9 +39,10 @@ export class MainController {
 
   @ApiOperation({summary: 'landing view song data'})
   @Get('/viewsong/:source/:musicId')
-  getLandingViewsong(@Param("source") source: string,
+  getMainViewsong(@Headers("auth_token") authToken: string,
+                     @Param("source") source: string,
                      @Param("musicId", ParseIntPipe) musicId: number,) : Promise<any> {
-    return this.mainService.getLandingViewsong(source, musicId);
+    return this.mainService.getMainViewsong(authToken, source, musicId);
   }
 
   @ApiOperation({summary: 'landing artist page data'})

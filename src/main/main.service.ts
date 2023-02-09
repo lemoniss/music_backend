@@ -149,14 +149,30 @@ export class MainService {
     return response;
   }
 
-  async getLandingViewsong(source: string, musicId: number): Promise<any> {
+  async getMainViewsong(authToken: string, source: string, musicId: number): Promise<any> {
 
     let response: any = {};
 
+    if(typeof authToken != 'undefined') {   // header 에 값이 있다. 로그인 검증해야함
+      try {
+        const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+
+        if(userInfo.id == 0) {
+          throw new ForbiddenException();
+          return false;
+        }
+
+        response.connectorInfo = userInfo;
+      } catch (e) {
+        throw new ForbiddenException();
+        return false;
+      }
+    }
+
     if(source == 'showtime') {
-      response = await this.showtimeRepository.getLandingRecent(musicId);
+      response.viewsongInfo = await this.showtimeRepository.getLandingRecent(musicId);
     } else {
-      response = await this.nftMusicRepository.getLandingNft(musicId);
+      response.viewsongInfo = await this.nftMusicRepository.getLandingNft(musicId);
     }
 
     response.serverTime = await this.showtimeRepository.getServertime();
