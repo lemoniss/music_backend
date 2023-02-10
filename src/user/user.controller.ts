@@ -72,10 +72,11 @@ export class UserController {
   })
   @ApiOperation({summary: '유저 정보 수정'})
   @UseGuards(AuthGuard)
-  @Patch("/:id")
-  updateUser(@Param("id", ParseIntPipe) id: number,@Body() updateUserDto: UpdateUserDto)
+  @Patch("/:handle")
+  updateUser(@Param("handle") handle: string,
+             @Body() updateUserDto: UpdateUserDto)
     : Promise<boolean> {
-    return this.userService.updateUser(id, updateUserDto);
+    return this.userService.updateUser(handle, updateUserDto);
   }
 
   @ApiHeader({

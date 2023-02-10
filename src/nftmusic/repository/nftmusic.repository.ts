@@ -16,6 +16,7 @@ import { ResponseNftInfoDto } from "../../showtime/dto/response.nftinfo.dto";
 import { ResponseContractInfoDto } from "../../showtime/dto/response.contractinfo.dto";
 import { ShowtimeTierRepository } from "../../showtime/repository/showtime_tier.repository";
 import { Formatter } from "../../util/formatter";
+import { ResponseArtistDetailDto } from "../../landing/dto/response.artistrelease.dto";
 
 @EntityRepository(NftMusicEntity)
 export class NftMusicRepository extends Repository<NftMusicEntity> {
@@ -968,6 +969,49 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     responseRecentWebDto.contractInfo = contractInfoDto;
 
     return responseRecentWebDto;
+  }
+
+  async getRecentByMinter(address: string): Promise<ResponseArtistDetailDto[]> {
+    const minterInfo = await getRepository(NftMusicEntity)
+      .createQueryBuilder('n')
+      .leftJoinAndSelect('n.nftMusicFileEntity', 'nf')
+      .leftJoinAndSelect('nf.fileEntity', 'f')
+      .where('n.minter = :address', {address: address})
+      .orderBy('n.id', 'DESC')
+      .getMany();
+    if (!minterInfo) {
+      return [];
+    }
+
+    let responseList = [];
+    for(const minter of minterInfo) {
+      const responseArtistDetailDto = new ResponseArtistDetailDto();
+
+      let imgFileUrl = '';
+      let musicFileUrl = '';
+      for(const obj of minter.nftMusicFileEntity) {
+        if(obj.fileType == 'MUSIC') {
+          musicFileUrl = obj.fileEntity.url;
+        }else if(obj.fileType == 'IMAGE') {
+          imgFileUrl = obj.fileEntity.url;
+          break;
+        }
+      }
+      responseArtistDetailDto.artist = minter.artist;
+      responseArtistDetailDto.name = minter.name;
+      responseArtistDetailDto.title = minter.title;
+      responseArtistDetailDto.playTime = minter.playTime;
+      responseArtistDetailDto.playCount = minter.playCount;
+      responseArtistDetailDto.handle = minter.handle;
+      responseArtistDetailDto.imgFileUrl = imgFileUrl;
+      responseArtistDetailDto.musicFileUrl = musicFileUrl;
+      responseArtistDetailDto.source = minter.source;
+
+      responseList.push(responseArtistDetailDto);
+    }
+
+
+    return responseList;
   }
 }
 

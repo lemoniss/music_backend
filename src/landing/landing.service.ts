@@ -70,8 +70,8 @@ export class LandingService {
     response.artistInfo = await this.userRepository.findById(userId);
     response.followingInfo = {following: "N/A", follower: "N/A"};
 
-    response.releases = await this.showtimeRepository.getLandingRecentByArtist(userId);
-    response.fellaz = await this.showtimeRepository.getLandingFellazByArtist(userId, 0);
+    response.releases = await this.showtimeRepository.getRecentByArtist(userId);
+    response.fellaz = await this.showtimeRepository.getFellazByArtist(userId, 0);
 
     const showtimeList = await this.showtimeHolderRepository.getLandingHolderShowtimes(userId);
     console.log('1234')
@@ -111,7 +111,7 @@ export class LandingService {
 
     let response: any = {};
 
-    response.fellaz = await this.showtimeRepository.getLandingFellazByArtist(userId, skip);
+    response.fellaz = await this.showtimeRepository.getFellazByArtist(userId, skip);
     return response;
   }
 }

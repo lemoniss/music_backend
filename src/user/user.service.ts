@@ -59,9 +59,11 @@ export class UserService {
     }
   }
 
-  async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<boolean> {
+  async updateUser(handle: string, updateUserDto: UpdateUserDto): Promise<boolean> {
 
-    const userInfo = await this.findById(id);
+    const handleInfo = await this.userRepository.findByHandle(handle);
+
+    const userInfo = await this.findById(handleInfo.id);
 
     if(userInfo.handle != updateUserDto.handle) {
       if(await this.isExistHandle(updateUserDto.handle.replace('@', '')) == false) {
@@ -70,18 +72,18 @@ export class UserService {
     }
 
     if(typeof updateUserDto.fileId != 'undefined') {
-      await this.userFileRepository.createUserFile(id, updateUserDto);
+      await this.userFileRepository.createUserFile(handleInfo.id, updateUserDto);
     }
 
-    if(updateUserDto.userSnsModels.length > 0) {
-      await this.userSnsRepository.createUserSns(id, updateUserDto);
+    if(typeof updateUserDto.userSnsModels != 'undefined' && updateUserDto.userSnsModels.length > 0) {
+      await this.userSnsRepository.createUserSns(handleInfo.id, updateUserDto);
     }
 
-    if(updateUserDto.genreIds.length > 0) {
-      await this.userGenreRepository.createUserGenre(id, updateUserDto);
+    if(typeof updateUserDto.genreIds != 'undefined' && updateUserDto.genreIds.length > 0) {
+      await this.userGenreRepository.createUserGenre(handleInfo.id, updateUserDto);
     }
 
-    return await this.userRepository.updateUser(id, updateUserDto);
+    return await this.userRepository.updateUser(handleInfo.id, updateUserDto);
   }
 
   async findById(id: number) : Promise<InfoUserDto> {
@@ -105,8 +107,8 @@ export class UserService {
     response.userInfo = await this.userRepository.findById(userId);
     response.followingInfo = {following: "N/A", follower: "N/A"};
 
-    response.releases = await this.showtimeRepository.getLandingRecentByArtist(userId);
-    response.fellaz = await this.showtimeRepository.getLandingFellazByArtist(userId, 0);
+    response.releases = await this.showtimeRepository.getRecentByArtist(userId);
+    response.fellaz = await this.showtimeRepository.getFellazByArtist(userId, 0);
 
     const showtimeList = await this.showtimeHolderRepository.getLandingHolderShowtimes(userId);
     const nftList = await this.nftMusicRepository.getLandingMyNftList(userId); //TODO: playCount 수정

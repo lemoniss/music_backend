@@ -204,8 +204,12 @@ export class MainService {
     response.artistInfo = await this.userRepository.findById(userId);
     response.followingInfo = {following: "N/A", follower: "N/A"};
 
-    response.releases = await this.showtimeRepository.getLandingRecentByArtist(userId);
-    response.fellaz = await this.showtimeRepository.getLandingFellazByArtist(userId, 0);
+    const showtimeRelease = await this.showtimeRepository.getRecentByArtist(userId);
+    const nftRelease = await this.nftMusicRepository.getRecentByMinter(handleResponse.address);
+    response.releases = showtimeRelease.concat(nftRelease);
+
+
+    response.fellaz = await this.showtimeRepository.getFellazByArtist(userId, 0);
 
     const showtimeList = await this.showtimeHolderRepository.getLandingHolderShowtimes(userId);
     console.log('1234')
@@ -245,7 +249,7 @@ export class MainService {
 
     let response: any = {};
 
-    response.fellaz = await this.showtimeRepository.getLandingFellazByArtist(userId, skip);
+    response.fellaz = await this.showtimeRepository.getFellazByArtist(userId, skip);
     return response;
   }
 }

@@ -1020,7 +1020,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
     return covers;
   }
 
-  async getLandingRecentByArtist(userId: number): Promise<ResponseArtistDetailDto[]> {
+  async getRecentByArtist(userId: number): Promise<ResponseArtistDetailDto[]> {
     const landingArtistInfo = await getRepository(ShowtimeEntity)
         .createQueryBuilder('s')
         .leftJoinAndSelect('s.showtimeCrewEntity', 'sc')
@@ -1076,7 +1076,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
     return responseList;
   }
 
-  async getLandingFellazByArtist(userId: number, skip: number): Promise<ResponseUserInfoDto[]> {
+  async getFellazByArtist(userId: number, skip: number): Promise<ResponseUserInfoDto[]> {
 
     const take = skip == 0 ? 5 : 12;
 
