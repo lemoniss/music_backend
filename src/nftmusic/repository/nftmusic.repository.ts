@@ -823,7 +823,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       infoNftDto.handle = nftEntity.handle;
       infoNftDto.description = nftEntity.description;
       infoNftDto.lyrics = nftEntity.lyrics;
-      // infoNftDto.playTime = nftEntity.playTime;
+      infoNftDto.playTime = nftEntity.playTime;
 
       if(nftEntity.source == 'showtime') {
         const streamObj = await entityManager.query(
