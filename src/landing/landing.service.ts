@@ -24,16 +24,25 @@ export class LandingService {
 
     const streamingTop15 = [];
 
-    const l2eTop15 = await this.l2eRepository.getStreamingTop(15);
+    const streamingDto = new SortNftDto();
+    streamingDto.skip = 0;
+    streamingDto.take = 15;
+    const l2eTop15 = await this.l2eRepository.getStreamingTop(streamingDto);
     for(const l2eInfo of l2eTop15) {
       const info = await this.nftMusicRepository.findNftToTokenIdAndSource(l2eInfo.tokenId, l2eInfo.source, l2eInfo.totalSecond);
       streamingTop15.push(info);
     }
 
     response.showtimeCovers = await this.showtimeRepository.getLandingCovers();
-    response.showtimePresents = await this.showtimeRepository.getLandingRecents(15);
+    const showtimeDto = new SortNftDto();
+    showtimeDto.skip = 0;
+    showtimeDto.take = 15;
+    response.showtimePresents = await this.showtimeRepository.getLandingRecents(showtimeDto);
     response.streamingTop = streamingTop15;
-    response.newRelease = await this.nftMusicRepository.findNftListTake(15);
+    const skipTakeDto = new SortNftDto();
+    skipTakeDto.skip = 0;
+    skipTakeDto.take = 9;
+    response.newRelease = await this.nftMusicRepository.findNftListTake(skipTakeDto);
     response.showtimeArtists = await this.userRepository.getArtists(0, 20);
     response.serverTime = await this.showtimeRepository.getServertime();
     return response;
@@ -81,7 +90,7 @@ export class LandingService {
 
     // 내 플레이리스트 가져오기
     let sortNftDto = new SortNftDto();
-    sortNftDto.userId = userId.toString();
+    sortNftDto.userId = userId;
     sortNftDto.keyword = '';
     sortNftDto.genreIds = [];
     sortNftDto.sortType = 'id'

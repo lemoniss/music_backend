@@ -8,6 +8,8 @@ export class ResponseUserInfoDto {
 
   imgFileUrl: string;
 
+  imgBannerFileUrl: string;
+
   followerCount: number;
 
   address: string;

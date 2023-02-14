@@ -20,10 +20,8 @@ import { UserNftMusicEntity } from "./entity/user_nftmusic.entity";
 import { NftMusicLikeEntity } from "./entity/nftmusic_like.entity";
 import { NftHistoryEntity } from "./entity/nfthistory.entity";
 import { L2eEntity } from "../l2e/entity/l2e.entity";
-import { MyMusicService } from "../mymusic/mymusic.service";
-import { UploadService } from "../upload/upload.service";
-import { ShowtimeService } from "../showtime/showtime.service";
 import { UserRepository } from "../user/repository/user.repository";
+import { GenreModule } from "../genre/genre.module";
 
 @Module({
   imports: [
@@ -31,6 +29,7 @@ import { UserRepository } from "../user/repository/user.repository";
     MyMusicModule,
     UploadModule,
     ShowtimeModule,
+    GenreModule,
     TypeOrmModule.forFeature([
       NftMusicEntity,
       NftMusicGenreEntity,
@@ -55,6 +54,7 @@ import { UserRepository } from "../user/repository/user.repository";
     MyMusicModule,
     UploadModule,
     ShowtimeModule,
+    GenreModule,
   ],
   exports: [TypeOrmModule, NftMusicService]
 })

@@ -4,7 +4,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  JoinColumn
+  JoinColumn, Column
 } from "typeorm";
 import { UserEntity } from "./user.entity";
 import { FileEntity } from "./file.entity";
@@ -21,6 +21,9 @@ export class UserFileEntity {
   @ManyToOne(() => FileEntity, fileEntity => fileEntity.userFileEntity)
   @JoinColumn({name: 'file_id'})
   fileEntity: FileEntity;
+
+  @Column({ type: 'varchar', name: 'file_type', length: 10, comment: '파일유형, PROFILE, BANNER' })
+  fileType: string;
 
   @CreateDateColumn({ type: 'datetime', name: 'create_at', comment: '생성일' })
   createdAt: Date;

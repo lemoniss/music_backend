@@ -218,4 +218,17 @@ export class NftMusicController {
   createL2e(@Body() createL2eDto: CreateL2eDto) {
     this.nftMusicService.createL2e(createL2eDto).then();;
   }
+
+  /**
+   * 음악 리스트 (검색: nullable)
+   * @param userId
+   * @param search
+   */
+  @Post('/playlist')
+  @ApiOperation({summary: 'NFT 음악 리스트'})
+  playList(@Headers("auth_token") authToken: string,
+           @Body() sortNftDto: SortNftDto)
+    : Promise<any> {
+    return this.nftMusicService.playList(authToken, sortNftDto);
+  }
 }

@@ -51,6 +51,8 @@ export class InfoUserDto {
   })
   profileImgUrl: string; // 프로필이미지URL
 
+  bannerImgUrl: string;
+
   @ApiProperty({
     name: 'genreIds',
     description: '내 장르들 index',

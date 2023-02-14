@@ -3,6 +3,7 @@ import { RuntimeException } from "@nestjs/core/errors/exceptions/runtime.excepti
 import { L2eEntity } from "../entity/l2e.entity";
 import { CreateL2eDto } from "../../nftmusic/dto/create.l2e.dto";
 import { InfoStreamingTopDto } from "../dto/info.streaming.top.dto";
+import { SortNftDto } from "../../nftmusic/dto/sort.nft.dto";
 
 @EntityRepository(L2eEntity)
 export class L2eRepository extends Repository<L2eEntity> {
@@ -37,7 +38,7 @@ export class L2eRepository extends Repository<L2eEntity> {
     }
   }
 
-  async getStreamingTop(limit: number): Promise<InfoStreamingTopDto[]> {
+  async getStreamingTop(sortNftDto: SortNftDto): Promise<InfoStreamingTopDto[]> {
     const entityManager = getManager();
     const l2eObj = await entityManager.query(
       'select t.token_id as tokenId, t.totalSecond, t.source ' +
@@ -48,7 +49,7 @@ export class L2eRepository extends Repository<L2eEntity> {
       ' group by token_id, source' +
       ') t ' +
       'order by t.totalSecond desc ' +
-      'limit ? ', [limit] );
+      'limit ? offset ? ', [sortNftDto.take, sortNftDto.skip] );
 
     const response = [];
 
@@ -65,7 +66,7 @@ export class L2eRepository extends Repository<L2eEntity> {
     return response;
   }
 
-  async getRecentPlayed(userId: number, limit: number): Promise<InfoStreamingTopDto[]> {
+  async getRecentPlayed(sortNftDto: SortNftDto): Promise<InfoStreamingTopDto[]> {
     const entityManager = getManager();
     const l2eObj = await entityManager.query(
       'select t.token_id as tokenId, t.totalSecond, t.source, t.id ' +
@@ -77,7 +78,7 @@ export class L2eRepository extends Repository<L2eEntity> {
       ' group by token_id, source' +
       ') t ' +
       'order by t.id desc ' +
-      'limit ? ', [userId, limit] );
+      'limit ? offset ? ', [sortNftDto.userId, sortNftDto.take, sortNftDto.skip] );
 
     const response = [];
 

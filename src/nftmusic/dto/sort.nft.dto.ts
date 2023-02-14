@@ -20,7 +20,7 @@ export class SortNftDto {
     example: '인기순: play_count, 최신순: create_at, 좋아요 순: likes(추가 예정)',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   sortType: string;
 
   @ApiProperty({
@@ -32,19 +32,18 @@ export class SortNftDto {
   @IsOptional()
   genreIds: number[];  // 장르ID
 
-  @ApiProperty({
-    name: 'userId',
-    description: '유저의 DB index',
-    required: true,
-    example: '1',
-  })
-  @IsString()
-  @IsNotEmpty()
-  userId: string;
+  @IsOptional()
+  userId: number;
 
   @IsOptional()
   device: string;  // device
 
   @IsOptional()
   take: number;
+
+  @IsOptional()
+  skip: number;
+
+  @IsOptional()
+  query: string;  // device
 }

@@ -270,7 +270,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
 
       for(const nftLikeEntity of nftEntity.nftMusicLikeEntity){
         if(nftLikeEntity.userEntity != undefined) {
-          if(nftLikeEntity.userEntity.id == parseInt(sortNftDto.userId)) {
+          if(nftLikeEntity.userEntity.id == sortNftDto.userId) {
             infoNftDto.isLike = true;
           }
         }
@@ -394,6 +394,10 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
 
     if(typeof sortNftDto.take != 'undefined') {
       nftList.take(sortNftDto.take);
+    }
+
+    if(typeof sortNftDto.skip != 'undefined') {
+      nftList.skip(sortNftDto.skip);
     }
 
     const nftListResult = await nftList
@@ -536,7 +540,15 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       userInfoDto.handle = userInfo.handle;
       userInfoDto.name = userInfo.nickname
       userInfoDto.address = userInfo.address
-      userInfoDto.imgFileUrl = userInfo.userFileEntity.length == 0 ? '' : userInfo.userFileEntity[0].fileEntity.url;
+      for(const userFile of userInfo.userFileEntity) {
+        if(userFile.fileType == 'PROFILE') {
+          userInfoDto.imgFileUrl = userFile.fileEntity.url;
+        } else if(userFile.fileType == 'BANNER') {
+          userInfoDto.imgBannerFileUrl = userFile.fileEntity.url;
+        } else {
+          userInfoDto.imgFileUrl = '';
+        }
+      }
 
       infoNftDto.artists.push(userInfoDto);
     }
@@ -616,7 +628,15 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       const fellazInfoDto = new ResponseUserInfoDto();
       fellazInfoDto.userId = holder.userEntity.id;
       fellazInfoDto.handle = holder.userEntity.handle;
-      fellazInfoDto.imgFileUrl = holder.userEntity.userFileEntity.length == 0 ? '' : holder.userEntity.userFileEntity[0].fileEntity.url;
+      for(const userFile of holder.userEntity.userFileEntity) {
+        if(userFile.fileType == 'PROFILE') {
+          fellazInfoDto.imgFileUrl = userFile.fileEntity.url;
+        } else if(userFile.fileType == 'BANNER') {
+          fellazInfoDto.imgBannerFileUrl = userFile.fileEntity.url;
+        } else {
+          fellazInfoDto.imgFileUrl = '';
+        }
+      }
       fellazList.add(fellazInfoDto);
     }
 
@@ -758,7 +778,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       .execute();
   }
 
-  async findNftListTake(take: number): Promise<InfoNftDto[]> {
+  async findNftListTake(sortNftDto: SortNftDto): Promise<InfoNftDto[]> {
 
     const nftList = await getRepository(NftMusicEntity)
       .createQueryBuilder('m')
@@ -768,8 +788,22 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       .leftJoinAndSelect('mg.genreEntity', 'g')
       .leftJoinAndSelect('m.nftMusicLikeEntity', 'ml')
       .leftJoinAndSelect('m.showtimeEntity', 's')
-      .orderBy(`m.createdAt`, 'DESC')
-      .take(take)
+      .where(typeof sortNftDto.genreIds != 'undefined' && sortNftDto.genreIds.length > 0 ? 'mg.genre_id in (:genreIds)' : '1 = 1', {genreIds: sortNftDto.genreIds})
+
+    if(typeof sortNftDto.userId != 'undefined') {
+      nftList.andWhere('ml.userEntity = :userId', {userId: sortNftDto.userId})
+    }
+
+    if(typeof sortNftDto.take != 'undefined') {
+      nftList.take(sortNftDto.take);
+    }
+
+    if(typeof sortNftDto.skip != 'undefined') {
+      nftList.skip(sortNftDto.skip);
+    }
+
+    const nftListResult = await nftList
+      .orderBy('m.createdAt', 'DESC')
       .getMany();
 
     if (!nftList) {
@@ -778,7 +812,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     const infoNftDtos = [];
     const entityManager = getManager();
 
-    for(const nftEntity of nftList) {
+    for(const nftEntity of nftListResult) {
 
       const infoNftDto = new InfoNftDto();
 
@@ -810,7 +844,6 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       }
 
 
-      infoNftDto.isLike = false;
       infoNftDto.tokenId = nftEntity.tokenId;
       infoNftDto.source = nftEntity.source;
 
@@ -837,6 +870,22 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       }
 
       infoNftDto.genres = genres.substring(0, genres.length-2);
+
+      if(nftEntity.nftMusicLikeEntity.length == 0) {
+        infoNftDto.isLike = false;
+      } else {
+        infoNftDto.isLike = true;
+      }
+
+      const nftObj = await entityManager.query(
+        'select ' +
+        '(select count(*) from nft_music_like where nft_music_id = n.id) as likeCount ' +
+        'from nft_music n where id = ?'
+        , [nftEntity.id]);
+
+      if(nftObj.length > 0) {
+        infoNftDto.likeCount = Number(nftObj[0].likeCount);
+      }
 
       infoNftDtos.push(infoNftDto);
     }
@@ -897,9 +946,17 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       const userInfoDto = new ResponseUserInfoDto();
       userInfoDto.userId = userInfo.id;
       userInfoDto.handle = userInfo.handle;
-      userInfoDto.name = userInfo.nickname
-      userInfoDto.address = userInfo.address
-      userInfoDto.imgFileUrl = userInfo.userFileEntity.length == 0 ? '' : userInfo.userFileEntity[0].fileEntity.url;
+      userInfoDto.name = userInfo.nickname;
+      userInfoDto.address = userInfo.address;
+      for(const userFile of userInfo.userFileEntity) {
+        if(userFile.fileType == 'PROFILE') {
+          userInfoDto.imgFileUrl = userFile.fileEntity.url;
+        } else if(userFile.fileType == 'BANNER') {
+          userInfoDto.imgBannerFileUrl = userFile.fileEntity.url;
+        } else {
+          userInfoDto.imgFileUrl = '';
+        }
+      }
 
       responseRecentWebDto.artists.push(userInfoDto);
     }
@@ -941,7 +998,15 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       const fellazInfoDto = new ResponseUserInfoDto();
       fellazInfoDto.userId = holder.userEntity.id;
       fellazInfoDto.handle = holder.userEntity.handle;
-      fellazInfoDto.imgFileUrl = holder.userEntity.userFileEntity.length == 0 ? '' : holder.userEntity.userFileEntity[0].fileEntity.url;
+      for(const userFile of holder.userEntity.userFileEntity) {
+        if(userFile.fileType == 'PROFILE') {
+          fellazInfoDto.imgFileUrl = userFile.fileEntity.url;
+        } else if(userFile.fileType == 'BANNER') {
+          fellazInfoDto.imgBannerFileUrl = userFile.fileEntity.url;
+        } else {
+          fellazInfoDto.imgFileUrl = '';
+        }
+      }
       fellazList.add(fellazInfoDto);
     }
 

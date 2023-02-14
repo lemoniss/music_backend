@@ -9,8 +9,6 @@ import { ShowtimeHolderRepository } from "../showtime/repository/showtime_holder
 import { BannerRepository } from "../showtime/repository/banner.repository";
 import { Rsa } from "../util/rsa";
 
-const crypto = require("crypto");
-const fs = require('fs');
 
 @Injectable()
 export class MainService {
@@ -56,13 +54,20 @@ export class MainService {
 
         response.connectorInfo = userInfo;
 
-          response.newRelease = await this.nftMusicRepository.findNftListTake(5);
+        const skipTakeDto = new SortNftDto();
+        skipTakeDto.skip = 0;
+        skipTakeDto.take = 5;
+        response.newRelease = await this.nftMusicRepository.findNftListTake(skipTakeDto);
         const sortNftDto = new SortNftDto();
-        sortNftDto.userId = userInfo.id.toString();
+        sortNftDto.userId = userInfo.id;
         sortNftDto.take = 7;
-        response.likes = await this.nftMusicRepository.findNftLikeList(sortNftDto);
+        response.likes = await this.nftMusicRepository.findNftListTake(sortNftDto);
         const recentPlayed = [];
-        const played = await this.l2eRepository.getRecentPlayed(userInfo.id, 15);
+        const recentDto = new SortNftDto();
+        recentDto.userId = userInfo.id;
+        recentDto.take = 15;
+        recentDto.skip = 0;
+        const played = await this.l2eRepository.getRecentPlayed(recentDto);
 
         for(const recent of played) {
           const info = await this.nftMusicRepository.findNftToTokenIdAndSource(recent.tokenId, recent.source, recent.totalSecond);
@@ -85,21 +90,28 @@ export class MainService {
         return false;
       }
     } else {  // 로그인 안함
-      response.newRelease = await this.nftMusicRepository.findNftListTake(9);
+      const skipTakeDto = new SortNftDto();
+      skipTakeDto.skip = 0;
+      skipTakeDto.take = 9;
+      response.newRelease = await this.nftMusicRepository.findNftListTake(skipTakeDto);
 
     }
 
     const streamingTop50 = [];
-
-    const l2eTop50 = await this.l2eRepository.getStreamingTop(50);
+    const streamingDto = new SortNftDto();
+    streamingDto.skip = 0;
+    streamingDto.take = 50;
+    const l2eTop50 = await this.l2eRepository.getStreamingTop(streamingDto);
     for(const l2eInfo of l2eTop50) {
       const info = await this.nftMusicRepository.findNftToTokenIdAndSource(l2eInfo.tokenId, l2eInfo.source, l2eInfo.totalSecond);
       streamingTop50.push(info);
     }
 
     response.streamingTop50 = streamingTop50;
-
-    response.showtime = await this.showtimeRepository.getLandingRecents(15);
+    const showtimeDto = new SortNftDto();
+    showtimeDto.skip = 0;
+    showtimeDto.take = 50;
+    response.showtime = await this.showtimeRepository.getLandingRecents(showtimeDto);
 
     const upcoming = [];
     const upcomingArtists = await this.userRepository.getArtists(0, 999999);
@@ -219,7 +231,7 @@ export class MainService {
 
     // 내 플레이리스트 가져오기
     let sortNftDto = new SortNftDto();
-    sortNftDto.userId = userId.toString();
+    sortNftDto.userId = userId;
     sortNftDto.keyword = '';
     sortNftDto.genreIds = [];
     sortNftDto.sortType = 'id'

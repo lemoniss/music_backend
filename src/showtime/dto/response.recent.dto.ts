@@ -10,6 +10,8 @@ export class ResponseRecentDto {
 
   artistImage: string;
 
+  artistBannerImage: string;
+
   name: string;
 
   artist: string;

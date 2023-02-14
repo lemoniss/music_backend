@@ -1,4 +1,4 @@
-import { Body, Injectable, Param, ParseIntPipe, Patch } from "@nestjs/common";
+import { Body, ForbiddenException, Injectable, Param, ParseIntPipe, Patch } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
 import { RuntimeException } from "@nestjs/core/errors/exceptions/runtime.exception";
 import { NftMusicRepository } from "./repository/nftmusic.repository";
@@ -22,15 +22,9 @@ import {FindByUserNftDto} from "./dto/findbyuser.nft.dto";
 import { NftProvenanceDto } from "./dto/nft.provenance.dto";
 import { CreateL2eDto } from "./dto/create.l2e.dto";
 import { L2eRepository } from "../l2e/repository/l2e.repository";
-import { L2eEntity } from "../l2e/entity/l2e.entity";
-import { NftMusicEntity } from "./entity/nftmusic.entity";
-import { NftMusicGenreEntity } from "./entity/nftmusic_genre.entity";
-import { NftMusicFileEntity } from "./entity/nftmusic_file.entity";
-import { UserNftMusicEntity } from "./entity/user_nftmusic.entity";
-import { NftMusicLikeEntity } from "./entity/nftmusic_like.entity";
-import { NftHistoryEntity } from "./entity/nfthistory.entity";
 import { UserRepository } from "../user/repository/user.repository";
 import { Rsa } from "../util/rsa";
+import { GenreService } from "../genre/genre.service";
 @Injectable()
 export class NftMusicService {
   constructor(
@@ -45,6 +39,7 @@ export class NftMusicService {
     private uploadService: UploadService,
     private showtimeService: ShowtimeService,
     private userRepository: UserRepository,
+    private genreService: GenreService,
   ) {}
 
 
@@ -194,5 +189,65 @@ export class NftMusicService {
 
   async createL2e(createL2eDto: CreateL2eDto) {
     await this.l2eRepository.saveL2e(createL2eDto);
+  }
+
+  async playList(authToken: string, sortNftDto: SortNftDto): Promise<any> {
+
+    if(typeof sortNftDto.skip == 'undefined' || isNaN(sortNftDto.skip))
+      sortNftDto.skip = 0;
+
+    if(typeof sortNftDto.take == 'undefined' || isNaN(sortNftDto.take))
+      sortNftDto.take = 10;
+
+    let response: any = {};
+
+    const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+
+    if(userInfo.id == 0) {
+      throw new ForbiddenException();
+      return false;
+    }
+
+    response.connectorInfo = userInfo;
+    response.genreList = await this.genreService.getGenreAll();
+
+    switch (sortNftDto.query) {
+      case 'newRelease':
+        response.playList = await this.nftMusicRepository.findNftListTake(sortNftDto);
+        break;
+      case 'likes':
+        sortNftDto.userId = userInfo.id;
+        response.playList = await this.nftMusicRepository.findNftListTake(sortNftDto);
+        break;
+      case 'recentlyPlayed':
+        const recentPlayed = [];
+        sortNftDto.userId = userInfo.id;
+        const played = await this.l2eRepository.getRecentPlayed(sortNftDto);
+        for(const recent of played) {
+          const info = await this.nftMusicRepository.findNftToTokenIdAndSource(recent.tokenId, recent.source, recent.totalSecond);
+          recentPlayed.push(info);
+        }
+        response.playList = recentPlayed;
+        break;
+      case 'streamingTop':
+        const streamingTop50 = [];
+        const l2eTop50 = await this.l2eRepository.getStreamingTop(sortNftDto);
+        for(const l2eInfo of l2eTop50) {
+          const info = await this.nftMusicRepository.findNftToTokenIdAndSource(l2eInfo.tokenId, l2eInfo.source, l2eInfo.totalSecond);
+          streamingTop50.push(info);
+        }
+        response.playList = streamingTop50;
+        break;
+      case 'myLikes':
+        sortNftDto.userId = userInfo.id;
+        response.playList = await this.nftMusicRepository.findNftListTake(sortNftDto);
+        break;
+      case 'showtime':
+        response.playList = await this.showtimeService.getLandingRecents(sortNftDto);
+        break;
+    }
+
+    // return await this.nftMusicRepository.findNftList(sortNftDto);
+    return response;
   }
 }

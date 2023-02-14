@@ -67,6 +67,7 @@ import { NftHistoryEntity } from "../nftmusic/entity/nfthistory.entity";
 import { CoinMarketRateEntity } from "./entity/coin_marketrate.entity";
 import { EtherscanGastrackerEntity } from "./entity/etherscan_gastracker.entity";
 import { BannerEntity } from "./entity/banner.entity";
+import { SortNftDto } from "../nftmusic/dto/sort.nft.dto";
 
 @Injectable()
 export class ShowtimeService {
@@ -396,9 +397,9 @@ export class ShowtimeService {
     return await this.showtimeRepository.getAllShowtimes();
   }
 
-  // async getRecents(): Promise<ResponseRecentListDto[]> {
-  //   return await this.showtimeRepository.getRecents();
-  // }
+  async getLandingRecents(sortNftDto: SortNftDto): Promise<InfoNftDto[]> {
+    return await this.showtimeRepository.getLandingRecents(sortNftDto);
+  }
 
   async getRecent(showtimeId: number, userId: number): Promise<ResponseRecentDto> {
     return await this.showtimeRepository.getRecent(showtimeId, userId);
