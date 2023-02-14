@@ -40,7 +40,15 @@ export class UserRepository extends Repository<UserEntity> {
     const responseArtistDto = new ResponseArtistDto();
 
     responseArtistDto.artistId = artistId;
-    responseArtistDto.artistImage = artistInfo.userFileEntity.length == 0 ? '' : artistInfo.userFileEntity[0].fileEntity.url;
+    for(const userFile of artistInfo.userFileEntity) {
+      if(userFile.fileType == 'PROFILE') {
+        responseArtistDto.artistImage = userFile.fileEntity.url;
+      } else if(userFile.fileType == 'BANNER') {
+        responseArtistDto.artistBannerImage = userFile.fileEntity.url;
+      } else {
+        responseArtistDto.artistImage = '';
+      }
+    }
     responseArtistDto.nickname = artistInfo.nickname;
     responseArtistDto.handle = artistInfo.handle;
     responseArtistDto.address = artistInfo.address;
@@ -100,7 +108,15 @@ export class UserRepository extends Repository<UserEntity> {
 
           for(const purchase of showtimeTier.showtimePurchaseHistoryEntity) {
             const homieDto = new ResponseArtistHomieDto();
-            homieDto.userImage = purchase.userEntity.userFileEntity.length == 0 ? '' : purchase.userEntity.userFileEntity[0].fileEntity.url;
+            for(const userFile of purchase.userEntity.userFileEntity) {
+              if(userFile.fileType == 'PROFILE') {
+                homieDto.userImage = userFile.fileEntity.url;
+              } else if(userFile.fileType == 'BANNER') {
+                homieDto.userBannerImage = userFile.fileEntity.url;
+              } else {
+                homieDto.userImage = '';
+              }
+            }
             homieDto.userHandle = purchase.userEntity.handle;
             homieDto.name = songDto.name;
             homieDto.boughtTier = showtimeTier.tier;
@@ -119,7 +135,15 @@ export class UserRepository extends Repository<UserEntity> {
       if(userFollower.followerEntity.id == userId) {
         responseArtistDto.isFollower = true;
       }
-      followerDto.userImage = userFollower.followerEntity.userFileEntity.length == 0 ? '' : userFollower.followerEntity.userFileEntity[0].fileEntity.url;
+      for(const userFile of userFollower.followerEntity.userFileEntity) {
+        if(userFile.fileType == 'PROFILE') {
+          followerDto.userImage = userFile.fileEntity.url;
+        } else if(userFile.fileType == 'BANNER') {
+          followerDto.userBannerImage = userFile.fileEntity.url;
+        } else {
+          followerDto.userImage = '';
+        }
+      }
       followerDto.userHandle = userFollower.followerEntity.handle;
       followerDto.address = userFollower.followerEntity.address;
       responseArtistDto.followers.push(followerDto);

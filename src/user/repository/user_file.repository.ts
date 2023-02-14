@@ -12,7 +12,7 @@ export class UserFileRepository extends Repository<UserFileEntity> {
    * 사용자 파일 관계데이터 생성
    * @param updateUserDto
    */
-  async createUserFile(id: number, updateUserDto: UpdateUserDto): Promise<boolean> {
+  async createUserFile(id: number, updateUserDto: UpdateUserDto, fileType: string): Promise<boolean> {
     try {
 
       await getConnection()
@@ -20,13 +20,17 @@ export class UserFileRepository extends Repository<UserFileEntity> {
         .delete()
         .from(UserFileEntity)
         .where('userEntity = :userId', {userId: id})
+        .andWhere('fileType = :fileType', {fileType: fileType})
         .execute();
 
       const userEntity = new UserEntity();
       userEntity.id = id;
 
+      // const fileEntity = new FileEntity();
+      // fileEntity.id = updateUserDto.fileId;
+
       const fileEntity = new FileEntity();
-      fileEntity.id = updateUserDto.fileId;
+      fileEntity.id = fileType == 'PROFILE' ? updateUserDto.profileFileId : updateUserDto.bannerFileId;
 
       await getConnection()
         .createQueryBuilder()
@@ -36,6 +40,7 @@ export class UserFileRepository extends Repository<UserFileEntity> {
         .values({
           userEntity: userEntity,
           fileEntity: fileEntity,
+          fileType: fileType,
         })
         .execute();
 

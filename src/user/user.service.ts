@@ -59,11 +59,9 @@ export class UserService {
     }
   }
 
-  async updateUser(handle: string, updateUserDto: UpdateUserDto): Promise<boolean> {
+  async updateUser(authToken: string, updateUserDto: UpdateUserDto): Promise<boolean> {
 
-    const handleInfo = await this.userRepository.findByHandle(handle);
-
-    const userInfo = await this.findById(handleInfo.id);
+    const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
 
     if(userInfo.handle != updateUserDto.handle) {
       if(await this.isExistHandle(updateUserDto.handle.replace('@', '')) == false) {
@@ -71,19 +69,23 @@ export class UserService {
       }
     }
 
-    if(typeof updateUserDto.fileId != 'undefined') {
-      await this.userFileRepository.createUserFile(handleInfo.id, updateUserDto);
+    if(typeof updateUserDto.profileFileId != 'undefined' && updateUserDto.profileFileId != 0) {
+      await this.userFileRepository.createUserFile(userInfo.id, updateUserDto, 'PROFILE');
+    }
+
+    if(typeof updateUserDto.bannerFileId != 'undefined' && updateUserDto.bannerFileId != 0) {
+      await this.userFileRepository.createUserFile(userInfo.id, updateUserDto, 'BANNER');
     }
 
     if(typeof updateUserDto.userSnsModels != 'undefined' && updateUserDto.userSnsModels.length > 0) {
-      await this.userSnsRepository.createUserSns(handleInfo.id, updateUserDto);
+      await this.userSnsRepository.createUserSns(userInfo.id, updateUserDto);
     }
 
     if(typeof updateUserDto.genreIds != 'undefined' && updateUserDto.genreIds.length > 0) {
-      await this.userGenreRepository.createUserGenre(handleInfo.id, updateUserDto);
+      await this.userGenreRepository.createUserGenre(userInfo.id, updateUserDto);
     }
 
-    return await this.userRepository.updateUser(handleInfo.id, updateUserDto);
+    return await this.userRepository.updateUser(userInfo.id, updateUserDto);
   }
 
   async findById(id: number) : Promise<InfoUserDto> {

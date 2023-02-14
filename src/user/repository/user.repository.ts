@@ -125,7 +125,15 @@ export class UserRepository extends Repository<UserEntity> {
     infoUserDto.nickname = userEntity.nickname;
     infoUserDto.handle = userEntity.handle;
     infoUserDto.introduce = userEntity.introduce;
-    infoUserDto.profileImgUrl = typeof userEntity.userFileEntity == 'undefined' || userEntity.userFileEntity.length == 0 ? '' : userEntity.userFileEntity[0].fileEntity.url;
+    for(const userFile of userEntity.userFileEntity) {
+      if(userFile.fileType == 'PROFILE') {
+        infoUserDto.profileImgUrl = userFile.fileEntity.url;
+      } else if(userFile.fileType == 'BANNER') {
+        infoUserDto.bannerImgUrl = userFile.fileEntity.url;
+      } else {
+        infoUserDto.profileImgUrl = '';
+      }
+    }
     infoUserDto.createAt = Formatter.dateFormatter(userEntity.createdAt);
     // responseArtistDto.createAt = this.dateFormatter(artistInfo.createdAt);
     let genres = '';
@@ -172,7 +180,15 @@ export class UserRepository extends Repository<UserEntity> {
       infoUserDto.nickname = user.nickname;
       infoUserDto.handle = user.handle;
       infoUserDto.introduce = user.introduce;
-      infoUserDto.profileImgUrl = typeof user.userFileEntity == 'undefined' || user.userFileEntity.length == 0 ? 'noImage' : user.userFileEntity[0].fileEntity.url;
+      for(const userFile of user.userFileEntity) {
+        if(userFile.fileType == 'PROFILE') {
+          infoUserDto.profileImgUrl = userFile.fileEntity.url;
+        } else if(userFile.fileType == 'BANNER') {
+          infoUserDto.bannerImgUrl = userFile.fileEntity.url;
+        } else {
+          infoUserDto.profileImgUrl = 'noImage';
+        }
+      }
     }
     return infoUserDto;
   }
@@ -197,7 +213,15 @@ export class UserRepository extends Repository<UserEntity> {
       infoUserDto.nickname = user.nickname;
       infoUserDto.handle = user.handle;
       infoUserDto.introduce = user.introduce;
-      infoUserDto.profileImgUrl = typeof user.userFileEntity == 'undefined' || user.userFileEntity.length == 0 ? '' : user.userFileEntity[0].fileEntity.url;
+      for(const userFile of user.userFileEntity) {
+        if(userFile.fileType == 'PROFILE') {
+          infoUserDto.profileImgUrl = userFile.fileEntity.url;
+        } else if(userFile.fileType == 'BANNER') {
+          infoUserDto.bannerImgUrl = userFile.fileEntity.url;
+        } else {
+          infoUserDto.profileImgUrl = '';
+        }
+      }
     }
     return infoUserDto;
   }
@@ -256,7 +280,15 @@ export class UserRepository extends Repository<UserEntity> {
     for(const artistInfo of artistList[0]) {
       const responseArtistDto = new ResponseArtistDto();
       responseArtistDto.artistId = artistInfo.id;
-      responseArtistDto.artistImage = artistInfo.userFileEntity.length == 0 ? '' : artistInfo.userFileEntity[0].fileEntity.url;
+      for(const userFile of artistInfo.userFileEntity) {
+        if(userFile.fileType == 'PROFILE') {
+          responseArtistDto.artistImage = userFile.fileEntity.url;
+        } else if(userFile.fileType == 'BANNER') {
+          responseArtistDto.artistBannerImage = userFile.fileEntity.url;
+        } else {
+          responseArtistDto.artistImage = '';
+        }
+      }
       responseArtistDto.nickname = artistInfo.nickname;
       responseArtistDto.handle = artistInfo.handle;
       responseArtistDto.address = artistInfo.address;

@@ -36,6 +36,8 @@ export class InfoNftDto {
 
   isLike: boolean;  // 좋아요 여부
 
+  likeCount: number;
+
   ipfsHash: string;
 
   minter: string;
@@ -77,4 +79,12 @@ export class InfoNftDto {
   fellaz: ResponseUserInfoDto[];
 
   contractInfo: ResponseContractInfoDto;
+
+  artistId: number;
+
+  artistImage: string;
+
+  artistBannerImage: string;
+
+  floorPrice: number;
 }

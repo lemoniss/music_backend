@@ -19,26 +19,35 @@ export class UpdateUserDto {
     required: false,
     example: '안녕하세요',
   })
-  @MaxLength(100)
+  @MaxLength(600)
   introduce: string; // 내 소개글
 
   @ApiProperty({
     name: 'handle',
     description: '핸들',
     required: false,
-    example: '@maxx',
+    example: 'maxx',
   })
   @MaxLength(20)
   handle: string; // 핸들
 
   @ApiProperty({
-    name: 'fileId',
+    name: 'profileFileId',
     description: '내 프로필사진ID',
     required: false,
     example: '1',
   })
   @IsOptional()
-  fileId: number; // 내 프로필사진ID (nullable)
+  profileFileId: number; // 내 프로필사진ID (nullable)
+
+  @ApiProperty({
+    name: 'bannerFileId',
+    description: '빽판image ID',
+    required: false,
+    example: '1',
+  })
+  @IsOptional()
+  bannerFileId: number; // 빽판image id (nullable)
 
   @ApiProperty({
     name: 'genreIds',

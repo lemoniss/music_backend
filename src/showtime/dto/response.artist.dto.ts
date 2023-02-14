@@ -8,6 +8,8 @@ export class ResponseArtistDto {
 
   artistImage: string;
 
+  artistBannerImage: string;
+
   nickname: string;
 
   handle: string;

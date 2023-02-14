@@ -23,6 +23,8 @@ import { ResponseSplitStructureDto } from "../dto/response.splitstructure.dto";
 import {ResponseArtistDetailDto} from "../../landing/dto/response.artistrelease.dto";
 import { BannerEntity } from "../entity/banner.entity";
 import { Formatter } from "../../util/formatter";
+import { SortNftDto } from "../../nftmusic/dto/sort.nft.dto";
+import { InfoNftDto } from "../../nftmusic/dto/info.nft.dto";
 
 @EntityRepository(ShowtimeEntity)
 export class ShowtimeRepository extends Repository<ShowtimeEntity> {
@@ -127,7 +129,15 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
     responseUpcomingDto.producerHandle = [];
     for(const crew of upcomingInfo.showtimeCrewEntity) {
       if(crew.name == 'A') {
-        responseUpcomingDto.artistImage = crew.userEntity.userFileEntity.length == 0 ? '' : crew.userEntity.userFileEntity[0].fileEntity.url;
+        for(const userFile of crew.userEntity.userFileEntity) {
+          if(userFile.fileType == 'PROFILE') {
+            responseUpcomingDto.artistImage = userFile.fileEntity.url;
+          } else if(userFile.fileType == 'BANNER') {
+            responseUpcomingDto.artistBannerImage = userFile.fileEntity.url;
+          } else {
+            responseUpcomingDto.artistImage = '';
+          }
+        }
         responseUpcomingDto.artistId = Number(crew.userEntity.id);
         // responseRecentDto.artistHandle.push(crew.userEntity.handle);
         const idHandleDto = new ResponseIdHandleDto();
@@ -311,7 +321,15 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
 
       for(const crew of recent.showtimeCrewEntity) {
         if(crew.name == 'A') {
-          responseRecentDto.artistImage = crew.userEntity.userFileEntity.length == 0 ? '' : crew.userEntity.userFileEntity[0].fileEntity.url;
+          for(const userFile of crew.userEntity.userFileEntity) {
+            if(userFile.fileType == 'PROFILE') {
+              responseRecentDto.artistImage = userFile.fileEntity.url;
+            } else if(userFile.fileType == 'BANNER') {
+              responseRecentDto.artistBannerImage = userFile.fileEntity.url;
+            } else {
+              responseRecentDto.artistImage = '';
+            }
+          }
           responseRecentDto.artistId = Number(crew.userEntity.id);
           break;
         }
@@ -368,7 +386,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
     return responseList;
   }
 
-  async getLandingRecents(take: number): Promise<ResponseRecentListDto[]> {
+  async getLandingRecents(sortNftDto: SortNftDto): Promise<InfoNftDto[]> {
     const recentList = await getRepository(ShowtimeEntity)
       .createQueryBuilder('s')
       .leftJoinAndSelect('s.showtimeCrewEntity', 'sc')
@@ -380,14 +398,15 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
       .leftJoinAndSelect('stf.fileEntity', 'f')
       .where('s.releaseYn = :releaseYn', {releaseYn: 'Y'})
       .andWhere('s.viewYn = :viewYn', {viewYn: 'Y'})
-      .take(take)
+      .take(sortNftDto.take)
+      .skip(sortNftDto.skip)
       .orderBy('s.id', 'DESC')
       .getMany();
 
 
     if (!recentList) {
       let responseList = [];
-      const responseObj = new ResponseRecentListDto();
+      const responseObj = new InfoNftDto();
       responseList.push(responseObj);
       return responseList;
     }
@@ -396,13 +415,21 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
 
     let responseList = [];
     for(const recent of recentList) {
-      const responseRecentDto = new ResponseRecentListDto();
+      const responseRecentDto = new InfoNftDto();
 
       responseRecentDto.showtimeId = Number(recent.id);
 
       for(const crew of recent.showtimeCrewEntity) {
         if(crew.name == 'A') {
-          responseRecentDto.artistImage = crew.userEntity.userFileEntity.length == 0 ? '' : crew.userEntity.userFileEntity[0].fileEntity.url;
+          for(const userFile of crew.userEntity.userFileEntity) {
+            if(userFile.fileType == 'PROFILE') {
+              responseRecentDto.artistImage = userFile.fileEntity.url;
+            } else if(userFile.fileType == 'BANNER') {
+              responseRecentDto.artistBannerImage = userFile.fileEntity.url;
+            } else {
+              responseRecentDto.artistImage = '';
+            }
+          }
           responseRecentDto.artistId = Number(crew.userEntity.id);
           break;
         }
@@ -482,7 +509,15 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
     responseRecentDto.producerHandle = [];
     for(const crew of recentInfo.showtimeCrewEntity) {
       if(crew.name == 'A') {
-        responseRecentDto.artistImage = crew.userEntity.userFileEntity.length == 0 ? '' : crew.userEntity.userFileEntity[0].fileEntity.url;
+        for(const userFile of crew.userEntity.userFileEntity) {
+          if(userFile.fileType == 'PROFILE') {
+            responseRecentDto.artistImage = userFile.fileEntity.url;
+          } else if(userFile.fileType == 'BANNER') {
+            responseRecentDto.artistBannerImage = userFile.fileEntity.url;
+          } else {
+            responseRecentDto.artistImage = '';
+          }
+        }
         responseRecentDto.artistId = Number(crew.userEntity.id);
         // responseRecentDto.artistHandle.push(crew.userEntity.handle);
         const idHandleDto = new ResponseIdHandleDto();
@@ -649,7 +684,15 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
         purchaseHistory.boughtPrice = Number(showtimeTier.price);
         purchaseHistory.boughtAt = Formatter.dateFormatter(purchase.createdAt);
         purchaseHistory.userHandle = purchase.userEntity.handle;
-        purchaseHistory.userImage = purchase.userEntity.userFileEntity.length == 0 ? '' : purchase.userEntity.userFileEntity[0].fileEntity.url;
+        for(const userFile of purchase.userEntity.userFileEntity) {
+          if(userFile.fileType == 'PROFILE') {
+            purchaseHistory.userImage = userFile.fileEntity.url;
+          } else if(userFile.fileType == 'BANNER') {
+            purchaseHistory.userBannerImage = userFile.fileEntity.url;
+          } else {
+            purchaseHistory.userImage = '';
+          }
+        }
         purchaseHistory.symbol = purchase.symbol;
         responseRecentDto.provenance.push(purchaseHistory);
       }
@@ -732,7 +775,15 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
       userInfoDto.handle = crew.userEntity.handle;
       userInfoDto.name = crew.userEntity.nickname;
       userInfoDto.address = crew.userEntity.address;
-      userInfoDto.imgFileUrl = crew.userEntity.userFileEntity.length == 0 ? '' : crew.userEntity.userFileEntity[0].fileEntity.url;
+      for(const userFile of crew.userEntity.userFileEntity) {
+        if(userFile.fileType == 'PROFILE') {
+          userInfoDto.imgFileUrl = userFile.fileEntity.url;
+        } else if(userFile.fileType == 'BANNER') {
+          userInfoDto.imgBannerFileUrl = userFile.fileEntity.url;
+        } else {
+          userInfoDto.imgFileUrl = '';
+        }
+      }
       userInfoDto.followerCount = crew.userEntity.userFollowerEntity.length;
       if(crew.name == 'A') {
         responseRecentWebDto.artists.push(userInfoDto);
@@ -873,7 +924,15 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
       for(const holder of tier.showtimeHolderEntity) {
         const fellazInfoDto = new ResponseUserInfoDto();
         fellazInfoDto.userId = holder.userEntity.id;
-        fellazInfoDto.imgFileUrl = holder.userEntity.userFileEntity.length == 0 ? '' : holder.userEntity.userFileEntity[0].fileEntity.url;
+        for(const userFile of holder.userEntity.userFileEntity) {
+          if(userFile.fileType == 'PROFILE') {
+            fellazInfoDto.imgFileUrl = userFile.fileEntity.url;
+          } else if(userFile.fileType == 'BANNER') {
+            fellazInfoDto.imgBannerFileUrl = userFile.fileEntity.url;
+          } else {
+            fellazInfoDto.imgFileUrl = '';
+          }
+        }
         fellazInfoDto.handle = holder.userEntity.handle;
         fellazList.push(fellazInfoDto);
       }
@@ -1114,7 +1173,15 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
           for(const holder of obj.showtimeHolderEntity) {
             const fellazInfoDto = new ResponseUserInfoDto();
             fellazInfoDto.userId = holder.userEntity.id;
-            fellazInfoDto.imgFileUrl = holder.userEntity.userFileEntity.length == 0 ? '' : holder.userEntity.userFileEntity[0].fileEntity.url;
+            for(const userFile of holder.userEntity.userFileEntity) {
+              if(userFile.fileType == 'PROFILE') {
+                fellazInfoDto.imgFileUrl = userFile.fileEntity.url;
+              } else if(userFile.fileType == 'BANNER') {
+                fellazInfoDto.imgBannerFileUrl = userFile.fileEntity.url;
+              } else {
+                fellazInfoDto.imgFileUrl = '';
+              }
+            }
             fellazInfoDto.name = holder.userEntity.nickname;
             fellazInfoDto.handle = holder.userEntity.handle;
             responseList.push(fellazInfoDto);
@@ -1166,7 +1233,15 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
           for(const holder of obj.showtimeHolderEntity) {
             const fellazInfoDto = new ResponseUserInfoDto();
             fellazInfoDto.userId = holder.userEntity.id;
-            fellazInfoDto.imgFileUrl = holder.userEntity.userFileEntity.length == 0 ? '' : holder.userEntity.userFileEntity[0].fileEntity.url;
+            for(const userFile of holder.userEntity.userFileEntity) {
+              if(userFile.fileType == 'PROFILE') {
+                fellazInfoDto.imgFileUrl = userFile.fileEntity.url;
+              } else if(userFile.fileType == 'BANNER') {
+                fellazInfoDto.imgBannerFileUrl = userFile.fileEntity.url;
+              } else {
+                fellazInfoDto.imgFileUrl = '';
+              }
+            }
             fellazInfoDto.name = holder.userEntity.nickname;
             fellazInfoDto.handle = holder.userEntity.handle;
             responseList.push(fellazInfoDto);

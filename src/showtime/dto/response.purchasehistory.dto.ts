@@ -9,6 +9,8 @@ export class ResponsePurchasehistoryDto {
 
   userImage: string;
 
+  userBannerImage: string;
+
   userHandle: string;
 
   boughtTier: string;

@@ -9,6 +9,8 @@ export class ResponseUpcomingDto {
 
   artistImage: string;
 
+  artistBannerImage: string;
+
   name: string;
 
   artist: string;

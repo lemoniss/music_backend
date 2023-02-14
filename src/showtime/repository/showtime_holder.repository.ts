@@ -292,7 +292,15 @@ export class ShowtimeHolderRepository extends Repository<ShowtimeHolderEntity> {
       userInfoDto.handle = crew.userEntity.handle;
       userInfoDto.name = crew.userEntity.nickname;
       userInfoDto.address = crew.userEntity.address;
-      userInfoDto.imgFileUrl = crew.userEntity.userFileEntity.length == 0 ? '' : crew.userEntity.userFileEntity[0].fileEntity.url;
+      for(const userFile of crew.userEntity.userFileEntity) {
+        if(userFile.fileType == 'PROFILE') {
+          userInfoDto.imgFileUrl = userFile.fileEntity.url;
+        } else if(userFile.fileType == 'BANNER') {
+          userInfoDto.imgBannerFileUrl = userFile.fileEntity.url;
+        } else {
+          userInfoDto.imgFileUrl = '';
+        }
+      }
       userInfoDto.followerCount = crew.userEntity.userFollowerEntity.length;
       if(crew.name == 'A') {
         infoNftDto.artists.push(userInfoDto);
@@ -300,16 +308,6 @@ export class ShowtimeHolderRepository extends Repository<ShowtimeHolderEntity> {
         infoNftDto.producers.push(userInfoDto);
       }
     }
-
-
-    // const fellazList = [];
-    // const fellazInfoDto = new ResponseUserInfoDto();
-    // fellazInfoDto.userId = holderShowtime.userEntity.id;
-    // fellazInfoDto.imgFileUrl = holderShowtime.userEntity.userFileEntity.length == 0 ? '' : holderShowtime.userEntity.userFileEntity[0].fileEntity.url;
-    // fellazInfoDto.handle = holderShowtime.userEntity.handle;
-    // fellazList.push(fellazInfoDto);
-    // infoNftDto.fellaz = fellazList;
-
 
     const recentInfo = await getRepository(ShowtimeEntity)
       .createQueryBuilder('s')
@@ -431,7 +429,15 @@ export class ShowtimeHolderRepository extends Repository<ShowtimeHolderEntity> {
       for(const holder of tier.showtimeHolderEntity) {
         const fellazInfoDto = new ResponseUserInfoDto();
         fellazInfoDto.userId = holder.userEntity.id;
-        fellazInfoDto.imgFileUrl = holder.userEntity.userFileEntity.length == 0 ? '' : holder.userEntity.userFileEntity[0].fileEntity.url;
+        for(const userFile of holder.userEntity.userFileEntity) {
+          if(userFile.fileType == 'PROFILE') {
+            fellazInfoDto.imgFileUrl = userFile.fileEntity.url;
+          } else if(userFile.fileType == 'BANNER') {
+            fellazInfoDto.imgBannerFileUrl = userFile.fileEntity.url;
+          } else {
+            fellazInfoDto.imgFileUrl = '';
+          }
+        }
         fellazInfoDto.handle = holder.userEntity.handle;
         fellazList.push(fellazInfoDto);
       }

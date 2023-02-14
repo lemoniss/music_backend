@@ -305,7 +305,15 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
         userInfoDto.handle = crew.userEntity.handle;
         userInfoDto.name = crew.userEntity.nickname;
         userInfoDto.address = crew.userEntity.address;
-        userInfoDto.imgFileUrl = crew.userEntity.userFileEntity.length == 0 ? '' : crew.userEntity.userFileEntity[0].fileEntity.url;
+        for(const userFile of crew.userEntity.userFileEntity) {
+          if(userFile.fileType == 'PROFILE') {
+            userInfoDto.imgFileUrl = userFile.fileEntity.url;
+          } else if(userFile.fileType == 'BANNER') {
+            userInfoDto.imgBannerFileUrl = userFile.fileEntity.url;
+          } else {
+            userInfoDto.imgFileUrl = '';
+          }
+        }
         userInfoDto.followerCount = crew.userEntity.userFollowerEntity.length;
         if(crew.name == 'A') {
           infoExchangeDto.artists.push(userInfoDto);
@@ -322,7 +330,15 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
         for(const holder of tier.showtimeHolderEntity) {
           const fellazInfoDto = new ResponseUserInfoDto();
           fellazInfoDto.userId = holder.userEntity.id;
-          fellazInfoDto.imgFileUrl = holder.userEntity.userFileEntity.length == 0 ? '' : holder.userEntity.userFileEntity[0].fileEntity.url;
+          for(const userFile of holder.userEntity.userFileEntity) {
+            if(userFile.fileType == 'PROFILE') {
+              fellazInfoDto.imgFileUrl = userFile.fileEntity.url;
+            } else if(userFile.fileType == 'BANNER') {
+              fellazInfoDto.imgBannerFileUrl = userFile.fileEntity.url;
+            } else {
+              fellazInfoDto.imgFileUrl = '';
+            }
+          }
           fellazInfoDto.handle = holder.userEntity.handle;
           fellazList.push(fellazInfoDto);
         }
@@ -446,7 +462,15 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
         userInfoDto.handle = userInfo.handle;
         userInfoDto.name = userInfo.nickname
         userInfoDto.address = userInfo.address
-        userInfoDto.imgFileUrl = userInfo.userFileEntity.length == 0 ? '' : userInfo.userFileEntity[0].fileEntity.url;
+        for(const userFile of userInfo.userFileEntity) {
+          if(userFile.fileType == 'PROFILE') {
+            userInfoDto.imgFileUrl = userFile.fileEntity.url;
+          } else if(userFile.fileType == 'BANNER') {
+            userInfoDto.imgBannerFileUrl = userFile.fileEntity.url;
+          } else {
+            userInfoDto.imgFileUrl = '';
+          }
+        }
 
         infoExchangeDto.artists.push(userInfoDto);
       }
@@ -457,7 +481,15 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
         const fellazInfoDto = new ResponseUserInfoDto();
         fellazInfoDto.userId = holder.userEntity.id;
         fellazInfoDto.handle = holder.userEntity.handle;
-        fellazInfoDto.imgFileUrl = holder.userEntity.userFileEntity.length == 0 ? '' : holder.userEntity.userFileEntity[0].fileEntity.url;
+        for(const userFile of holder.userEntity.userFileEntity) {
+          if(userFile.fileType == 'PROFILE') {
+            fellazInfoDto.imgFileUrl = userFile.fileEntity.url;
+          } else if(userFile.fileType == 'BANNER') {
+            fellazInfoDto.imgBannerFileUrl = userFile.fileEntity.url;
+          } else {
+            fellazInfoDto.imgFileUrl = '';
+          }
+        }
         fellazList.add(fellazInfoDto);
       }
 

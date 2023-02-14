@@ -6,6 +6,8 @@ export class ResponseRecentListDto {
 
   artistImage: string;
 
+  artistBannerImage: string;
+
   name: string;
 
   artist: string;
