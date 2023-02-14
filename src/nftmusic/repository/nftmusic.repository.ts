@@ -720,6 +720,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     infoNftDto.isLike = false;
     infoNftDto.tokenId = nftInfo.tokenId;
     infoNftDto.source = nftInfo.source;
+    infoNftDto.releaseDt = Formatter.dateFormatter(nftInfo.createdAt);
 
     if(nftInfo.source == 'showtime') {
       infoNftDto.showtimeId = showtimeId;
@@ -824,6 +825,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       infoNftDto.description = nftEntity.description;
       infoNftDto.lyrics = nftEntity.lyrics;
       infoNftDto.playTime = nftEntity.playTime;
+      infoNftDto.releaseDt = Formatter.dateFormatter(nftEntity.createdAt);
 
       if(nftEntity.source == 'showtime') {
         const streamObj = await entityManager.query(

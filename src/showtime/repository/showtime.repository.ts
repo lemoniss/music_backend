@@ -463,6 +463,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
       responseRecentDto.source = 'showtime';
       responseRecentDto.playTime = recent.playTime;
       responseRecentDto.likeCount = recent.showtimeLikeEntity.length;
+      responseRecentDto.releaseDt = Formatter.dateFormatter(recent.createdAt);
 
       const streamObj = await entityManager.query(
         'select ceil(ifnull(sum(total_second)/?, 0)) as totalStreams from l2e where token_id in ' +

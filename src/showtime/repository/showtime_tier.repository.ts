@@ -6,6 +6,7 @@ import { CreateShowTimeDataDto } from "../dto/create.showtimedata.dto";
 import { ResponseTierListDto } from "../dto/response.tierlist.dto";
 import { ResponseTierInfoDto } from "../dto/response.tierinfo.dto";
 import { InfoNftDto } from "../../nftmusic/dto/info.nft.dto";
+import { Formatter } from "../../util/formatter";
 
 @EntityRepository(ShowtimeTierEntity)
 export class ShowtimeTierRepository extends Repository<ShowtimeTierEntity> {
@@ -203,6 +204,7 @@ export class ShowtimeTierRepository extends Repository<ShowtimeTierEntity> {
     infoNftDto.tokenId = tierInfo.tokenId;
     infoNftDto.source = 'showtime';
     infoNftDto.playCount = streamObj[0].totalStreams;
+    infoNftDto.releaseDt = Formatter.dateFormatter(tierInfo.showtimeEntity.createdAt);
 
     for(const showtimeFileEntity of tierInfo.showtimeFileEntity) {
       switch (showtimeFileEntity.fileType) {
