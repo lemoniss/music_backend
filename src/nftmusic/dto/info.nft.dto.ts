@@ -87,4 +87,6 @@ export class InfoNftDto {
   artistBannerImage: string;
 
   floorPrice: number;
+
+  releaseDt: string;
 }
