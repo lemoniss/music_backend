@@ -153,14 +153,13 @@ export class UserRepository extends Repository<UserEntity> {
 
   // 최초 사용자데이터 존재여부 검색시 사용
   async findByAddress(address: string): Promise<InfoUserDto> {
-    console.log(address)
+
     const user = await getRepository(UserEntity)
       .createQueryBuilder('u')
       .leftJoinAndSelect('u.userFileEntity', 'uf')
       .leftJoinAndSelect('uf.fileEntity', 'f')
       .where('u.address = :address', {address: address})
       .getOne();
-    console.log(user)
 
     const infoUserDto = new InfoUserDto();
 

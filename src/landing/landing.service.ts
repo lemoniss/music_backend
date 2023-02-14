@@ -74,9 +74,9 @@ export class LandingService {
     response.fellaz = await this.showtimeRepository.getFellazByArtist(userId, 0);
 
     const showtimeList = await this.showtimeHolderRepository.getLandingHolderShowtimes(userId);
-    console.log('1234')
+
     const nftList = await this.nftMusicRepository.getLandingMyNftList(userId); //TODO: playCount 수정
-    console.log(response.fellaz)
+
     response.collection = showtimeList.concat(nftList);
 
     // 내 플레이리스트 가져오기
