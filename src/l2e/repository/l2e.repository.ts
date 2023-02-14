@@ -39,16 +39,54 @@ export class L2eRepository extends Repository<L2eEntity> {
   }
 
   async getStreamingTop(sortNftDto: SortNftDto): Promise<InfoStreamingTopDto[]> {
+
+    let genreIds: string = '';
+
+    if(typeof sortNftDto.genreIds != 'undefined' && sortNftDto.genreIds.length > 0) {
+      for(const genreId of sortNftDto.genreIds) {
+        genreIds = genreIds + genreId + ','
+      }
+      genreIds = genreIds.substring(0, genreIds.length-1);
+    }
+
+    let genreQuery: string = '';
+    if(genreIds != '') {
+      genreQuery = ' and ng.genre_id in (' + genreIds + ') ';
+    }
+
     const entityManager = getManager();
     const l2eObj = await entityManager.query(
-      'select t.token_id as tokenId, t.totalSecond, t.source ' +
-      'from ( ' +
-      ' select token_id, source, sum(total_second) as totalSecond ' +
-      ' from l2e ' +
-      ' where source != \'myMusic\' ' +
-      ' group by token_id, source' +
-      ') t ' +
-      'order by t.totalSecond desc ' +
+      'select r.tokenId, r.totalSecond, r.source, r.id from (' +
+      'select t.token_id as tokenId, t.totalSecond, t.source, t.id ' +
+      '      from ( ' +
+      '       select token_id, source, sum(total_second) as totalSecond, max(id) as id ' +
+      '       from l2e ' +
+      '       where source != \'myMusic\' ' +
+      '       group by token_id, source' +
+      '      ) t ' +
+      '      inner join showtime_tier st' +
+      '      on t.token_id = st.token_id' +
+      '      and t.source = \'showtime\'' +
+      '      inner join showtime_genre ng' +
+      '      on st.showtime_id = ng.showtime_id  ' +
+      genreQuery +
+      '      union all ' +
+      'select t.token_id as tokenId, t.totalSecond, t.source, t.id ' +
+      '      from ( ' +
+      '       select token_id, source, sum(total_second) as totalSecond, max(id) as id ' +
+      '       from l2e ' +
+      '       where source != \'myMusic\' ' +
+      '       group by token_id, source' +
+      '      ) t ' +
+      '      inner join nft_music n' +
+      '      on t.token_id = n.token_id' +
+      '      and t.source != \'showtime\'' +
+      '      inner join nft_music_genre ng' +
+      '      on ng.nft_music_id = n.id' +
+      genreQuery +
+      ') r      ' +
+      'group by r.tokenId, r.totalSecond, r.source, r.id ' +
+      'order by r.totalSecond desc ' +
       'limit ? offset ? ', [sortNftDto.take, sortNftDto.skip] );
 
     const response = [];
@@ -67,18 +105,58 @@ export class L2eRepository extends Repository<L2eEntity> {
   }
 
   async getRecentPlayed(sortNftDto: SortNftDto): Promise<InfoStreamingTopDto[]> {
+
+    let genreIds: string = '';
+
+    if(typeof sortNftDto.genreIds != 'undefined' && sortNftDto.genreIds.length > 0) {
+      for(const genreId of sortNftDto.genreIds) {
+        genreIds = genreIds + genreId + ','
+      }
+      genreIds = genreIds.substring(0, genreIds.length-1);
+    }
+
+    let genreQuery: string = '';
+    if(genreIds != '') {
+      genreQuery = ' and ng.genre_id in (' + genreIds + ') ';
+    }
+
     const entityManager = getManager();
+
     const l2eObj = await entityManager.query(
+      'select r.tokenId, r.totalSecond, r.source, r.id from (' +
       'select t.token_id as tokenId, t.totalSecond, t.source, t.id ' +
-      'from ( ' +
-      ' select token_id, source, sum(total_second) as totalSecond, max(id) as id ' +
-      ' from l2e ' +
-      ' where user_id = ? ' +
-      ' and source != \'myMusic\' ' +
-      ' group by token_id, source' +
-      ') t ' +
-      'order by t.id desc ' +
-      'limit ? offset ? ', [sortNftDto.userId, sortNftDto.take, sortNftDto.skip] );
+      '      from ( ' +
+      '       select token_id, source, sum(total_second) as totalSecond, max(id) as id ' +
+      '       from l2e ' +
+      '       where user_id = ? ' +
+      '       and source != \'myMusic\' ' +
+      '       group by token_id, source' +
+      '      ) t ' +
+      '      inner join showtime_tier st' +
+      '      on t.token_id = st.token_id' +
+      '      and t.source = \'showtime\'' +
+      '      inner join showtime_genre ng' +
+      '      on st.showtime_id = ng.showtime_id  ' +
+      genreQuery +
+      '      union all ' +
+      'select t.token_id as tokenId, t.totalSecond, t.source, t.id ' +
+      '      from ( ' +
+      '       select token_id, source, sum(total_second) as totalSecond, max(id) as id ' +
+      '       from l2e ' +
+      '       where user_id = ? ' +
+      '       and source != \'myMusic\' ' +
+      '       group by token_id, source' +
+      '      ) t ' +
+      '      inner join nft_music n' +
+      '      on t.token_id = n.token_id' +
+      '      and t.source != \'showtime\'' +
+      '      inner join nft_music_genre ng' +
+      '      on ng.nft_music_id = n.id' +
+      genreQuery +
+      ') r      ' +
+      'group by r.tokenId, r.totalSecond, r.source, r.id ' +
+      'order by r.id desc ' +
+      'limit ? offset ? ', [sortNftDto.userId, sortNftDto.userId, sortNftDto.take, sortNftDto.skip] );
 
     const response = [];
 
