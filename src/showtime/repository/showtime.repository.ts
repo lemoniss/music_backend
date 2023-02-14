@@ -396,6 +396,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
       .leftJoinAndSelect('s.showtimeTierEntity', 'st')
       .leftJoinAndSelect('st.showtimeFileEntity', 'stf')
       .leftJoinAndSelect('stf.fileEntity', 'f')
+      .leftJoinAndSelect('s.showtimeLikeEntity', 'sl')
       .where('s.releaseYn = :releaseYn', {releaseYn: 'Y'})
       .andWhere('s.viewYn = :viewYn', {viewYn: 'Y'})
       .take(sortNftDto.take)
@@ -460,7 +461,8 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
       responseRecentDto.musicFileUrl = musicFileUrl;
       responseRecentDto.lyrics = recent.lyrics;
       responseRecentDto.source = 'showtime';
-
+      responseRecentDto.playTime = recent.playTime;
+      responseRecentDto.likeCount = recent.showtimeLikeEntity.length;
 
       const streamObj = await entityManager.query(
         'select ceil(ifnull(sum(total_second)/?, 0)) as totalStreams from l2e where token_id in ' +
@@ -469,6 +471,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
         ')'
         , [Number(recent.playTime), recent.id]);
       responseRecentDto.playCount = streamObj[0].totalStreams;
+
       responseList.push(responseRecentDto);
     }
 
