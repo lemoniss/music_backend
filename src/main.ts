@@ -10,7 +10,7 @@ async function bootstrap() {
   const swaggerConfig = new DocumentBuilder()
     .setTitle('MillimX API')
     .setDescription('Millim-X API Description')
-    .setVersion('1.1.0')
+    .setVersion('1.1.3')
     .build();
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('millimx/api', app, swaggerDocument);

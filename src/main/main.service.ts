@@ -70,7 +70,7 @@ export class MainService {
         const played = await this.l2eRepository.getRecentPlayed(recentDto);
 
         for(const recent of played) {
-          const info = await this.nftMusicRepository.findNftToTokenIdAndSource(recent.tokenId, recent.source, recent.totalSecond);
+          const info = await this.nftMusicRepository.findNftToToIdAndSource(recent.musicId, recent.source, recent.totalSecond);
           recentPlayed.push(info);
         }
         response.recentPlayed = recentPlayed;
@@ -103,7 +103,7 @@ export class MainService {
     streamingDto.take = 50;
     const l2eTop50 = await this.l2eRepository.getStreamingTop(streamingDto);
     for(const l2eInfo of l2eTop50) {
-      const info = await this.nftMusicRepository.findNftToTokenIdAndSource(l2eInfo.tokenId, l2eInfo.source, l2eInfo.totalSecond);
+      const info = await this.nftMusicRepository.findNftToToIdAndSource(l2eInfo.musicId, l2eInfo.source, l2eInfo.totalSecond);
       streamingTop50.push(info);
     }
 

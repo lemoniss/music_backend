@@ -1,5 +1,5 @@
 export class InfoStreamingTopDto {
-  tokenId: string;
+  musicId: string;
   totalSecond: number;
   source: string;
 }

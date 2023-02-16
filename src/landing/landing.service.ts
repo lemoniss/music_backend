@@ -29,7 +29,7 @@ export class LandingService {
     streamingDto.take = 15;
     const l2eTop15 = await this.l2eRepository.getStreamingTop(streamingDto);
     for(const l2eInfo of l2eTop15) {
-      const info = await this.nftMusicRepository.findNftToTokenIdAndSource(l2eInfo.tokenId, l2eInfo.source, l2eInfo.totalSecond);
+      const info = await this.nftMusicRepository.findNftToToIdAndSource(l2eInfo.musicId, l2eInfo.source, l2eInfo.totalSecond);
       streamingTop15.push(info);
     }
 

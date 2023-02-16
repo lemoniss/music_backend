@@ -115,7 +115,7 @@ export class NftMusicService {
     return await this.nftMusicRepository.findNftLikeList(sortNftDto);
   }
 
-  async findNftInfo(source: string, nftMusicId: number, authToken: string): Promise<InfoNftDto> {
+  async findNftInfo(source: string, nftMusicId: number, authToken: string): Promise<any> {
 
     let response: any = {};
 
@@ -224,7 +224,7 @@ export class NftMusicService {
         sortNftDto.userId = userInfo.id;
         const played = await this.l2eRepository.getRecentPlayed(sortNftDto);
         for(const recent of played) {
-          const info = await this.nftMusicRepository.findNftToTokenIdAndSource(recent.tokenId, recent.source, recent.totalSecond);
+          const info = await this.nftMusicRepository.findNftToToIdAndSource(recent.musicId, recent.source, recent.totalSecond);
           recentPlayed.push(info);
         }
         response.playList = recentPlayed;
@@ -233,7 +233,7 @@ export class NftMusicService {
         const streamingTop50 = [];
         const l2eTop50 = await this.l2eRepository.getStreamingTop(sortNftDto);
         for(const l2eInfo of l2eTop50) {
-          const info = await this.nftMusicRepository.findNftToTokenIdAndSource(l2eInfo.tokenId, l2eInfo.source, l2eInfo.totalSecond);
+          const info = await this.nftMusicRepository.findNftToToIdAndSource(l2eInfo.musicId, l2eInfo.source, l2eInfo.totalSecond);
           streamingTop50.push(info);
         }
         response.playList = streamingTop50;

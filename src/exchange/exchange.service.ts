@@ -34,9 +34,9 @@ export class ExchangeService {
 
       const infoNftMusicDto = await this.nftMusicService.findNftInfo(createExchangeDto.source, createExchangeDto.nftMusicId, authToken);
 
-      await this.exchangeRepository.registerExchangeItem(createExchangeDto, infoNftMusicDto).then(async (exchangeId) => {
-          await this.exchangeGenreRepository.registerExchangeGenre(exchangeId, infoNftMusicDto);
-          await this.exchangeFileRepository.registerExchangeFile(exchangeId, infoNftMusicDto);
+      await this.exchangeRepository.registerExchangeItem(createExchangeDto, infoNftMusicDto.myNftInfo).then(async (exchangeId) => {
+          await this.exchangeGenreRepository.registerExchangeGenre(exchangeId, infoNftMusicDto.myNftInfo);
+          await this.exchangeFileRepository.registerExchangeFile(exchangeId, infoNftMusicDto.myNftInfo);
           await this.userExchangeRepository.registerUserExchange(userInfo.id, exchangeId);
       });
 

@@ -17,7 +17,7 @@ export class NftMusicEntity extends BaseEntity {
   @PrimaryGeneratedColumn({type: 'bigint', name: 'id', comment: '내가만든음원 식별자'})
   id: number;
 
-  @Column({ type: 'varchar', name: 'ipfs_hash', length: 100, comment: 'IPFS해시' })
+  @Column({ type: 'varchar', name: 'ipfs_hash', length: 100, comment: 'IPFS해시', nullable: true })
   ipfsHash: string;
 
   @Column({ type: 'varchar', name: 'title', length: 50, comment: '제목' })
