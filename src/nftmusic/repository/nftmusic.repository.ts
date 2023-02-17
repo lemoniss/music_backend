@@ -672,26 +672,10 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     return infoNftDto;
   }
 
-  async findNftToTokenIdAndSource(tokenId: string, source: string, totalSecond: number): Promise<InfoNftDto> {
-
-    const entityManager = getManager();
-
-    let showtimeId;
+  async findNftToToIdAndSource(musicId: string, source: string, totalSecond: number): Promise<InfoNftDto> {
 
     if(source == 'showtime') {
-      const showtimeObj = await entityManager.query(
-        'select showtime_id as showtimeId from showtime_tier where token_id = ? ',
-        [tokenId]);
-
-      showtimeId = showtimeObj[0].showtimeId;
-
-      // const tokenObj = await entityManager.query(
-      //   'select min(token_id) as tokenId from showtime_tier where showtime_id = ? ',
-      //   [showtimeObj[0].showtimeId]);
-      //
-      // tokenId = tokenObj[0].tokenId;
-
-      return await ShowtimeTierRepository.getL2eToShowtimeId(showtimeId);
+      return await ShowtimeTierRepository.getL2eToShowtimeId(musicId);
     }
 
     const nftInfo = await getRepository(NftMusicEntity)
@@ -702,8 +686,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       .leftJoinAndSelect('mg.genreEntity', 'g')
       .leftJoinAndSelect('m.nftMusicLikeEntity', 'ml')
       .leftJoinAndSelect('ml.userEntity', 'u')
-      .where('m.tokenId = :tokenId', {tokenId: tokenId})
-      .andWhere('m.source = :source', {source: source})
+      .where('m.id = :musicId', {musicId: musicId})
       .getOne();
 
     const infoNftDto = new InfoNftDto();
@@ -712,7 +695,6 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       throw new RuntimeException('Music Not Found');
       // return await ShowtimeTierRepository.getTierToTokenId(tokenId, totalSecond);
     }
-
 
     infoNftDto.nftMusicId = nftInfo.id;
     infoNftDto.title = nftInfo.title;
@@ -727,10 +709,6 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     infoNftDto.tokenId = nftInfo.tokenId;
     infoNftDto.source = nftInfo.source;
     infoNftDto.releaseDt = Formatter.dateFormatter(nftInfo.createdAt);
-
-    if(nftInfo.source == 'showtime') {
-      infoNftDto.showtimeId = showtimeId;
-    }
 
     for(const nftFileEntity of nftInfo.nftMusicFileEntity) {
       switch (nftFileEntity.fileType) {

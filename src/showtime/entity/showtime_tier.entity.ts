@@ -41,7 +41,7 @@ export class ShowtimeTierEntity {
   @Column({ type: 'char', name: 'purchase_yn', length: 1, comment: '구매여부' })
   purchaseYn: string;
 
-  @Column({ type: 'varchar', name: 'ipfs_hash', length: 100, comment: 'IPFS해시' })
+  @Column({ type: 'varchar', name: 'ipfs_hash', length: 100, comment: 'IPFS해시', nullable: true })
   ipfsHash: string;
 
   @Column({ type: 'varchar', name: 'price', length: 50, comment: '판매가격' })

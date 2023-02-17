@@ -16,7 +16,7 @@ export class ExchangeEntity extends BaseEntity {
   @PrimaryGeneratedColumn({type: 'bigint', name: 'id', comment: '거래소 식별자'})
   id: number;
 
-  @Column({ type: 'varchar', name: 'ipfs_hash', length: 100, comment: 'IPFS해시' })
+  @Column({ type: 'varchar', name: 'ipfs_hash', length: 100, comment: 'IPFS해시', nullable: true })
   ipfsHash: string;
 
   @Column({ type: 'varchar', name: 'token_id', length: 50, comment: 'NFT Token ID' })
