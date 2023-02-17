@@ -166,12 +166,14 @@ auth_token: HRKMeWYyLXnETKoiU9OczRFXkCXRShWAAt7sEvd+sNkGtTrFb64WIygvHl2KjNna67BI
 
 ### 삭제
 
-POST http://localhost:23936/nfts/history/save
+POST http://localhost:23936/exchange/register
 Content-Type: application/json
-auth_token: dy/3ae5KjWbixVobieGf7mYui0LQJZuuy0jZgkMfgt/dSlI9Mky/9O5CJV54TulU36P84rYlTxai9z5yYuJMThxb8EkN4oVQAZxtwu2qi1RQ7Glk1WMXKqeM20hO5t6J/2CdIR3USvapujS5Nu5+RhhM4i1zjrRr/TzdtT9Jd1xH3OKXrrI0ENMGqjUIQZZag/Wbd5EtsRmF9/AMcgo0k82BoW4xOdrWt+tpDaCMxlPiGBOxBi+BsLQpBZS5dMulf2jxH0UK4gQzKdNRSgkiHWtQfllmDapy4FLHBDOtd8o/vujXS+hkRHoloASjF3bZB5FQI6pfMLdRvzJTClF09A==
+auth_token: LZWK8LWHOI+f1ilFkmY5eJL60jRswxCKW3OoPqe5pGmtB1Hho3ENtjOKEXgW73i3mt6tIB8fwbeixaHgq3R/spf9R6NaoK38IfYZvjkyQ71ETu+0a94fo+aoksJRuUz9F2DjFeRoq6CEOgIm+ycmKc8Oi4jaS/xdVNTO/zp4N12Z3/4RvIkvvEjROCanNd+QkNoVj1lSRynenXKaDqCKKWzHjSZu1W8nZkvwJHMDwSqodJHKMssbWXjnaWpPwnRDA6G47u39VJH7MhzlNvT6B4A2OfaTCEQxywRVVBYg3FLOkor88Ye6UZgtmrpETZkrm6zsQ6k0oaWpztVwzMBnjA==
 
 {
-  "nftMusicId": 1975,
-  "exchangeId": 89,
+  "nftMusicId": 1980,
+  "itemId": "98",
+  "seller": "0xcFFD8B22343f04b7611f85ef04A90A64D4F35476",
+  "price": "200000000000000000",
   "source": "normal"
 }

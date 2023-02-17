@@ -126,7 +126,8 @@ export class NftMusicService {
     } else {
       response.myNftInfo = await this.nftMusicRepository.findNftInfo(nftMusicId, response.connectorInfo.id);
     }
-
+    console.log('response')
+    console.log(response)
     return response;
   }
 

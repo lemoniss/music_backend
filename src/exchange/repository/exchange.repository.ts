@@ -47,7 +47,8 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
       // });
       //
       // return exchange.id;
-
+      console.log('infoNftDto.tokenId')
+      console.log(infoNftDto.tokenId)
       const exchange = await getConnection()
         .createQueryBuilder()
         .insert()

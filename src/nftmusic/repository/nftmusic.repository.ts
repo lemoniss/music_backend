@@ -474,6 +474,8 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       .leftJoinAndSelect('nl.userEntity', 'nlu')
       .where('n.id = :nftMusicId', {nftMusicId: nftMusicId})
       .getOne();
+    console.log('nftInfo')
+    console.log(nftInfo)
     if (!nftInfo) {
       // throw new RuntimeException('Music Not Found');
 
@@ -507,6 +509,8 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     infoNftDto.playTime = nftInfo.playTime;
     infoNftDto.minter = nftInfo.minter;
     // infoNftDto.handle = nftInfo.userNftMusicEntity[0].userEntity.handle;
+    console.log('infoNftDto')
+    console.log(infoNftDto.tokenId, nftInfo.tokenId)
     if(userObj.length > 0) {
       infoNftDto.userId = userObj[0].id;
       infoNftDto.handle = userObj[0].handle;
@@ -663,6 +667,8 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     contractInfoDto.splitStructure = splits;
     infoNftDto.contractInfo = contractInfoDto;
 
+    console.log('inoNftDto 탈출 전')
+    console.log(infoNftDto)
     return infoNftDto;
   }
 

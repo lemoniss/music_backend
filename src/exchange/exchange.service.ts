@@ -33,7 +33,8 @@ export class ExchangeService {
       const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
 
       const infoNftMusicDto = await this.nftMusicService.findNftInfo(createExchangeDto.source, createExchangeDto.nftMusicId, authToken);
-
+      console.log('infoNftMusicDto.tokenId')
+      console.log(infoNftMusicDto)
       await this.exchangeRepository.registerExchangeItem(createExchangeDto, infoNftMusicDto).then(async (exchangeId) => {
           await this.exchangeGenreRepository.registerExchangeGenre(exchangeId, infoNftMusicDto);
           await this.exchangeFileRepository.registerExchangeFile(exchangeId, infoNftMusicDto);
