@@ -25,9 +25,16 @@ export class MyMusicService {
     private genreService: GenreService,
   ) {}
 
-  async createMusic(userId: number, createMusicDto: CreateMusicDto): Promise<boolean> {
+  async createMusic(authToken: string, createMusicDto: CreateMusicDto): Promise<boolean> {
     try {
-      await this.myMusicRepository.createMusic(userId, createMusicDto).then(async (myMusicId) => {
+      const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+
+      if(userInfo.id == 0) {
+        throw new ForbiddenException();
+        return false;
+      }
+
+      await this.myMusicRepository.createMusic(userInfo.id, createMusicDto).then(async (myMusicId) => {
         await this.myMusicGenreRepository.createMusicGenre(myMusicId, createMusicDto);
         await this.myMusicFileRepository.createMusicFile(myMusicId, createMusicDto);
       });

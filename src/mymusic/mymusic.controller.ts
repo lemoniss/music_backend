@@ -30,11 +30,11 @@ export class MyMusicController {
    * @param createMusicDto
    */
   @ApiOperation({summary: '내 음악 정보 생성'})
-  @Post("/:userId")
-  createMusic(@Param("userId", ParseIntPipe) userId: number,
+  @Post()
+  createMusic(@Headers("auth_token") authToken: string,
               @Body() createMusicDto: CreateMusicDto)
     : Promise<boolean> {
-    return this.myMusicService.createMusic(userId, createMusicDto);
+    return this.myMusicService.createMusic(authToken, createMusicDto);
   }
 
   /**
