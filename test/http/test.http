@@ -817,3 +817,7 @@ auth_token: LZWK8LWHOI+f1ilFkmY5eJL60jRswxCKW3OoPqe5pGmtB1Hho3ENtjOKEXgW73i3mt6t
   "price": "200000000000000000",
   "source": "normal"
 }
+
+### upload page init
+GET http://localhost:23936/musics/upload/init
+auth_token: {authToken}

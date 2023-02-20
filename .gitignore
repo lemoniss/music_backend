@@ -48,6 +48,7 @@ Thumbs.db
 *.mov
 *.wmv
 
-.env.dev
-.env.local
-.env.prod
+.env
+#.env.dev
+#.env.local
+#.env.prod

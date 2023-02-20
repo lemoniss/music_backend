@@ -2,7 +2,7 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
+  Get, Headers,
   Param,
   ParseIntPipe,
   Patch,
@@ -96,4 +96,17 @@ export class MyMusicController {
     : Promise<boolean> {
     return this.myMusicService.updateMusicStatus(myMusicId, updateMusicStatusDto);
   }
+
+  /**
+   * 음악 리스트 (검색: nullable)
+   * @param userId
+   * @param search
+   */
+  @Get("/upload/init")
+  @ApiOperation({summary: 'upload init'})
+  uploadSongInitData(@Headers("auth_token") authToken: string)
+    : Promise<any> {
+    return this.myMusicService.uploadSongInitData(authToken);
+  }
+
 }

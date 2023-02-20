@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
 import { MyMusicRepository } from "./repository/mymusic.repository";
 import { MyMusicGenreRepository } from "./repository/mymusic_genre.repository";
@@ -11,6 +11,9 @@ import { UpdateMusicStatusDto } from "./dto/status.music.dto";
 import { MyMusicFileEntity } from "./entity/mymusic_file.entity";
 import { MyMusicGenreEntity } from "./entity/mymusic_genre.entity";
 import { MyMusicEntity } from "./entity/mymusic.entity";
+import { Rsa } from "../util/rsa";
+import { UserRepository } from "../user/repository/user.repository";
+import { GenreService } from "../genre/genre.service";
 
 @Injectable()
 export class MyMusicService {
@@ -18,6 +21,8 @@ export class MyMusicService {
     private myMusicRepository: MyMusicRepository,
     private myMusicGenreRepository: MyMusicGenreRepository,
     private myMusicFileRepository: MyMusicFileRepository,
+    private userRepository: UserRepository,
+    private genreService: GenreService,
   ) {}
 
   async createMusic(userId: number, createMusicDto: CreateMusicDto): Promise<boolean> {
@@ -84,5 +89,21 @@ export class MyMusicService {
       console.log(e);
       throw new RuntimeException();
     }
+  }
+
+  async uploadSongInitData(authToken: string) : Promise<any> {
+    let response: any = {};
+
+    const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+
+    if(userInfo.id == 0) {
+      throw new ForbiddenException();
+      return false;
+    }
+
+    response.connectorInfo = userInfo;
+    response.genreList = await this.genreService.getGenreAll();
+
+    return response;
   }
 }

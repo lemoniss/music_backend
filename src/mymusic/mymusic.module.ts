@@ -9,10 +9,13 @@ import { UserModule } from "../user/user.module";
 import { MyMusicEntity } from "./entity/mymusic.entity";
 import { MyMusicGenreEntity } from "./entity/mymusic_genre.entity";
 import { MyMusicFileEntity } from "./entity/mymusic_file.entity";
+import { UserRepository } from "../user/repository/user.repository";
+import { GenreModule } from "../genre/genre.module";
 
 @Module({
   imports: [
     UserModule,
+    GenreModule,
     TypeOrmModule.forFeature([
       MyMusicEntity,
       MyMusicGenreEntity,
@@ -24,7 +27,9 @@ import { MyMusicFileEntity } from "./entity/mymusic_file.entity";
     MyMusicService,
     MyMusicRepository,
     MyMusicGenreRepository,
-    MyMusicFileRepository
+    MyMusicFileRepository,
+    UserRepository,
+    GenreModule,
   ],
   exports: [TypeOrmModule, MyMusicService],
 })
