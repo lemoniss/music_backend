@@ -474,8 +474,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       .leftJoinAndSelect('nl.userEntity', 'nlu')
       .where('n.id = :nftMusicId', {nftMusicId: nftMusicId})
       .getOne();
-    console.log('nftInfo')
-    console.log(nftInfo)
+
     if (!nftInfo) {
       // throw new RuntimeException('Music Not Found');
 

@@ -172,8 +172,27 @@ auth_token: LZWK8LWHOI+f1ilFkmY5eJL60jRswxCKW3OoPqe5pGmtB1Hho3ENtjOKEXgW73i3mt6t
 
 {
   "nftMusicId": 1980,
-  "itemId": "98",
-  "seller": "0xcFFD8B22343f04b7611f85ef04A90A64D4F35476",
+  "itemId": "181",
+  "seller": "0x51ab2c76dc259f150192a8f47912927a27f2b929",
   "price": "200000000000000000",
   "source": "normal"
+}
+
+### nft히스토리
+
+POST http://localhost:23936/nfts/history/save
+Content-Type: application/json
+auth_token: LZWK8LWHOI+f1ilFkmY5eJL60jRswxCKW3OoPqe5pGmtB1Hho3ENtjOKEXgW73i3mt6tIB8fwbeixaHgq3R/spf9R6NaoK38IfYZvjkyQ71ETu+0a94fo+aoksJRuUz9F2DjFeRoq6CEOgIm+ycmKc8Oi4jaS/xdVNTO/zp4N12Z3/4RvIkvvEjROCanNd+QkNoVj1lSRynenXKaDqCKKWzHjSZu1W8nZkvwJHMDwSqodJHKMssbWXjnaWpPwnRDA6G47u39VJH7MhzlNvT6B4A2OfaTCEQxywRVVBYg3FLOkor88Ye6UZgtmrpETZkrm6zsQ6k0oaWpztVwzMBnjA==
+
+{
+  "blockNumber":"8506378",
+  "fromAddress":"0x51ab2c76dc259F150192a8f47912927A27F2b929",
+  "itemId":"116",
+  "method":"register",
+  "price":"200000000000000000",
+  "status":"SUCCESS",
+  "symbol":"ETH",
+  "toAddress":"0x6589Ca6359955Bd8E92CE9D92a3B9CEE0d0E20ed",
+  "tokenId":"181",
+  "txHash":"0x6b6e13d79e26a068da43a3d217f0e96054c719f3af13a000b274115faccd98ff"
 }

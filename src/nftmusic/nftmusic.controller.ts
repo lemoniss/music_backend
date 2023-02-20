@@ -152,6 +152,7 @@ export class NftMusicController {
    */
   @Patch('/onsale/:nftMusicId/:source/:onSaleType')
   @ApiOperation({summary: 'NFT 판매중 상태로 업데이트'})
+  @UseGuards(AuthGuard)
   patchOnSale(@Param("nftMusicId", ParseIntPipe) nftMusicId: number,
               @Param("source") source: string,
               @Param("onSaleType") onSaleType: string) {

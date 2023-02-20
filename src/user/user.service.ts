@@ -102,10 +102,11 @@ export class UserService {
 
   async findMyInfo(authToken: string) : Promise<any> {
     const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
-
     let response: any = {};
 
     const userId = userInfo.id;
+
+    response.connectorInfo = userInfo;
     response.userInfo = await this.userRepository.findById(userId);
     response.followingInfo = {following: "N/A", follower: "N/A"};
 
