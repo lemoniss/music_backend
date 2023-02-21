@@ -66,7 +66,9 @@ export class MyMusicRepository extends Repository<MyMusicEntity> {
    */
   async updateMusic(myMusicId: number, updateMusicDto: UpdateMusicDto): Promise<boolean> {
     try {
+      console.log(typeof myMusicId, myMusicId, updateMusicDto)
       const infoMyMusicDto = await this.findOne(myMusicId);
+      console.log(infoMyMusicDto)
 
       // await this.update({ id: myMusicId }, {
       //   title: typeof updateMusicDto.title == 'undefined' ? infoMyMusicDto.title : updateMusicDto.title,
@@ -75,6 +77,8 @@ export class MyMusicRepository extends Repository<MyMusicEntity> {
       //   description: typeof updateMusicDto.description == 'undefined' ? infoMyMusicDto.description : updateMusicDto.description,
       //   lyrics: typeof updateMusicDto.lyrics == 'undefined' ? infoMyMusicDto.lyrics : updateMusicDto.lyrics,
       // });
+
+
 
       await getConnection()
         .createQueryBuilder()
