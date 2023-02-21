@@ -94,6 +94,7 @@ export class MyMusicRepository extends Repository<MyMusicEntity> {
           description: typeof updateMusicDto.description == 'undefined' ? musicInfo.description : updateMusicDto.description,
           lyrics: typeof updateMusicDto.lyrics == 'undefined' ? musicInfo.lyrics : updateMusicDto.lyrics,
           playTime: typeof updateMusicDto.playTime == 'undefined' ? musicInfo.playTime : Number(updateMusicDto.playTime),
+          status: 'Review',
         })
         .where('id = :myMusicId', {myMusicId: myMusicId})
         .execute();
