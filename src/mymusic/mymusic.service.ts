@@ -67,8 +67,21 @@ export class MyMusicService {
     }
   }
 
-  async findMusicList(userId: number, keyword: string): Promise<InfoMusicDto[]> {
-    return await this.myMusicRepository.findMusicList(userId, keyword);
+  async findMusicList(authToken: string, keyword: string): Promise<any> {
+
+    let response: any = {};
+
+    const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+
+    if(userInfo.id == 0) {
+      throw new ForbiddenException();
+      return false;
+    }
+
+    response.connectorInfo = userInfo;
+    response.musicList = await this.myMusicRepository.findMusicList(userInfo.id, keyword);
+
+    return response;
   }
 
   async findMusicInfo(myMusicId: number): Promise<InfoMusicDto> {

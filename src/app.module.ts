@@ -32,8 +32,8 @@ import { UtilModule } from "./util/util.module";
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      // envFilePath: process.env.NODE_ENV == 'dev' ? '.develop_env.dev' :
-      //   process.env.NODE_ENV == 'prod' ? '.develop_env.prod' : '.develop_env.local',
+      envFilePath: process.env.NODE_ENV == 'dev' ? '.env.dev' :
+        process.env.NODE_ENV == 'prod' ? '.env.prod' : '.env.local',
     }),
     TypeOrmModule.forRoot({
       type: 'mysql', //Database 설정

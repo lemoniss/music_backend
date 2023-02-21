@@ -54,13 +54,13 @@ export class MyMusicController {
    * @param userId
    * @param search
    */
-  @Get("/:userId")
+  @Get()
   @ApiOperation({summary: '내 음악 리스트'})
   @ApiQuery({name: 'keyword', required: false})
-  findMusicList(@Param("userId", ParseIntPipe) userId: number,
+  findMusicList(@Headers("auth_token") authToken: string,
                 @Query('keyword') keyword: string)
-    : Promise<InfoMusicDto[]> {
-    return this.myMusicService.findMusicList(userId, keyword);
+    : Promise<any> {
+    return this.myMusicService.findMusicList(authToken, keyword);
   }
 
   /**
