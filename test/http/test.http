@@ -840,3 +840,8 @@ auth_token: LZWK8LWHOI+f1ilFkmY5eJL60jRswxCKW3OoPqe5pGmtB1Hho3ENtjOKEXgW73i3mt6t
   "imgFileId": 71,
   "playTime": 278
 }
+
+### 음악 목록
+GET http://localhost:23936/musics
+Content-Type: application/json
+auth_token: {authToken}
