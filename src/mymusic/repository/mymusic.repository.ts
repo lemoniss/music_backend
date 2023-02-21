@@ -66,7 +66,15 @@ export class MyMusicRepository extends Repository<MyMusicEntity> {
    */
   async updateMusic(myMusicId: number, updateMusicDto: UpdateMusicDto): Promise<boolean> {
     try {
-      const infoMyMusicDto = await this.findOne(myMusicId);
+      // const infoMyMusicDto = await this.findOne(myMusicId);
+
+      const musicInfo = await getRepository(MyMusicEntity)
+        .createQueryBuilder('m')
+        .where('m.id = :myMusicId', {myMusicId: myMusicId})
+        .getOne();
+      if (!musicInfo) {
+        throw new RuntimeException('Music Not Found');
+      }
 
       // await this.update({ id: myMusicId }, {
       //   title: typeof updateMusicDto.title == 'undefined' ? infoMyMusicDto.title : updateMusicDto.title,
@@ -80,12 +88,12 @@ export class MyMusicRepository extends Repository<MyMusicEntity> {
         .createQueryBuilder()
         .update(MyMusicEntity)
         .set({
-          title: typeof updateMusicDto.title == 'undefined' ? infoMyMusicDto.title : updateMusicDto.title,
-          name: typeof updateMusicDto.name == 'undefined' ? infoMyMusicDto.name : updateMusicDto.name,
-          artist: typeof updateMusicDto.artist == 'undefined' ? infoMyMusicDto.title : updateMusicDto.artist,
-          description: typeof updateMusicDto.description == 'undefined' ? infoMyMusicDto.description : updateMusicDto.description,
-          lyrics: typeof updateMusicDto.lyrics == 'undefined' ? infoMyMusicDto.lyrics : updateMusicDto.lyrics,
-          playTime: typeof updateMusicDto.playTime == 'undefined' ? infoMyMusicDto.playTime : Number(updateMusicDto.playTime),
+          title: typeof updateMusicDto.title == 'undefined' ? musicInfo.title : updateMusicDto.title,
+          name: typeof updateMusicDto.name == 'undefined' ? musicInfo.name : updateMusicDto.name,
+          artist: typeof updateMusicDto.artist == 'undefined' ? musicInfo.title : updateMusicDto.artist,
+          description: typeof updateMusicDto.description == 'undefined' ? musicInfo.description : updateMusicDto.description,
+          lyrics: typeof updateMusicDto.lyrics == 'undefined' ? musicInfo.lyrics : updateMusicDto.lyrics,
+          playTime: typeof updateMusicDto.playTime == 'undefined' ? musicInfo.playTime : Number(updateMusicDto.playTime),
         })
         .where('id = :myMusicId', {myMusicId: myMusicId})
         .execute();
