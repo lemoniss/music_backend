@@ -843,5 +843,29 @@ auth_token: LZWK8LWHOI+f1ilFkmY5eJL60jRswxCKW3OoPqe5pGmtB1Hho3ENtjOKEXgW73i3mt6t
 
 ### 음악 목록
 GET http://localhost:23936/musics
+auth_token: {authToken}
+
+### 음악 상세정보
+GET http://localhost:23936/musics/details/{musicId}
+auth_token: {authToken}
+
+### 음악 정보 수정
+PATCH http://localhost:23936/musics/{musicId}
 Content-Type: application/json
+auth_token: {authToken}
+
+{
+  "title": "앨범명",
+  "name": "노래제목",
+  "artist": "아티스트",
+  "genreIds": [1, 2, 3],
+  "description": "설명",
+  "lyrics": "가사", // optional
+  "musicFileId": 70,  // optional
+  "imgFileId": 71,  // optional
+  "playTime": 278
+}
+
+### 음악 삭제
+DELETE http://localhost:23936/musics/{musicId}
 auth_token: {authToken}

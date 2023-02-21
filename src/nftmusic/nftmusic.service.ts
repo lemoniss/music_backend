@@ -43,21 +43,21 @@ export class NftMusicService {
   ) {}
 
 
-  async createIpfs(userId: number, createNftDto: CreateNftDto): Promise<string> {
+  async createIpfs(authToken: string, createNftDto: CreateNftDto): Promise<string> {
     try {
-      const infoMusicDto = await this.myMusicService.findMusicInfo(createNftDto.myMusicId);
+      const infoMusicDto = await this.myMusicService.findMusicInfo(authToken, createNftDto.myMusicId);
 
       const metadataNftDto = new MetadataNftDto();
-      metadataNftDto.title = infoMusicDto.title;
-      metadataNftDto.name = infoMusicDto.name;
-      metadataNftDto.artist = infoMusicDto.artist;
-      metadataNftDto.genres = infoMusicDto.genres;
-      metadataNftDto.description = infoMusicDto.description;
-      metadataNftDto.playTime = infoMusicDto.playTime;
+      metadataNftDto.title = infoMusicDto.musicInfo.title;
+      metadataNftDto.name = infoMusicDto.musicInfo.name;
+      metadataNftDto.artist = infoMusicDto.musicInfo.artist;
+      metadataNftDto.genres = infoMusicDto.musicInfo.genres;
+      metadataNftDto.description = infoMusicDto.musicInfo.description;
+      metadataNftDto.playTime = infoMusicDto.musicInfo.playTime;
       metadataNftDto.minter = createNftDto.minter;
       metadataNftDto.tokenId = createNftDto.tokenId;
 
-      for(const i of infoMusicDto.files) {
+      for(const i of infoMusicDto.musicInfo.files) {
         if(i.filetype == 'MUSIC') {
           metadataNftDto.musicIpfsHash = await this.uploadService.uploadFileToIpfs(i.fileId);
         } else {
@@ -75,14 +75,14 @@ export class NftMusicService {
     }
   }
 
-  async createNft(userId: number, createNftDto: CreateNftDto): Promise<boolean> {
+  async createNft(authToken: string, createNftDto: CreateNftDto): Promise<boolean> {
     try {
-      const infoMusicDto = await this.myMusicService.findMusicInfo(createNftDto.myMusicId);
+      const infoMusicDto = await this.myMusicService.findMusicInfo(authToken, createNftDto.myMusicId);
 
-      await this.nftMusicRepository.createNft(createNftDto, await infoMusicDto).then(async (nftMusicId) => {
-        await this.nftMusicGenreRepository.createNftMusicGenre(nftMusicId, await infoMusicDto);
-        await this.nftMusicFileRepository.createNftMusicFile(nftMusicId, await infoMusicDto);
-        await this.userNftMusicRepository.createUserNftMusic(userId, nftMusicId);
+      await this.nftMusicRepository.createNft(createNftDto, await infoMusicDto.musicInfo).then(async (nftMusicId) => {
+        await this.nftMusicGenreRepository.createNftMusicGenre(nftMusicId, await infoMusicDto.musicInfo);
+        await this.nftMusicFileRepository.createNftMusicFile(nftMusicId, await infoMusicDto.musicInfo);
+        await this.userNftMusicRepository.createUserNftMusic(infoMusicDto.connectorInfo.userId, nftMusicId);
       });
       await this.myMusicService.deleteMusic(createNftDto.myMusicId);
 

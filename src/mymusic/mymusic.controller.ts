@@ -69,9 +69,10 @@ export class MyMusicController {
    */
   @Get("/details/:myMusicId")
   @ApiOperation({summary: '내 음악 상세'})
-  findMusicInfo(@Param("myMusicId", ParseIntPipe) myMusicId: number)
-    : Promise<InfoMusicDto> {
-    return this.myMusicService.findMusicInfo(myMusicId);
+  findMusicInfo(@Headers("auth_token") authToken: string,
+                @Param("myMusicId", ParseIntPipe) myMusicId: number)
+    : Promise<any> {
+    return this.myMusicService.findMusicInfo(authToken, myMusicId);
   }
 
   /**

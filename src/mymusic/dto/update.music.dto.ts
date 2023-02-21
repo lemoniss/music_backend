@@ -86,6 +86,6 @@ export class UpdateMusicDto {
     example: '270',
   })
 
-  @IsNotEmpty()
+  @IsOptional()
   playTime: string; // playtime
 }

@@ -84,8 +84,20 @@ export class MyMusicService {
     return response;
   }
 
-  async findMusicInfo(myMusicId: number): Promise<InfoMusicDto> {
-    return await this.myMusicRepository.findMusicInfo(myMusicId);
+  async findMusicInfo(authToken: string, myMusicId: number): Promise<any> {
+    let response: any = {};
+
+    const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+
+    if(userInfo.id == 0) {
+      throw new ForbiddenException();
+      return false;
+    }
+
+    response.connectorInfo = userInfo;
+    response.musicInfo = await this.myMusicRepository.findMusicInfo(myMusicId);
+
+    return response;
   }
 
   async deleteMusic(myMusicId: number): Promise<boolean> {

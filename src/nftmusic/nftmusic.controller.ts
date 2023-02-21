@@ -34,11 +34,11 @@ export class NftMusicController {
    * @param createMusicDto
    */
   @ApiOperation({summary: 'NFT 음악 정보 생성'})
-  @Post('/ipfs/:userId')
-  createIpfs(@Param("userId", ParseIntPipe) userId: number,
+  @Post('/ipfs')
+  createIpfs(@Headers("auth_token") authToken: string,
               @Body() createNftDto: CreateNftDto)
     : Promise<string> {
-    return this.nftMusicService.createIpfs(userId, createNftDto);
+    return this.nftMusicService.createIpfs(authToken, createNftDto);
   }
 
   /**
@@ -47,10 +47,10 @@ export class NftMusicController {
    */
   @ApiOperation({summary: 'NFT 음악 정보 생성'})
   @Post('/mint/:userId')
-  createNft(@Param("userId", ParseIntPipe) userId: number,
+  createNft(@Headers("auth_token") authToken: string,
              @Body() createNftDto: CreateNftDto)
     : Promise<boolean> {
-    return this.nftMusicService.createNft(userId, createNftDto);
+    return this.nftMusicService.createNft(authToken, createNftDto);
   }
 
   /**
