@@ -97,6 +97,11 @@ export class MyMusicService {
     response.connectorInfo = userInfo;
     response.musicInfo = await this.myMusicRepository.findMusicInfo(myMusicId);
 
+    if(userInfo.id != response.musicInfo.userId) {
+      throw new ForbiddenException();
+      return false;
+    }
+
     return response;
   }
 

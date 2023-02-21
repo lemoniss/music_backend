@@ -169,6 +169,7 @@ export class MyMusicRepository extends Repository<MyMusicEntity> {
       .innerJoinAndSelect('mf.fileEntity', 'f')
       .leftJoinAndSelect('m.myMusicGenreEntity', 'mg')
       .innerJoinAndSelect('mg.genreEntity', 'g')
+      .innerJoinAndSelect('m.userEntity', 'u')
       .where('m.id = :myMusicId', {myMusicId: myMusicId})
       .getOne();
     if (!musicInfo) {
@@ -186,6 +187,7 @@ export class MyMusicRepository extends Repository<MyMusicEntity> {
     infoMusicDto.playTime = musicInfo.playTime;
     infoMusicDto.lyrics = musicInfo.lyrics;
     infoMusicDto.status = musicInfo.status;
+    infoMusicDto.userId = musicInfo.userEntity.id;
 
     let fileInfos = [];
 

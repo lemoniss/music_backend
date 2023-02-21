@@ -31,4 +31,6 @@ export class InfoMusicDto {
   lyrics: string;
 
   status: string;
+
+  userId: number;
 }
