@@ -50,7 +50,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
         .insert()
         .into(NftMusicEntity)
         .values({
-          ipfsHash: createNftDto.tokenUri,
+          ipfsHash: createNftDto.tokenId,
           tokenId: createNftDto.tokenId,
           minter: createNftDto.minter,
           title: infoMusicDto.title,

@@ -869,3 +869,8 @@ auth_token: {authToken}
 ### 음악 삭제
 DELETE http://localhost:23936/musics/{musicId}
 auth_token: {authToken}
+
+
+### 음악 상세정보
+GET http://localhost:23936/musics/details/70
+auth_token: LZWK8LWHOI+f1ilFkmY5eJL60jRswxCKW3OoPqe5pGmtB1Hho3ENtjOKEXgW73i3mt6tIB8fwbeixaHgq3R/spf9R6NaoK38IfYZvjkyQ71ETu+0a94fo+aoksJRuUz9F2DjFeRoq6CEOgIm+ycmKc8Oi4jaS/xdVNTO/zp4N12Z3/4RvIkvvEjROCanNd+QkNoVj1lSRynenXKaDqCKKWzHjSZu1W8nZkvwJHMDwSqodJHKMssbWXjnaWpPwnRDA6G47u39VJH7MhzlNvT6B4A2OfaTCEQxywRVVBYg3FLOkor88Ye6UZgtmrpETZkrm6zsQ6k0oaWpztVwzMBnjA==

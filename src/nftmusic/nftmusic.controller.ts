@@ -46,7 +46,7 @@ export class NftMusicController {
    * @param createMusicDto
    */
   @ApiOperation({summary: 'NFT 음악 정보 생성'})
-  @Post('/mint/:userId')
+  @Post('/mint')
   createNft(@Headers("auth_token") authToken: string,
              @Body() createNftDto: CreateNftDto)
     : Promise<boolean> {
