@@ -27,6 +27,8 @@ import { LandingModule } from "./landing/landing.module";
 import { LandingController } from "./landing/landing.controller";
 import { MainModule } from "./main/main.module";
 import { UtilModule } from "./util/util.module";
+import { Web3Module } from "nest-web3";
+import { BlockchainModule } from "./blockchain/blockchain.module";
 
 @Module({
   imports: [
@@ -47,6 +49,10 @@ import { UtilModule } from "./util/util.module";
       logging: true,  // 운영에서는 무조건 false 로 설정할 것
       // autoLoadEntities: true
     }),
+    Web3Module.forRoot({
+      name: 'eth',
+      url: process.env.ETHCLIENT_ENDPOINT,
+    }),
     UserModule,
     GenreModule,
     UploadModule,
@@ -58,6 +64,7 @@ import { UtilModule } from "./util/util.module";
     LandingModule,
     MainModule,
     UtilModule,
+    BlockchainModule,
   ],
   controllers: [],
   providers: [],
