@@ -82,7 +82,7 @@ export class NftMusicService {
       await this.nftMusicRepository.createNft(createNftDto, await infoMusicDto.musicInfo).then(async (nftMusicId) => {
         await this.nftMusicGenreRepository.createNftMusicGenre(nftMusicId, await infoMusicDto.musicInfo);
         await this.nftMusicFileRepository.createNftMusicFile(nftMusicId, await infoMusicDto.musicInfo);
-        await this.userNftMusicRepository.createUserNftMusic(infoMusicDto.connectorInfo.userId, nftMusicId);
+        await this.userNftMusicRepository.createUserNftMusic(infoMusicDto.connectorInfo.id, nftMusicId);
       });
       await this.myMusicService.deleteMusic(createNftDto.myMusicId);
 

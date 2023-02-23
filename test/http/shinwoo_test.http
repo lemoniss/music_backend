@@ -196,3 +196,15 @@ auth_token: LZWK8LWHOI+f1ilFkmY5eJL60jRswxCKW3OoPqe5pGmtB1Hho3ENtjOKEXgW73i3mt6t
   "tokenId":"181",
   "txHash":"0x6b6e13d79e26a068da43a3d217f0e96054c719f3af13a000b274115faccd98ff"
 }
+
+### createIpfs
+
+POST http://localhost:23936/nfts/ipfs
+Content-Type: application/json
+auth_token: HFfu6DTe6NBAGi6Xd3Ct5bEehFGH8+KiPG0xNcEX2NNmKQskk9AU+e4/OmPGC3DwxXy5FJ/rutY5WwQ25X8avfrjMnFOWJKKd8U20U6HwPaBPesyjYbdWFEnrrC8H16ynUeYrh/NCegXtTVCj7ETg75kDka0IyKzQ7/ejqj2jD15zEawTP+Jdh1ETOwSs9kJNoTo1Jq04ZmsZlVhlb3uK051ojpNifC5VBcdv//z84/6xAKKad6j9ZgPca8TW7uxvXjLrWQp0+hhft9Dwl3Rc0c7SQBPNDmNtFK8XmaoYh0wL1mt0bGmJYRsEZiTviPNyyqDfsP/sL3wkXT6rIF97Q==
+
+{
+  "minter":"0x76b610b8BbdF0539EBD31181969B568C24676421",
+  "myMusicId":"74",
+  "tokenId":"196"
+}
