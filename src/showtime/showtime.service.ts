@@ -1,11 +1,7 @@
 import { Get, Injectable } from "@nestjs/common";
-import { InjectRepository } from '@nestjs/typeorm';
 import { ShowtimeRepository } from "./repository/showtime.repository";
-import { CreateShowTimeDto } from "./dto/create.showtime.dto";
 import { UploadService } from "../upload/upload.service";
-import { GenreService } from "../genre/genre.service";
 import { IpfsShowtimeDto } from "./dto/ipfs.showtime.dto";
-import { ResponseShowtimeIpfsDto } from "./dto/response.showtimeipfs.dto";
 import { ShowtimeGenreRepository } from "./repository/showtime_genre.repository";
 import { ShowtimeDistributorRepository } from "./repository/showtime_distributor.repository";
 import { UserShowtimeRepository } from "./repository/user_showtime.repository";
@@ -36,38 +32,15 @@ import { CoinMarketRateRepository } from "./repository/coin_marketrate.repositor
 import { CoinMarketRateDto } from "./dto/create.coinmarketrate.dto";
 import { EtherscanGastrackerDto } from "./dto/create.etherscangastracker.dto";
 import { EtherscanGastrackerRepository } from "./repository/etherscan_gastracker.repository";
-import { ResponseRecentIosWebDto } from "./dto/response.recent.iosweb.dto";
 import { BannerRepository } from "./repository/banner.repository";
 import { CreateBannerDataDto } from "./dto/create.bannerdata.dto";
 import { BannerFileRepository } from "./repository/banner_file.repository";
 import { ResponseBannerDataDto } from "./dto/response.bannerdata.dto";
 import { CreateBannerLikeDto } from "./dto/create.bannerlike.dto";
 import { BannerLikeRepository } from "./repository/banner_like.repository";
-import { ApiOperation } from "@nestjs/swagger";
-import axios from "axios";
-import fs from "fs";
-import { BannerLikeEntity } from "./entity/banner_like.entity";
-import { BannerFileEntity } from "./entity/banner_file.entity";
-import { ShowtimeEntity } from "./entity/showtime.entity";
-import { ShowtimeGenreEntity } from "./entity/showtime_genre.entity";
-import { ShowtimeDistributorEntity } from "./entity/showtime_distributor.entity";
-import { UserShowtimeEntity } from "./entity/user_showtime.entity";
-import { ShowtimeTierEntity } from "./entity/showtime_tier.entity";
-import { ShowtimeFileEntity } from "./entity/showtime_file.entity";
-import { ShowtimePurchaseHistoryEntity } from "./entity/showtime_purchasehistory.entity";
-import { ShowtimeCrewEntity } from "./entity/showtime_crew.entity";
-import { ShowtimeLikeEntity } from "./entity/showtime_like.entity";
-import { UserFollowerEntity } from "./entity/user_follower.entity";
-import { UserEntity } from "./entity/user.entity";
-import { ShowtimeHolderEntity } from "./entity/showtime_holder.entity";
-import { NftMusicEntity } from "./entity/nftmusic.entity";
-import { NftMusicFileEntity } from "./entity/nftmusic_file.entity";
-import { NftMusicGenreEntity } from "./entity/nftmusic_genre.entity";
-import { NftHistoryEntity } from "../nftmusic/entity/nfthistory.entity";
-import { CoinMarketRateEntity } from "./entity/coin_marketrate.entity";
-import { EtherscanGastrackerEntity } from "./entity/etherscan_gastracker.entity";
-import { BannerEntity } from "./entity/banner.entity";
 import { SortNftDto } from "../nftmusic/dto/sort.nft.dto";
+import fs from "fs";
+
 
 @Injectable()
 export class ShowtimeService {

@@ -24,7 +24,7 @@
 //    */
 //   // @ApiOperation({summary: 'Save Event '})
 //   // @Post()
-//   // saveEvent(@Body() saveEventDto: SaveEventDto) : Promise<number> {
+//   // saveEvent(@Body() saveEventDto: ApproveDto) : Promise<number> {
 //   //   return this.eventService.saveEvent(saveEventDto);
 //   // }
 //

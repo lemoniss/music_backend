@@ -48,9 +48,6 @@ import { EtherscanGastrackerEntity } from "./entity/etherscan_gastracker.entity"
 import { BannerEntity } from "./entity/banner.entity";
 import { BannerFileEntity } from "./entity/banner_file.entity";
 import { BannerLikeEntity } from "./entity/banner_like.entity";
-import { UploadService } from "../upload/upload.service";
-import { UploadRepository } from "../upload/repository/upload.repository";
-import { BaseUriRepository } from "../upload/repository/baseuri.repository";
 
 @Module({
   imports: [
