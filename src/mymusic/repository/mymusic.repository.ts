@@ -92,7 +92,8 @@ export class MyMusicRepository extends Repository<MyMusicEntity> {
           name: typeof updateMusicDto.name == 'undefined' ? musicInfo.name : updateMusicDto.name,
           artist: typeof updateMusicDto.artist == 'undefined' ? musicInfo.title : updateMusicDto.artist,
           description: typeof updateMusicDto.description == 'undefined' ? musicInfo.description : updateMusicDto.description,
-          lyrics: typeof updateMusicDto.lyrics == 'undefined' ? musicInfo.lyrics : updateMusicDto.lyrics,
+          // lyrics: typeof updateMusicDto.lyrics == 'undefined' ? musicInfo.lyrics : updateMusicDto.lyrics,
+          lyrics: typeof updateMusicDto.lyrics == 'undefined' ? null : updateMusicDto.lyrics,
           playTime: typeof updateMusicDto.playTime == 'undefined' ? musicInfo.playTime : Number(updateMusicDto.playTime),
           status: 'Review',
         })
