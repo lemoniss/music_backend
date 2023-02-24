@@ -820,10 +820,15 @@ auth_token: LZWK8LWHOI+f1ilFkmY5eJL60jRswxCKW3OoPqe5pGmtB1Hho3ENtjOKEXgW73i3mt6t
 
 ### upload page init
 GET https://devin.millimx.com:446/musics/upload/init
+Content-Type: application/json
 auth_token: LZWK8LWHOI+f1ilFkmY5eJL60jRswxCKW3OoPqe5pGmtB1Hho3ENtjOKEXgW73i3mt6tIB8fwbeixaHgq3R/spf9R6NaoK38IfYZvjkyQ71ETu+0a94fo+aoksJRuUz9F2DjFeRoq6CEOgIm+ycmKc8Oi4jaS/xdVNTO/zp4N12Z3/4RvIkvvEjROCanNd+QkNoVj1lSRynenXKaDqCKKWzHjSZu1W8nZkvwJHMDwSqodJHKMssbWXjnaWpPwnRDA6G47u39VJH7MhzlNvT6B4A2OfaTCEQxywRVVBYg3FLOkor88Ye6UZgtmrpETZkrm6zsQ6k0oaWpztVwzMBnjA==
 
 ### upload page init
 GET http://localhost:23936/musics/upload/init
+auth_token: LZWK8LWHOI+f1ilFkmY5eJL60jRswxCKW3OoPqe5pGmtB1Hho3ENtjOKEXgW73i3mt6tIB8fwbeixaHgq3R/spf9R6NaoK38IfYZvjkyQ71ETu+0a94fo+aoksJRuUz9F2DjFeRoq6CEOgIm+ycmKc8Oi4jaS/xdVNTO/zp4N12Z3/4RvIkvvEjROCanNd+QkNoVj1lSRynenXKaDqCKKWzHjSZu1W8nZkvwJHMDwSqodJHKMssbWXjnaWpPwnRDA6G47u39VJH7MhzlNvT6B4A2OfaTCEQxywRVVBYg3FLOkor88Ye6UZgtmrpETZkrm6zsQ6k0oaWpztVwzMBnjA==
+
+### upload page init
+POST https://devin.millimx.com:446/musics/upload/init
 auth_token: LZWK8LWHOI+f1ilFkmY5eJL60jRswxCKW3OoPqe5pGmtB1Hho3ENtjOKEXgW73i3mt6tIB8fwbeixaHgq3R/spf9R6NaoK38IfYZvjkyQ71ETu+0a94fo+aoksJRuUz9F2DjFeRoq6CEOgIm+ycmKc8Oi4jaS/xdVNTO/zp4N12Z3/4RvIkvvEjROCanNd+QkNoVj1lSRynenXKaDqCKKWzHjSZu1W8nZkvwJHMDwSqodJHKMssbWXjnaWpPwnRDA6G47u39VJH7MhzlNvT6B4A2OfaTCEQxywRVVBYg3FLOkor88Ye6UZgtmrpETZkrm6zsQ6k0oaWpztVwzMBnjA==
 
 
@@ -839,7 +844,7 @@ auth_token: LZWK8LWHOI+f1ilFkmY5eJL60jRswxCKW3OoPqe5pGmtB1Hho3ENtjOKEXgW73i3mt6t
   "handle": "핸들",
   "genreIds": [1, 2, 3],
   "description": "설명",
-  "lyrics": "가사", // optional
+  "lyrics": "가사",
   "musicFileId": 70,
   "imgFileId": 71,
   "playTime": 278
@@ -890,4 +895,14 @@ auth_token: HRKMeWYyLXnETKoiU9OczRFXkCXRShWAAt7sEvd+sNkGtTrFb64WIygvHl2KjNna67BI
 
 {
   "baseUri": "https://millimx.infura-ipfs.io/ipfs/QmT1naa5vSjx92Fg3D8JvPhCtqfKY5nKYLGZnn4MEUAJBd/"
+}
+
+
+### setBaseUri
+POST http://localhost:23936/blockchain/setBaseUri
+Content-Type: application/json
+auth_token: {authToken}
+
+{
+  "baseUri": "{baseUri}"
 }

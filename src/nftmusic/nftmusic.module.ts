@@ -22,6 +22,8 @@ import { NftHistoryEntity } from "./entity/nfthistory.entity";
 import { L2eEntity } from "../l2e/entity/l2e.entity";
 import { UserRepository } from "../user/repository/user.repository";
 import { GenreModule } from "../genre/genre.module";
+import { NftMusicDistributorEntity } from "./entity/nftmusic_distributor.entity";
+import { NftMusicDistributorRepository } from "./repository/nftmusic_distributor.repository";
 
 @Module({
   imports: [
@@ -38,6 +40,7 @@ import { GenreModule } from "../genre/genre.module";
       NftMusicLikeEntity,
       NftHistoryEntity,
       L2eEntity,
+      NftMusicDistributorEntity,
     ]),
   ],
   controllers: [NftMusicController],
@@ -49,6 +52,7 @@ import { GenreModule } from "../genre/genre.module";
     UserNftMusicRepository,
     NftMusicLikeRepository,
     NftHistoryRepository,
+    NftMusicDistributorRepository,
     UserRepository,
     L2eRepository,
     MyMusicModule,

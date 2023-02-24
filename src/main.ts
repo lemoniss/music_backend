@@ -41,7 +41,7 @@ async function bootstrap() {
 
   // await app.listen(3000);
   const server = await app.listen(23936);
-  server.keepAliveTimeout = 61 * 1000;
-  server.headersTimeout = 65 * 1000;
+  server.keepAliveTimeout = 300 * 1000;
+  server.headersTimeout = 300 * 1000;
 }
 bootstrap();

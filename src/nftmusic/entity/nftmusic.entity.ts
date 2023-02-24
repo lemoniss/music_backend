@@ -11,6 +11,7 @@ import { UserNftMusicEntity } from "./user_nftmusic.entity";
 import { NftMusicLikeEntity } from "./nftmusic_like.entity";
 import { NftMusicGenreEntity } from "./nftmusic_genre.entity";
 import { ShowtimeEntity } from "../../showtime/entity/showtime.entity";
+import { NftMusicDistributorEntity } from "./nftmusic_distributor.entity";
 
 @Entity({ name: 'nft_music' })
 export class NftMusicEntity extends BaseEntity {
@@ -78,6 +79,9 @@ export class NftMusicEntity extends BaseEntity {
   @OneToOne(() => ShowtimeEntity, showtimeEntity => showtimeEntity.nftMusicEntity)
   @JoinColumn({name: 'showtime_id'})
   showtimeEntity: ShowtimeEntity;
+
+  @OneToMany(() => NftMusicDistributorEntity, nftMusicDistributorEntity => nftMusicDistributorEntity.nftMusicEntity)
+  nftMusicDistributorEntity: NftMusicDistributorEntity[];
 
   @Column({ type: 'char', name: 'view_yn', length: 1, comment: '노출여부', default: 'Y' })
   viewYn: string;

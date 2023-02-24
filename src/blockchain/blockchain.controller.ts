@@ -11,7 +11,7 @@ import { ApproveDto } from "./dto/approve.dto";
 import { SetBaseUriDto } from "./dto/set.baseuri.dto";
 
 @UseGuards(AuthGuard)
-@Controller("/blockchain")
+@Controller("blockchain")
 export class BlockchainController {
   constructor(private readonly blockchainService: BlockchainService) {}
 

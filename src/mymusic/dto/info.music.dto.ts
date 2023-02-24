@@ -33,4 +33,6 @@ export class InfoMusicDto {
   status: string;
 
   userId: number;
+
+  percent: number;
 }

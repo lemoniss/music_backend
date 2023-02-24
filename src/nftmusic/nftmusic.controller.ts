@@ -25,7 +25,7 @@ import { CreateL2eDto } from "./dto/create.l2e.dto";
   description: 'your auth_token'
 })
 @UseGuards(AuthGuard)
-@Controller("/nfts")
+@Controller("nfts")
 export class NftMusicController {
 
   constructor(private readonly nftMusicService: NftMusicService) {}

@@ -15,7 +15,7 @@ import { SaveEventDto } from "./dto/save.event.dto";
   description: 'your auth_token'
 })
 // @UseGuards(AuthGuard)
-@Controller("/events")
+@Controller("events")
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 

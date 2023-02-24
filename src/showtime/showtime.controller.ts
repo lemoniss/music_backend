@@ -29,7 +29,7 @@ import { CreateBannerLikeDto } from "./dto/create.bannerlike.dto";
   description: 'your auth_token'
 })
 @UseGuards(AuthGuard)
-@Controller("/showtime")
+@Controller("showtime")
 export class ShowtimeController {
 
   constructor(private readonly showtimeService: ShowtimeService) {}

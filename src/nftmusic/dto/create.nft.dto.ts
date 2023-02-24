@@ -1,5 +1,6 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
+import { InfoDistributorDto } from "./info.distributor.dto";
 
 export class CreateNftDto {
 
@@ -40,4 +41,7 @@ export class CreateNftDto {
   @IsString()
   @IsNotEmpty()
   minter: string;
+
+  @IsOptional()
+  distributors: InfoDistributorDto[];
 }

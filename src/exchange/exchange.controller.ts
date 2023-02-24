@@ -19,7 +19,7 @@ import { ItemExchangeDto } from "./dto/item.exchange.dto";
   description: 'your auth_token'
 })
 
-@Controller("/exchange")
+@Controller("exchange")
 export class ExchangeController {
 
   constructor(private readonly exchangeService: ExchangeService) {}

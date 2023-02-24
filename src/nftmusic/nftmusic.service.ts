@@ -25,6 +25,7 @@ import { L2eRepository } from "../l2e/repository/l2e.repository";
 import { UserRepository } from "../user/repository/user.repository";
 import { Rsa } from "../util/rsa";
 import { GenreService } from "../genre/genre.service";
+import { NftMusicDistributorRepository } from "./repository/nftmusic_distributor.repository";
 @Injectable()
 export class NftMusicService {
   constructor(
@@ -34,6 +35,7 @@ export class NftMusicService {
     private userNftMusicRepository: UserNftMusicRepository,
     private nftMusicLikeRepository: NftMusicLikeRepository,
     private nftHistoryRepository: NftHistoryRepository,
+    private nftMusicDistributorRepository: NftMusicDistributorRepository,
     private l2eRepository: L2eRepository,
     private myMusicService: MyMusicService,
     private uploadService: UploadService,
@@ -80,9 +82,10 @@ export class NftMusicService {
       const infoMusicDto = await this.myMusicService.findMusicInfo(authToken, createNftDto.myMusicId);
 
       await this.nftMusicRepository.createNft(createNftDto, await infoMusicDto.musicInfo).then(async (nftMusicId) => {
-        await this.nftMusicGenreRepository.createNftMusicGenre(nftMusicId, await infoMusicDto.musicInfo);
-        await this.nftMusicFileRepository.createNftMusicFile(nftMusicId, await infoMusicDto.musicInfo);
+        await this.nftMusicGenreRepository.createNftMusicGenre(nftMusicId, infoMusicDto.musicInfo);
+        await this.nftMusicFileRepository.createNftMusicFile(nftMusicId, infoMusicDto.musicInfo);
         await this.userNftMusicRepository.createUserNftMusic(infoMusicDto.connectorInfo.id, nftMusicId);
+        await this.nftMusicDistributorRepository.createNftMusicDistributor(nftMusicId, createNftDto.distributors);
       });
       await this.myMusicService.deleteMusic(createNftDto.myMusicId);
 

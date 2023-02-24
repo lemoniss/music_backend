@@ -21,7 +21,7 @@ import { UpdateMusicStatusDto } from "./dto/status.music.dto";
   description: 'your auth_token'
 })
 @UseGuards(AuthGuard)
-@Controller("/musics")
+@Controller("musics")
 export class MyMusicController {
 
   constructor(private readonly myMusicService: MyMusicService) {}
@@ -106,6 +106,18 @@ export class MyMusicController {
   @Get("/upload/init")
   @ApiOperation({summary: 'upload init'})
   uploadSongInitData(@Headers("auth_token") authToken: string)
+    : Promise<any> {
+    return this.myMusicService.uploadSongInitData(authToken);
+  }
+
+  /**
+   * 음악 리스트 (검색: nullable)
+   * @param userId
+   * @param search
+   */
+  @Post("/upload/init")
+  @ApiOperation({summary: 'upload init'})
+  uploadSongInitData2(@Headers("auth_token") authToken: string)
     : Promise<any> {
     return this.myMusicService.uploadSongInitData(authToken);
   }
