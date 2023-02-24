@@ -11,7 +11,6 @@ export class UpdateMusicDto {
   })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(25)
   title: string; // 앨범타이틀
 
   @ApiProperty({
@@ -22,7 +21,6 @@ export class UpdateMusicDto {
   })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(25)
   name: string; // 노래제목
 
   @ApiProperty({
@@ -33,7 +31,6 @@ export class UpdateMusicDto {
   })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(25)
   artist: string; // 아티스트
 
   @ApiProperty({
@@ -53,7 +50,6 @@ export class UpdateMusicDto {
   })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(1000)
   description: string; // 설명
 
   @IsOptional()

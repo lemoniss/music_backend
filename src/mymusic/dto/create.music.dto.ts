@@ -11,7 +11,6 @@ export class CreateMusicDto {
   })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(50)
   title: string; // 앨범타이틀
 
   @ApiProperty({
@@ -22,7 +21,6 @@ export class CreateMusicDto {
   })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(50)
   name: string; // 노래제목
 
   @ApiProperty({
@@ -33,7 +31,6 @@ export class CreateMusicDto {
   })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(50)
   artist: string; // 아티스트
 
   @ApiProperty({
@@ -44,7 +41,6 @@ export class CreateMusicDto {
   })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(50)
   handle: string; // 아티스트
 
   @ApiProperty({
@@ -64,7 +60,6 @@ export class CreateMusicDto {
   })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(2000)
   description: string; // 설명
 
   @IsOptional()

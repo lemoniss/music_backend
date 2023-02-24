@@ -906,3 +906,36 @@ auth_token: {authToken}
 {
   "baseUri": "{baseUri}"
 }
+
+
+### 음악 정보 수정
+PATCH http://localhost:23936/musics/98
+Content-Type: application/json
+auth_token: CMje5kdz2lFCcIePGrKfdSglXyIPgWd81k4AhEFxtKKMO8Y3Zd8Llh9mJpAjnqzdjIbks7q0E7MoshaDVapRTeSKerVo9a3WzhGxEOrAOvTqFEV6WTugwHkXP4bGsivbBwtkl0uILtd92MtobWdiTCZSHKWn2EpegHPOEoZCYuhBFkVWaxkiudb8MoaQQrVC4uwefpMZ6e7c2E8+aWCYjqY2Nhwee+vgNhm2MiiCImk5gG4JiDmdORWueLX+JqOJ7vOveZ/KVLsg8pVzyCrD7L7OeUQYOEcZ0SJlq3BS3iRVXcMHse6FEqxvwBeDenXyTukHdNw9oderBhQ373v4cg==
+
+{
+  "artist": "FVMELESS",
+  "description": "Man in the mirror",
+  "genreIds": [1, 8, 17, 18],
+  "imgFileId": 8690,
+  "musicFileId": 8689,
+  "name": "Maskman",
+  "playTime": "289",
+  "title": "Maskman"
+}
+
+### 음악 정보 수정
+PATCH http://localhost:23936/musics/98
+Content-Type: application/json
+auth_token: CMje5kdz2lFCcIePGrKfdSglXyIPgWd81k4AhEFxtKKMO8Y3Zd8Llh9mJpAjnqzdjIbks7q0E7MoshaDVapRTeSKerVo9a3WzhGxEOrAOvTqFEV6WTugwHkXP4bGsivbBwtkl0uILtd92MtobWdiTCZSHKWn2EpegHPOEoZCYuhBFkVWaxkiudb8MoaQQrVC4uwefpMZ6e7c2E8+aWCYjqY2Nhwee+vgNhm2MiiCImk5gG4JiDmdORWueLX+JqOJ7vOveZ/KVLsg8pVzyCrD7L7OeUQYOEcZ0SJlq3BS3iRVXcMHse6FEqxvwBeDenXyTukHdNw9oderBhQ373v4cg==
+
+{
+  "artist": "Skrxlla",
+  "description": "Just take it step by step",
+  "genreIds": [17,18],
+  "imgFileId": 8743,
+  "musicFileId": 8742,
+  "name": "Tell me what you really like",
+  "playTime": "122",
+  "title": "Baby I can take my time"
+}
