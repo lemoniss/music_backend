@@ -17,6 +17,7 @@ import { ResponseContractInfoDto } from "../../showtime/dto/response.contractinf
 import { ShowtimeTierRepository } from "../../showtime/repository/showtime_tier.repository";
 import { Formatter } from "../../util/formatter";
 import { ResponseArtistDetailDto } from "../../landing/dto/response.artistrelease.dto";
+import { ResponseSplitStructureDto } from "../../showtime/dto/response.splitstructure.dto";
 
 @EntityRepository(NftMusicEntity)
 export class NftMusicRepository extends Repository<NftMusicEntity> {
@@ -472,6 +473,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       .leftJoinAndSelect('uf.fileEntity', 'ff')
       .leftJoinAndSelect('n.nftMusicLikeEntity', 'nl')
       .leftJoinAndSelect('nl.userEntity', 'nlu')
+      .leftJoinAndSelect('n.nftMusicDistributorEntity', 'nd')
       .where('n.id = :nftMusicId', {nftMusicId: nftMusicId})
       .getOne();
 
@@ -652,17 +654,15 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     contractInfoDto.tokenStandard = 'ERC721';
     contractInfoDto.blockchain = 'Ethereum';
 
-    // TODO : 현재 일반 민팅시 split 내용을 디비에 저장하지 않고 있음
-    // TODO : 나중에 작업해야함
-    const splits = [];
-    //
-    // for(const distributor of nftInfo.) {
-    //   const splitStructureDto = new ResponseSplitStructureDto();
-    //   splitStructureDto.address = distributor.address;
-    //   splitStructureDto.percent = distributor.percent;
-    //   splits.push(splitStructureDto);
-    // }
-    //
+    let splits = [];
+
+    for(const distributor of nftInfo.nftMusicDistributorEntity) {
+      const splitStructureDto = new ResponseSplitStructureDto();
+      splitStructureDto.address = distributor.address;
+      splitStructureDto.percent = distributor.percent;
+      splits.push(splitStructureDto);
+    }
+
     contractInfoDto.splitStructure = splits;
     infoNftDto.contractInfo = contractInfoDto;
 
@@ -890,6 +890,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       .leftJoinAndSelect('nun.userEntity', 'u')
       .leftJoinAndSelect('u.userFileEntity', 'uf')
       .leftJoinAndSelect('uf.fileEntity', 'ff')
+      .leftJoinAndSelect('n.nftMusicDistributorEntity', 'nd')
       .where('n.id = :nftMusicId', {nftMusicId: nftMusicId})
       .getOne();
     if (!nftInfo) {
@@ -1004,17 +1005,14 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     contractInfoDto.tokenStandard = 'ERC721';
     contractInfoDto.blockchain = 'Ethereum';
 
-    // TODO : 현재 일반 민팅시 split 내용을 디비에 저장하지 않고 있음
-    // TODO : 나중에 작업해야함
-    const splits = [];
-    //
-    // for(const distributor of nftInfo.) {
-    //   const splitStructureDto = new ResponseSplitStructureDto();
-    //   splitStructureDto.address = distributor.address;
-    //   splitStructureDto.percent = distributor.percent;
-    //   splits.push(splitStructureDto);
-    // }
-    //
+    let splits = [];
+
+    for(const distributor of nftInfo.nftMusicDistributorEntity) {
+      const splitStructureDto = new ResponseSplitStructureDto();
+      splitStructureDto.address = distributor.address;
+      splitStructureDto.percent = distributor.percent;
+      splits.push(splitStructureDto);
+    }
     contractInfoDto.splitStructure = splits;
     responseRecentWebDto.contractInfo = contractInfoDto;
 
