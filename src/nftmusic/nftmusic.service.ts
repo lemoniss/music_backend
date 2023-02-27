@@ -203,14 +203,22 @@ export class NftMusicService {
 
     let response: any = {};
 
-    const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+    let userId = 0;
 
-    if(userInfo.id == 0) {
-      throw new ForbiddenException();
-      return false;
+    if(typeof authToken != 'undefined') {   // header 에 값이 있다. 로그인 검증해야함
+      const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+
+      if(userInfo.id == 0) {
+        throw new ForbiddenException();
+        return false;
+      }
+
+      response.connectorInfo = userInfo;
+
+      userId = userInfo.id;
     }
 
-    response.connectorInfo = userInfo;
+
     response.genreList = await this.genreService.getGenreAll();
 
     switch (sortNftDto.query) {
@@ -218,12 +226,12 @@ export class NftMusicService {
         response.playList = await this.nftMusicRepository.findNftListTake(sortNftDto);
         break;
       case 'likes':
-        sortNftDto.userId = userInfo.id;
+        sortNftDto.userId = userId;
         response.playList = await this.nftMusicRepository.findNftListTake(sortNftDto);
         break;
       case 'recentlyPlayed':
         const recentPlayed = [];
-        sortNftDto.userId = userInfo.id;
+        sortNftDto.userId = userId;
         const played = await this.l2eRepository.getRecentPlayed(sortNftDto);
         for(const recent of played) {
           const info = await this.nftMusicRepository.findNftToToIdAndSource(recent.musicId, recent.source, recent.totalSecond);
@@ -241,7 +249,7 @@ export class NftMusicService {
         response.playList = streamingTop50;
         break;
       case 'myLikes':
-        sortNftDto.userId = userInfo.id;
+        sortNftDto.userId = userId;
         response.playList = await this.nftMusicRepository.findNftListTake(sortNftDto);
         break;
       case 'showtime':

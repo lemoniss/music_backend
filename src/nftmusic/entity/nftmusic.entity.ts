@@ -12,6 +12,7 @@ import { NftMusicLikeEntity } from "./nftmusic_like.entity";
 import { NftMusicGenreEntity } from "./nftmusic_genre.entity";
 import { ShowtimeEntity } from "../../showtime/entity/showtime.entity";
 import { NftMusicDistributorEntity } from "./nftmusic_distributor.entity";
+import { NftMusicFavoritesEntity } from "./nftmusic_favorites.entity";
 
 @Entity({ name: 'nft_music' })
 export class NftMusicEntity extends BaseEntity {
@@ -75,6 +76,9 @@ export class NftMusicEntity extends BaseEntity {
 
   @OneToMany(() => NftMusicLikeEntity, nftMusicLikeEntity => nftMusicLikeEntity.nftMusicEntity)
   nftMusicLikeEntity: NftMusicLikeEntity[];
+
+  @OneToMany(() => NftMusicFavoritesEntity, nftMusicFavoritesEntity => nftMusicFavoritesEntity.nftMusicEntity)
+  nftMusicFavoritesEntity: NftMusicFavoritesEntity[];
 
   @OneToOne(() => ShowtimeEntity, showtimeEntity => showtimeEntity.nftMusicEntity)
   @JoinColumn({name: 'showtime_id'})

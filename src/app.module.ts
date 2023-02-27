@@ -77,6 +77,7 @@ export class AppModule implements NestModule {
       .exclude({ path: 'users/address/(.*)', method: RequestMethod.GET }, { path: 'users/handle/(.*)', method: RequestMethod.GET }, { path: 'users', method: RequestMethod.POST }
         , { path: 'events/(.*)', method: RequestMethod.GET }, { path: 'events', method: RequestMethod.POST } // event 생성
         , { path: 'landing/(.*)', method: RequestMethod.GET } // landing
+        , { path: '/nfts/playlist', method: RequestMethod.POST } // playlist
         , { path: 'exchange', method: RequestMethod.POST }, { path: 'exchange/details/(.*)', method: RequestMethod.GET })
       // .exclude({ path: 'user/user_all', method: RequestMethod.GET }) // 유저 전체 조회
       .forRoutes(

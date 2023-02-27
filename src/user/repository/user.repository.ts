@@ -11,6 +11,7 @@ import { ShowtimeCrewEntity } from "../../showtime/entity/showtime_crew.entity";
 import { UserFileEntity } from "../entity/user_file.entity";
 import { UserShowtimeEntity } from "../../showtime/entity/user_showtime.entity";
 import { Formatter } from "../../util/formatter";
+import { SortNftDto } from "../../nftmusic/dto/sort.nft.dto";
 
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {
@@ -256,28 +257,35 @@ export class UserRepository extends Repository<UserEntity> {
     }
   }
 
-  async getArtists(skip: number, take: number) : Promise<ResponseArtistDto[]> {
-    const artistList = await getRepository(UserEntity)
+  async getArtists(sortNftDto: SortNftDto) : Promise<ResponseArtistDto[]> {
+    const artistQuery = await getRepository(UserEntity)
       .createQueryBuilder('u')
       .innerJoinAndSelect('u.userArtistEntity', 'ua')
       .leftJoinAndSelect('u.userFileEntity', 'uf')
       .leftJoinAndSelect('uf.fileEntity', 'f')
       .leftJoinAndSelect('u.userGenreEntity', 'ug')
       .leftJoinAndSelect('ug.genreEntity', 'g')
+      .where(typeof sortNftDto.keyword != 'undefined' ? '(u.nickname like :keyword or u.handle like :keyword)' : '1 = 1', {keyword: `%${sortNftDto.keyword}%`})
+
+    if(typeof sortNftDto.take != 'undefined') {
+      artistQuery.take(sortNftDto.take);
+    }
+
+    if(typeof sortNftDto.skip != 'undefined') {
+      artistQuery.skip(sortNftDto.skip);
+    }
+
+    const artistList = await artistQuery
       .orderBy('ua.order', 'ASC')
-      .take(take)
-      .skip(skip)
-      .getManyAndCount();
+      .getMany();
 
     const response = [];
-
-    artistList[1]
 
     if (!artistList) {
       return response;
     }
 
-    for(const artistInfo of artistList[0]) {
+    for(const artistInfo of artistList) {
       const responseArtistDto = new ResponseArtistDto();
       responseArtistDto.artistId = artistInfo.id;
       for(const userFile of artistInfo.userFileEntity) {
@@ -300,7 +308,6 @@ export class UserRepository extends Repository<UserEntity> {
         responseArtistDto.genres.push(genre.genreEntity.name);
       }
       responseArtistDto.introduce = artistInfo.introduce;
-      responseArtistDto.remainCount = artistList[1] - skip;
 
       response.push(responseArtistDto);
     }

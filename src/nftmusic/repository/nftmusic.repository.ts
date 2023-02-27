@@ -225,9 +225,9 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       .leftJoinAndSelect('m.nftMusicLikeEntity', 'ml')
       .leftJoinAndSelect('ml.userEntity', 'u')
       .where(typeof sortNftDto.keyword != 'undefined' ? '(m.name like :keyword or m.artist like :keyword)' : '1 = 1', {keyword: `%${sortNftDto.keyword}%`})
-      .andWhere(sortNftDto.genreIds.length > 0 ? 'mg.genre_id in (:genreIds)' : '1 = 1', {genreIds: sortNftDto.genreIds})
+      .andWhere(typeof sortNftDto.genreIds != 'undefined' && sortNftDto.genreIds.length > 0 ? 'mg.genre_id in (:genreIds)' : '1 = 1', {genreIds: sortNftDto.genreIds})
       .andWhere(typeof sortNftDto.device != 'undefined' && sortNftDto.device == 'ios' && 'm.viewYn = \'Y\' ')
-      .orderBy(`m.${sortNftDto.sortType}`, 'DESC')
+      .orderBy(typeof sortNftDto.sortType != 'undefined' ? `m.${sortNftDto.sortType}`  : 'm.id ', 'DESC')
       .getMany();
 
     if (!nftList) {
@@ -773,6 +773,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       .leftJoinAndSelect('m.nftMusicLikeEntity', 'ml')
       .leftJoinAndSelect('m.showtimeEntity', 's')
       .where(typeof sortNftDto.genreIds != 'undefined' && sortNftDto.genreIds.length > 0 ? 'mg.genre_id in (:genreIds)' : '1 = 1', {genreIds: sortNftDto.genreIds})
+      .andWhere(typeof sortNftDto.keyword != 'undefined' ? '(m.name like :keyword or m.artist like :keyword)' : '1 = 1', {keyword: `%${sortNftDto.keyword}%`})
 
     if(typeof sortNftDto.userId != 'undefined') {
       nftList.andWhere('ml.userEntity = :userId', {userId: sortNftDto.userId})

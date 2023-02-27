@@ -43,7 +43,10 @@ export class LandingService {
     skipTakeDto.skip = 0;
     skipTakeDto.take = 9;
     response.newRelease = await this.nftMusicRepository.findNftListTake(skipTakeDto);
-    response.showtimeArtists = await this.userRepository.getArtists(0, 20);
+    let artistDto = new SortNftDto();
+    artistDto.skip = 0;
+    artistDto.take = 20;
+    response.showtimeArtists = await this.userRepository.getArtists(artistDto);
     response.serverTime = await this.showtimeRepository.getServertime();
     return response;
   }
@@ -51,8 +54,10 @@ export class LandingService {
   async getLandingArtistsDatas(skip: number): Promise<any> {
 
     let response: any = {};
-
-    response.showtimeArtists = await this.userRepository.getArtists(skip, 20);
+    let sortNftDto = new SortNftDto();
+    sortNftDto.skip = skip;
+    sortNftDto.take = 20;
+    response.showtimeArtists = await this.userRepository.getArtists(sortNftDto);
     return response;
   }
 

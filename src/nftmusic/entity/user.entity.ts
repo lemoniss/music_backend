@@ -12,6 +12,7 @@ import { NftMusicLikeEntity } from "./nftmusic_like.entity";
 import { UserFileEntity } from "./user_file.entity";
 import { NftHistoryEntity } from "./nfthistory.entity";
 import { NftMusicDistributorEntity } from "./nftmusic_distributor.entity";
+import { NftMusicFavoritesEntity } from "./nftmusic_favorites.entity";
 
 @Entity({ name: 'user' })
 @Unique(['address', 'handle'])
@@ -51,6 +52,9 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(() => NftMusicLikeEntity, nftMusicLikeEntity => nftMusicLikeEntity.userEntity)
   nftMusicLikeEntity: NftMusicLikeEntity[];
+
+  @OneToMany(() => NftMusicFavoritesEntity, nftMusicFavoritesEntity => nftMusicFavoritesEntity.userEntity)
+  nftMusicFavoritesEntity: NftMusicFavoritesEntity[];
 
   @OneToMany(() => UserFileEntity, userFileEntity => userFileEntity.userEntity)
   userFileEntity: UserFileEntity[];

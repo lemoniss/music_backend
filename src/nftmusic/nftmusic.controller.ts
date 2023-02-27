@@ -24,7 +24,7 @@ import { CreateL2eDto } from "./dto/create.l2e.dto";
   name: 'auth_token',
   description: 'your auth_token'
 })
-@UseGuards(AuthGuard)
+
 @Controller("nfts")
 export class NftMusicController {
 
@@ -33,6 +33,7 @@ export class NftMusicController {
    * 음악 IPFS 정보 생성
    * @param createMusicDto
    */
+  @UseGuards(AuthGuard)
   @ApiOperation({summary: 'NFT 음악 정보 생성'})
   @Post('/ipfs')
   createIpfs(@Headers("auth_token") authToken: string,
@@ -45,6 +46,7 @@ export class NftMusicController {
    * 음악 정보 생성
    * @param createMusicDto
    */
+  @UseGuards(AuthGuard)
   @ApiOperation({summary: 'NFT 음악 정보 생성'})
   @Post('/mint')
   createNft(@Headers("auth_token") authToken: string,
@@ -57,6 +59,7 @@ export class NftMusicController {
    * 내 NFT 리스트
    * @param createMusicDto
    */
+  @UseGuards(AuthGuard)
   @ApiOperation({summary: '내 NFT 리스트'})
   @Get('/myNft')
   findMyNftList(@Headers("auth_token") authToken: string)
@@ -69,6 +72,7 @@ export class NftMusicController {
    * @param userId
    * @param search
    */
+  @UseGuards(AuthGuard)
   @Post()
   @ApiOperation({summary: 'NFT 음악 리스트'})
   findNftList(@Body() sortNftDto: SortNftDto)
@@ -82,6 +86,7 @@ export class NftMusicController {
    * @param targetUserId
    * @param search
    */
+  @UseGuards(AuthGuard)
   @Post('/findbyuserid')
   @ApiOperation({summary: '유저별 NFT 음악 리스트'})
   findNftListByUser(@Body() findByUserNftDto: FindByUserNftDto)
@@ -94,6 +99,7 @@ export class NftMusicController {
    * @param userId
    * @param search
    */
+  @UseGuards(AuthGuard)
   @Post('/like/:userId')
   @ApiOperation({summary: 'NFT 좋아요 음악 리스트'})
   findNftLikeList(@Body() sortNftDto: SortNftDto)
@@ -105,6 +111,7 @@ export class NftMusicController {
    * 즐겨찾기 추가
    * @param nftLikeDto
    */
+  @UseGuards(AuthGuard)
   @Post('/like')
   @ApiOperation({summary: 'NFT 음악 즐겨찾기 추가'})
   createNftLike(@Body() nftLikeDto: NftLikeDto)
@@ -116,6 +123,7 @@ export class NftMusicController {
    * 좋아요 삭제
    * @param nftLikeDto
    */
+  @UseGuards(AuthGuard)
   @Delete('/like')
   @ApiOperation({summary: 'NFT 음악 좋아요 삭제'})
   deleteNftLike(@Body() nftLikeDto: NftLikeDto)
@@ -127,6 +135,7 @@ export class NftMusicController {
    * 음악 상세
    * @param nftMusicId
    */
+  @UseGuards(AuthGuard)
   @Get("/details/:source/:nftMusicId")
   @ApiOperation({summary: 'NFT 음악 상세'})
   findNftInfo(@Headers("auth_token") authToken: string,
@@ -140,6 +149,7 @@ export class NftMusicController {
    * 음악 재생횟수 추가
    * @param nftMusicId
    */
+  @UseGuards(AuthGuard)
   @Patch('/count/:nftMusicId')
   @ApiOperation({summary: 'NFT 음악 재생횟수 추가'})
   patchPlayCount(@Param("nftMusicId", ParseIntPipe) nftMusicId: number) {
@@ -163,6 +173,7 @@ export class NftMusicController {
    * 선물하기
    * @param nftLikeDto
    */
+  @UseGuards(AuthGuard)
   @Post('/nftGift/:userId')
   @ApiOperation({summary: 'NFT 음악 선물하기'})
   nftGift(@Param("userId", ParseIntPipe) userId: number,
@@ -171,6 +182,7 @@ export class NftMusicController {
     return this.nftMusicService.nftGift(userId, giftNftDto);
   }
 
+  @UseGuards(AuthGuard)
   @Post('/history/save')
   @ApiOperation({summary: 'NFT 음악 재생횟수 추가'})
   saveHistory(@Body() nftHistoryDto: NftHistoryDto) {
@@ -181,6 +193,7 @@ export class NftMusicController {
    * tokenId로 이력 가져오기
    * @param nftMusicId
    */
+  @UseGuards(AuthGuard)
   @ApiOperation({summary: 'getNftHistoryInTokenId'})
   @Get('/history/music/:tokenId')
   getNftHistoryInTokenId(@Param("tokenId") tokenId: string)
@@ -192,6 +205,7 @@ export class NftMusicController {
    * address로 이력 가져오기
    * @param userId
    */
+  @UseGuards(AuthGuard)
   @ApiOperation({summary: 'getNftHistoryInAddress'})
   @Get('/history/user/:address')
   getNftHistoryInAddress(@Param("address") address: string)
@@ -203,6 +217,7 @@ export class NftMusicController {
    * 이력 상세 가져오기
    * @param userId
    */
+  @UseGuards(AuthGuard)
   @ApiOperation({summary: 'getNftHistoryDetail'})
   @Get('/history/detail/:id')
   getNftHistoryDetail(@Param("id", ParseIntPipe) id: number,)
@@ -214,6 +229,7 @@ export class NftMusicController {
    * L2E 기록
    * @param createL2eDto
    */
+  @UseGuards(AuthGuard)
   @Post('/l2e')
   @ApiOperation({summary: 'L2E 기록'})
   createL2e(@Body() createL2eDto: CreateL2eDto) {

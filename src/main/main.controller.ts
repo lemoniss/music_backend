@@ -59,6 +59,27 @@ export class MainController {
     return this.mainService.getLandingFellazByArtist(handle, skip);
   }
 
+  @ApiOperation({summary: 'search result'})
+  @Get('/search')
+  getSearchResult(@Headers("auth_token") authToken: string,
+         @Query('keyword') keyword: string) : Promise<any> {
+    return this.mainService.getSearchResult(authToken, keyword);
+  }
+
+  @ApiOperation({summary: 'search result'})
+  @Get('/search/songs')
+  getSearchResultForSongsMore(@Query('keyword') keyword: string,
+                              @Query('skip') skip: number) : Promise<any> {
+    return this.mainService.getSearchResultForSongsMore(keyword, skip);
+  }
+
+  @ApiOperation({summary: 'search result'})
+  @Get('/search/artists')
+  getSearchResultForArtistsMore(@Query('keyword') keyword: string,
+                              @Query('skip') skip: number) : Promise<any> {
+    return this.mainService.getSearchResultForArtistsMore(keyword, skip);
+  }
+
 }
 
 

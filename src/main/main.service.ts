@@ -114,7 +114,10 @@ export class MainService {
     response.showtime = await this.showtimeRepository.getLandingRecents(showtimeDto);
 
     const upcoming = [];
-    const upcomingArtists = await this.userRepository.getArtists(0, 999999);
+    let artistDto = new SortNftDto();
+    artistDto.skip = 0;
+    artistDto.take = 999999;
+    const upcomingArtists = await this.userRepository.getArtists(artistDto);
     for(const upcomingArtist of upcomingArtists) {
       if(upcomingArtist.isComingsoon) upcoming.push(upcomingArtist);
     }
@@ -148,7 +151,10 @@ export class MainService {
     }
 
     response.musitByGenre = musitByGenre;
-    response.showtimeArtists = await this.userRepository.getArtists(0, 20);
+    let sortNftDto = new SortNftDto();
+    sortNftDto.skip = 0;
+    sortNftDto.take = 20;
+    response.showtimeArtists = await this.userRepository.getArtists(sortNftDto);
     response.serverTime = await this.showtimeRepository.getServertime();
     return response;
   }
@@ -156,8 +162,11 @@ export class MainService {
   async getLandingArtistsDatas(skip: number): Promise<any> {
 
     let response: any = {};
-
-    response.showtimeArtists = await this.userRepository.getArtists(skip, 20);
+    // 내 플레이리스트 가져오기
+    let sortNftDto = new SortNftDto();
+    sortNftDto.skip = skip;
+    sortNftDto.take = 20;
+    response.showtimeArtists = await this.userRepository.getArtists(sortNftDto);
     return response;
   }
 
@@ -262,6 +271,56 @@ export class MainService {
     let response: any = {};
 
     response.fellaz = await this.showtimeRepository.getFellazByArtist(userId, skip);
+    return response;
+  }
+
+  async getSearchResult(authToken: string, keyword: string): Promise<any> {
+    let response: any = {};
+
+    if(typeof authToken != 'undefined') {   // header 에 값이 있다. 로그인 검증해야함
+      try {
+        const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+
+        if(userInfo.id == 0) {
+          throw new ForbiddenException();
+          return false;
+        }
+
+        response.connectorInfo = userInfo;
+      } catch (e) {
+        throw new ForbiddenException();
+        return false;
+      }
+    }
+    let sortNftDto = new SortNftDto();
+    sortNftDto.keyword = keyword;
+    sortNftDto.skip = 0;
+    sortNftDto.take = 10;
+
+    response.songs = await this.nftMusicRepository.findNftListTake(sortNftDto);
+    response.artists = await this.userRepository.getArtists(sortNftDto);
+    return response;
+  }
+
+  async getSearchResultForSongsMore(keyword: string, skip: number): Promise<any> {
+    let response: any = {};
+    let sortNftDto = new SortNftDto();
+    sortNftDto.keyword = keyword;
+    sortNftDto.skip = skip;
+    sortNftDto.take = 10;
+
+    response.songs = await this.nftMusicRepository.findNftListTake(sortNftDto);
+    return response;
+  }
+
+  async getSearchResultForArtistsMore(keyword: string, skip: number): Promise<any> {
+    let response: any = {};
+    let sortNftDto = new SortNftDto();
+    sortNftDto.keyword = keyword;
+    sortNftDto.skip = skip;
+    sortNftDto.take = 10;
+
+    response.artists = await this.userRepository.getArtists(sortNftDto);
     return response;
   }
 }
