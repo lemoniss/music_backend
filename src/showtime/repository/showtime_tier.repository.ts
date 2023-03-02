@@ -174,6 +174,7 @@ export class ShowtimeTierRepository extends Repository<ShowtimeTierEntity> {
       .leftJoinAndSelect('sf.fileEntity', 'f')
       .leftJoinAndSelect('s.showtimeGenreEntity', 'sg')
       .leftJoinAndSelect('sg.genreEntity', 'g')
+      .leftJoinAndSelect('s.showtimeLikeEntity', 'sl')
       .where('s.id = :showtimeId', {showtimeId: showtimeId})
       .getOne();
 
@@ -204,6 +205,7 @@ export class ShowtimeTierRepository extends Repository<ShowtimeTierEntity> {
     infoNftDto.tokenId = tierInfo.tokenId;
     infoNftDto.source = 'showtime';
     infoNftDto.playCount = streamObj[0].totalStreams;
+    infoNftDto.likeCount = tierInfo.showtimeEntity.showtimeLikeEntity.length;
     infoNftDto.releaseDt = Formatter.dateFormatter(tierInfo.showtimeEntity.createdAt);
 
     for(const showtimeFileEntity of tierInfo.showtimeFileEntity) {
