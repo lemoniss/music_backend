@@ -96,6 +96,10 @@ export class MainService {
         }
         response.streamingTop50 = streamingTop50;
 
+        const showtimeDto = new SortNftDto();
+        showtimeDto.skip = 0;
+        showtimeDto.take = 50;
+        response.showtime = await this.showtimeRepository.getLandingRecents(userInfo.id, showtimeDto);
       } catch (e) {
         throw new ForbiddenException();
         return false;
@@ -116,14 +120,12 @@ export class MainService {
         streamingTop50.push(info);
       }
       response.streamingTop50 = streamingTop50;
+
+      const showtimeDto = new SortNftDto();
+      showtimeDto.skip = 0;
+      showtimeDto.take = 50;
+      response.showtime = await this.showtimeRepository.getLandingRecents(0, showtimeDto);
     }
-
-
-
-    const showtimeDto = new SortNftDto();
-    showtimeDto.skip = 0;
-    showtimeDto.take = 50;
-    response.showtime = await this.showtimeRepository.getLandingRecents(showtimeDto);
 
     const upcoming = [];
     let artistDto = new SortNftDto();

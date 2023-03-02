@@ -360,8 +360,8 @@ export class ShowtimeService {
     return await this.showtimeRepository.getAllShowtimes();
   }
 
-  async getLandingRecents(sortNftDto: SortNftDto): Promise<InfoNftDto[]> {
-    return await this.showtimeRepository.getLandingRecents(sortNftDto);
+  async getLandingRecents(userId: number, sortNftDto: SortNftDto): Promise<InfoNftDto[]> {
+    return await this.showtimeRepository.getLandingRecents(userId, sortNftDto);
   }
 
   async getRecent(showtimeId: number, userId: number): Promise<ResponseRecentDto> {

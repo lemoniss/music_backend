@@ -37,7 +37,7 @@ export class LandingService {
     const showtimeDto = new SortNftDto();
     showtimeDto.skip = 0;
     showtimeDto.take = 15;
-    response.showtimePresents = await this.showtimeRepository.getLandingRecents(showtimeDto);
+    response.showtimePresents = await this.showtimeRepository.getLandingRecents(0, showtimeDto);
     response.streamingTop = streamingTop15;
     const skipTakeDto = new SortNftDto();
     skipTakeDto.skip = 0;

@@ -387,7 +387,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
     return responseList;
   }
 
-  async getLandingRecents(sortNftDto: SortNftDto): Promise<InfoNftDto[]> {
+  async getLandingRecents(userId: number, sortNftDto: SortNftDto): Promise<InfoNftDto[]> {
     const recentList = await getRepository(ShowtimeEntity)
       .createQueryBuilder('s')
       .leftJoinAndSelect('s.showtimeCrewEntity', 'sc')
@@ -398,6 +398,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
       .leftJoinAndSelect('st.showtimeFileEntity', 'stf')
       .leftJoinAndSelect('stf.fileEntity', 'f')
       .leftJoinAndSelect('s.showtimeLikeEntity', 'sl')
+      .leftJoinAndSelect('sl.userEntity', 'u')
       .leftJoinAndSelect('s.showtimeGenreEntity', 'sg')
       .leftJoinAndSelect('sg.genreEntity', 'g')
       .where('s.releaseYn = :releaseYn', {releaseYn: 'Y'})
@@ -469,6 +470,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
       responseRecentDto.playTime = recent.playTime;
       responseRecentDto.likeCount = recent.showtimeLikeEntity.length;
       responseRecentDto.releaseDt = Formatter.dateFormatter(recent.createdAt);
+      responseRecentDto.isLike = false;
 
       const streamObj = await entityManager.query(
         'select ceil(ifnull(sum(total_second)/?, 0)) as totalStreams from l2e where token_id in ' +
@@ -477,6 +479,12 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
         ')'
         , [Number(recent.playTime), recent.id]);
       responseRecentDto.playCount = streamObj[0].totalStreams;
+
+      for(const likeEntity of recent.showtimeLikeEntity) {
+        if(likeEntity.userEntity.id == userId) {
+          responseRecentDto.isLike = true;
+        }
+      }
 
       responseList.push(responseRecentDto);
     }

@@ -257,7 +257,7 @@ export class NftMusicService {
         response.playList = await this.nftMusicRepository.findNftListTake(sortNftDto);
         break;
       case 'showtime':
-        response.playList = await this.showtimeService.getLandingRecents(sortNftDto);
+        response.playList = await this.showtimeService.getLandingRecents(userId, sortNftDto);
         break;
     }
 
