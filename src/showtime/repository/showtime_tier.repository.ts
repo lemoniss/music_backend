@@ -175,6 +175,7 @@ export class ShowtimeTierRepository extends Repository<ShowtimeTierEntity> {
       .leftJoinAndSelect('s.showtimeGenreEntity', 'sg')
       .leftJoinAndSelect('sg.genreEntity', 'g')
       .leftJoinAndSelect('s.showtimeLikeEntity', 'sl')
+      .leftJoinAndSelect('sl.userEntity', 'u')
       .where('s.id = :showtimeId', {showtimeId: showtimeId})
       .getOne();
 
