@@ -21,4 +21,6 @@ export class ResponseArtistDetailDto {
   handle: string;
 
   showtimeId: number;
+
+  nftMusicId: number;
 }

@@ -1070,6 +1070,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       responseArtistDetailDto.imgFileUrl = imgFileUrl;
       responseArtistDetailDto.musicFileUrl = musicFileUrl;
       responseArtistDetailDto.source = minter.source;
+      responseArtistDetailDto.nftMusicId = minter.id;
 
       if(minter.source == 'showtime') {
         responseArtistDetailDto.showtimeId = Number(minter.showtimeEntity.id);
