@@ -1,8 +1,9 @@
-import { IsOptional } from "class-validator";
+import { IsNotEmpty, IsNumber } from "class-validator";
 
 export class CreateUserFollowerDto {
 
-  @IsOptional()
+  @IsNumber()
+  @IsNotEmpty()
   followerId: number;
 
 }

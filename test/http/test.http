@@ -956,3 +956,23 @@ GET http://localhost:23936/main/search/songs?keyword=ja&skip=5
 ### searchResult artists more
 GET http://localhost:23936/main/search/artists?keyword={keyword}&skip={skip}
 
+
+### PatchFollower
+POST http://localhost:23936/users/patchFollower
+Content-Type: application/json
+auth_token: {authToken}
+
+{
+  "followerId": 1
+}
+
+### PatchLike
+POST http://localhost:23936/nets/patchLike
+Content-Type: application/json
+auth_token: {authToken}
+
+{
+  "nftMusicId": 1,
+  "source": "showtime"
+}
+
