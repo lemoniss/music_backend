@@ -224,21 +224,21 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
       infoExchangeDto.handle = userObj[0].handle;
     }
 
-    const nftObj = await entityManager.query(
-      'select ' +
-      'n.play_count as playCount, ' +
-      '(select count(*) from nft_music_like where nft_music_id = n.id) as likeCount, ' +
-      'ifnull(n.showtime_id, 0) as showTimeId ' +
-      'from nft_music n where id = ?'
-      , [exchangeInfo.nftMusicId]);
-
-    if(nftObj.length > 0) {
-      infoExchangeDto.playCount = Number(nftObj[0].playCount);
-      infoExchangeDto.likeCount = Number(nftObj[0].likeCount);
-      infoExchangeDto.showTimeId = Number(nftObj[0].showTimeId);
-    } else {
-      infoExchangeDto.showTimeId = 0;
-    }
+    // const nftObj = await entityManager.query(
+    //   'select ' +
+    //   'n.play_count as playCount, ' +
+    //   '(select count(*) from nft_music_like where nft_music_id = n.id) as likeCount, ' +
+    //   'ifnull(n.showtime_id, 0) as showTimeId ' +
+    //   'from nft_music n where id = ?'
+    //   , [exchangeInfo.nftMusicId]);
+    //
+    // if(nftObj.length > 0) {
+    //   infoExchangeDto.playCount = Number(nftObj[0].playCount);
+    //   infoExchangeDto.likeCount = Number(nftObj[0].likeCount);
+    //   infoExchangeDto.showTimeId = Number(nftObj[0].showTimeId);
+    // } else {
+    //   infoExchangeDto.showTimeId = 0;
+    // }
     infoExchangeDto.rareImgFileUrl = [];
     for(const exchangeFileEntity of exchangeInfo.exchangeFileEntity) {
       switch (exchangeFileEntity.fileType) {
@@ -295,6 +295,8 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
         .leftJoinAndSelect('u.userFollowerEntity', 'ufw')
         .where('st.id = :tierId', {tierId: exchangeInfo.nftMusicId})
         .getOne();
+
+      infoExchangeDto.showTimeId = recentLikeInfo.id;
 
       infoExchangeDto.artists = [];
       infoExchangeDto.producers = [];
