@@ -92,7 +92,7 @@ export class ShowtimeHolderRepository extends Repository<ShowtimeHolderEntity> {
       infoNftDto.description = holderEntity.showtimeTierEntity.showtimeEntity.description;
       infoNftDto.lyrics = holderEntity.showtimeTierEntity.showtimeEntity.lyrics;
       infoNftDto.playTime = holderEntity.showtimeTierEntity.showtimeEntity.playTime;
-      infoNftDto.isLike = false;
+      infoNftDto.isLike = holderEntity.showtimeTierEntity.showtimeEntity.showtimeLikeEntity.length > 0 ? true : false;
       infoNftDto.tokenId = holderEntity.showtimeTierEntity.tokenId;
       infoNftDto.isOnSale = holderEntity.isOnSale;
       // infoNftDto.price = holderEntity.showtimeTierEntity.price;
@@ -167,7 +167,7 @@ export class ShowtimeHolderRepository extends Repository<ShowtimeHolderEntity> {
       infoNftDto.description = holderEntity.showtimeTierEntity.showtimeEntity.description;
       infoNftDto.lyrics = holderEntity.showtimeTierEntity.showtimeEntity.lyrics;
       infoNftDto.playTime = holderEntity.showtimeTierEntity.showtimeEntity.playTime;
-      infoNftDto.isLike = false;
+      infoNftDto.isLike = holderEntity.showtimeTierEntity.showtimeEntity.showtimeLikeEntity.length > 0 ? true : false;
       infoNftDto.tokenId = holderEntity.showtimeTierEntity.tokenId;
       infoNftDto.isOnSale = holderEntity.isOnSale;
       // infoNftDto.price = holderEntity.showtimeTierEntity.price;

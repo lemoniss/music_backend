@@ -166,7 +166,7 @@ export class ShowtimeTierRepository extends Repository<ShowtimeTierEntity> {
     return responseTierDto;
   }
 
-  static async getL2eToShowtimeId(showtimeId: string): Promise<InfoNftDto> {
+  static async getL2eToShowtimeId(userId: number, showtimeId: string): Promise<InfoNftDto> {
     const tierInfo = await getRepository(ShowtimeTierEntity)
       .createQueryBuilder('st')
       .leftJoinAndSelect('st.showtimeEntity', 's')
@@ -222,6 +222,12 @@ export class ShowtimeTierRepository extends Repository<ShowtimeTierEntity> {
     let genres = '';
     for(const showtimeGenreEntity of tierInfo.showtimeEntity.showtimeGenreEntity) {
       genres += showtimeGenreEntity.genreEntity.name + ', '
+    }
+
+    for(const likeEntity of tierInfo.showtimeEntity.showtimeLikeEntity) {
+      if(likeEntity.userEntity.id == userId) {
+        infoNftDto.isLike = true;
+      }
     }
 
     infoNftDto.genres = genres.substring(0, genres.length-2);

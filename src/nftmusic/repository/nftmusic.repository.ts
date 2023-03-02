@@ -108,7 +108,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       infoNftDto.description = nftEntity.description;
       infoNftDto.lyrics = nftEntity.lyrics;
       infoNftDto.playTime = nftEntity.playTime;
-      infoNftDto.isLike = false;
+      infoNftDto.isLike = nftEntity.nftMusicLikeEntity.length > 0 ? true : false;
       infoNftDto.tokenId = nftEntity.tokenId;
       infoNftDto.isOnSale = nftEntity.isOnSale;
 
@@ -124,6 +124,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
             break;
         }
       }
+
       let genres = '';
       for(const nftGenreEntity of nftEntity.nftMusicGenreEntity) {
         genres += nftGenreEntity.genreEntity.name + ', '
@@ -145,6 +146,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       .innerJoinAndSelect('ng.genreEntity', 'g')
       .innerJoinAndSelect('n.userNftMusicEntity', 'un')
       .leftJoinAndSelect('n.showtimeEntity', 'ns')
+      .leftJoinAndSelect('n.nftMusicLikeEntity', 'nl')
       .where('un.user_id = :userId', {userId: userId})
       .orderBy('n.isOnSale', 'DESC')
       .addOrderBy('n.id', 'DESC')
@@ -170,7 +172,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       infoNftDto.description = nftEntity.description;
       infoNftDto.lyrics = nftEntity.lyrics;
       infoNftDto.playTime = nftEntity.playTime;
-      infoNftDto.isLike = false;
+      infoNftDto.isLike = nftEntity.nftMusicLikeEntity.length > 0 ? true : false;
       infoNftDto.tokenId = nftEntity.tokenId;
       infoNftDto.isOnSale = nftEntity.isOnSale;
 
@@ -678,10 +680,10 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     return infoNftDto;
   }
 
-  async findNftToToIdAndSource(musicId: string, source: string, totalSecond: number): Promise<InfoNftDto> {
+  async findNftToToIdAndSource(userId: number, musicId: string, source: string, totalSecond: number): Promise<InfoNftDto> {
 
     if(source == 'showtime') {
-      return await ShowtimeTierRepository.getL2eToShowtimeId(musicId);
+      return await ShowtimeTierRepository.getL2eToShowtimeId(userId, musicId);
     }
 
     const nftInfo = await getRepository(NftMusicEntity)
@@ -738,6 +740,12 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     }
 
     infoNftDto.genres = genres.substring(0, genres.length-2);
+
+    for(const likeEntity of nftInfo.nftMusicLikeEntity) {
+      if(likeEntity.userEntity.id == userId) {
+        infoNftDto.isLike = true;
+      }
+    }
 
     return infoNftDto;
   }

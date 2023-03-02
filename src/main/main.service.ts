@@ -70,7 +70,7 @@ export class MainService {
         const played = await this.l2eRepository.getRecentPlayed(recentDto);
 
         for(const recent of played) {
-          const info = await this.nftMusicRepository.findNftToToIdAndSource(recent.musicId, recent.source, recent.totalSecond);
+          const info = await this.nftMusicRepository.findNftToToIdAndSource(userInfo.id, recent.musicId, recent.source, recent.totalSecond);
           recentPlayed.push(info);
         }
         response.recentPlayed = recentPlayed;
@@ -85,6 +85,17 @@ export class MainService {
 
         response.myLikes = myLikes;
 
+        const streamingTop50 = [];
+        const streamingDto = new SortNftDto();
+        streamingDto.skip = 0;
+        streamingDto.take = 50;
+        const l2eTop50 = await this.l2eRepository.getStreamingTop(streamingDto);
+        for(const l2eInfo of l2eTop50) {
+          const info = await this.nftMusicRepository.findNftToToIdAndSource(userInfo.id, l2eInfo.musicId, l2eInfo.source, l2eInfo.totalSecond);
+          streamingTop50.push(info);
+        }
+        response.streamingTop50 = streamingTop50;
+
       } catch (e) {
         throw new ForbiddenException();
         return false;
@@ -95,19 +106,20 @@ export class MainService {
       skipTakeDto.take = 9;
       response.newRelease = await this.nftMusicRepository.findNftListTake(skipTakeDto);
 
+      const streamingTop50 = [];
+      const streamingDto = new SortNftDto();
+      streamingDto.skip = 0;
+      streamingDto.take = 50;
+      const l2eTop50 = await this.l2eRepository.getStreamingTop(streamingDto);
+      for(const l2eInfo of l2eTop50) {
+        const info = await this.nftMusicRepository.findNftToToIdAndSource(0, l2eInfo.musicId, l2eInfo.source, l2eInfo.totalSecond);
+        streamingTop50.push(info);
+      }
+      response.streamingTop50 = streamingTop50;
     }
 
-    const streamingTop50 = [];
-    const streamingDto = new SortNftDto();
-    streamingDto.skip = 0;
-    streamingDto.take = 50;
-    const l2eTop50 = await this.l2eRepository.getStreamingTop(streamingDto);
-    for(const l2eInfo of l2eTop50) {
-      const info = await this.nftMusicRepository.findNftToToIdAndSource(l2eInfo.musicId, l2eInfo.source, l2eInfo.totalSecond);
-      streamingTop50.push(info);
-    }
 
-    response.streamingTop50 = streamingTop50;
+
     const showtimeDto = new SortNftDto();
     showtimeDto.skip = 0;
     showtimeDto.take = 50;
