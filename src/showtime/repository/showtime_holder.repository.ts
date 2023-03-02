@@ -269,6 +269,7 @@ export class ShowtimeHolderRepository extends Repository<ShowtimeHolderEntity> {
     infoNftDto.minter = 'Showtime';
     infoNftDto.tier = holderShowtime.showtimeTierEntity.tier;
     infoNftDto.rareYn = holderShowtime.showtimeTierEntity.rareYn;
+    infoNftDto.showtimeId = holderShowtime.showtimeTierEntity.showtimeEntity.id;
 
     if(userObj.length > 0) {
       infoNftDto.userId = userObj[0].id;
