@@ -19,4 +19,6 @@ export class ResponseArtistDetailDto {
   source: string;
 
   handle: string;
+
+  showtimeId: number;
 }

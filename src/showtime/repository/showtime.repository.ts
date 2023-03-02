@@ -356,6 +356,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
           break;
         }
       }
+      responseRecentDto.showtimeId = Number(recent.id);
       responseRecentDto.name = recent.name;
       responseRecentDto.artist = recent.artist;
       responseRecentDto.title = recent.title;
@@ -455,6 +456,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
           break;
         }
       }
+      responseRecentDto.showtimeId = Number(recent.id);
       responseRecentDto.name = recent.name;
       responseRecentDto.artist = recent.artist;
       responseRecentDto.title = recent.title;
@@ -1125,6 +1127,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
           }
         }
       }
+      responseArtistDetailDto.showtimeId = Number(song.id);
       responseArtistDetailDto.artist = song.artist;
       responseArtistDetailDto.name = song.name;
       responseArtistDetailDto.title = song.title;
@@ -1207,65 +1210,6 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
     return responseList;
   }
 
-  async getLandingCollectionByArtist(userId: number): Promise<ResponseArtistDetailDto[]> {
-    const fellazByArtist = await getRepository(ShowtimeEntity)
-      .createQueryBuilder('s')
-      .leftJoinAndSelect('s.showtimeCrewEntity', 'sc')
-      .leftJoinAndSelect('sc.userEntity', 'uc')
-      .leftJoinAndSelect('uc.userFileEntity', 'uf')
-      .leftJoinAndSelect('uf.fileEntity', 'ff')
-      .leftJoinAndSelect('s.showtimeTierEntity', 'st')
-      .leftJoinAndSelect('st.showtimeFileEntity', 'stf')
-      .leftJoinAndSelect('stf.fileEntity', 'f')
-      .leftJoinAndSelect('st.showtimeHolderEntity', 'sth')
-      .leftJoinAndSelect('sth.userEntity', 'sthu')
-      .leftJoinAndSelect('sthu.userFileEntity', 'sthuf')
-      .leftJoinAndSelect('sthuf.fileEntity', 'fff')
-      .where('sc.id = uc.id')
-      .where('uc.id = :userId', {userId: userId})
-      .orderBy('sc.id', 'ASC')
-      .getMany();
-    if (!fellazByArtist) {
-      let responseList = [];
-      const responseObj = new ResponseUserInfoDto();
-      responseList.push(responseObj);
-      return responseList;
-    }
-
-    let responseList = [];
-
-    for(const song of fellazByArtist) {
-      for(const obj of song.showtimeTierEntity) {
-        if(obj.showtimeHolderEntity.length !== 0) {
-          for(const holder of obj.showtimeHolderEntity) {
-            const fellazInfoDto = new ResponseUserInfoDto();
-            fellazInfoDto.userId = holder.userEntity.id;
-            for(const userFile of holder.userEntity.userFileEntity) {
-              if(userFile.fileType == 'PROFILE') {
-                fellazInfoDto.imgFileUrl = userFile.fileEntity.url;
-              } else if(userFile.fileType == 'BANNER') {
-                fellazInfoDto.imgBannerFileUrl = userFile.fileEntity.url;
-              } else {
-                fellazInfoDto.imgFileUrl = '';
-              }
-            }
-            fellazInfoDto.name = holder.userEntity.nickname;
-            fellazInfoDto.handle = holder.userEntity.handle;
-            responseList.push(fellazInfoDto);
-          }
-        }
-      }
-
-      responseList = responseList.reduce(function (acc, current) {
-        if (acc.findIndex(({ userId }) => userId === current.userId) === -1) {
-          acc.push(current);
-        }
-        return acc;
-      }, []);
-    }
-
-    return responseList;
-  }
 
   async getServertime(): Promise<String> {
 
