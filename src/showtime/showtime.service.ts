@@ -17,8 +17,8 @@ import { ShowtimeLikeRepository } from "./repository/showtime_like.repository";
 import { ResponseUpcomingDto } from "./dto/response.upcoming.dto";
 import { ResponseRecentListDto } from "./dto/response.recentlist.dto";
 import { ResponseRecentDto } from "./dto/response.recent.dto";
-import { CreateUserFollowerDto } from "./dto/create.userfollower.dto";
-import { UserFollowerRepository } from "./repository/user_follower.repository";
+import { CreateUserFollowerDto } from "../user/dto/create.userfollower.dto";
+import { UserFollowerRepository } from "../user/repository/user_follower.repository";
 import { UserRepository } from "./repository/user.repository";
 import { ResponseArtistDto } from "./dto/response.artist.dto";
 import { ResponseTierListDto } from "./dto/response.tierlist.dto";
@@ -54,7 +54,7 @@ export class ShowtimeService {
     private showtimePurchasehistoryRepository: ShowtimePurchasehistoryRepository,
     private showtimeCrewRepository: ShowtimeCrewRepository,
     private showtimeLikeRepository: ShowtimeLikeRepository,
-    private userFollowerRepository: UserFollowerRepository,
+
     private userRepository: UserRepository,
     private showtimeHolderRepository: ShowtimeHolderRepository,
     private upcomingToRecentRepository: UpcomingToRecentRepository,
@@ -337,16 +337,6 @@ export class ShowtimeService {
   async patchLike(createShowTimeLikeDto: CreateShowTimeLikeDto) {
     try {
       await this.showtimeLikeRepository.patchLike(createShowTimeLikeDto);
-      return true;
-    } catch (e) {
-      throw new RuntimeException('Server Error. Please try again later.');
-      return false;
-    }
-  }
-
-  async patchFollower(createUserFollowerDto: CreateUserFollowerDto) {
-    try {
-      await this.userFollowerRepository.patchFollower(createUserFollowerDto);
       return true;
     } catch (e) {
       throw new RuntimeException('Server Error. Please try again later.');

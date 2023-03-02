@@ -15,7 +15,6 @@ import { CreateShowTimeLikeDto } from "./dto/create.showtimelike.dto";
 import { ResponseUpcomingDto } from "./dto/response.upcoming.dto";
 import { ResponseRecentListDto, } from "./dto/response.recentlist.dto";
 import { ResponseRecentDto } from "./dto/response.recent.dto";
-import { CreateUserFollowerDto } from "./dto/create.userfollower.dto";
 import { ResponseArtistDto } from "./dto/response.artist.dto";
 import { ResponseTierListDto } from "./dto/response.tierlist.dto";
 import { CoinMarketRateDto } from "./dto/create.coinmarketrate.dto";
@@ -84,13 +83,6 @@ export class ShowtimeController {
   patchLike(@Body() createShowTimeLikeDto: CreateShowTimeLikeDto)
     : Promise<boolean> {
     return this.showtimeService.patchLike(createShowTimeLikeDto);
-  }
-
-  @ApiOperation({summary: 'showtime Follower 갱신'})
-  @Patch("/patchFollower")
-  patchFollower(@Body() createUserFollowerDto: CreateUserFollowerDto)
-    : Promise<boolean> {
-    return this.showtimeService.patchFollower(createUserFollowerDto);
   }
 
   /**

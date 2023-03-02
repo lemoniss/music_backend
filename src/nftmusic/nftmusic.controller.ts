@@ -19,6 +19,7 @@ import { NftHistoryDto } from "./dto/nfthistory.dto";
 import {FindByUserNftDto} from "./dto/findbyuser.nft.dto";
 import { NftProvenanceDto } from "./dto/nft.provenance.dto";
 import { CreateL2eDto } from "./dto/create.l2e.dto";
+import { PatchLikeNftDto } from "./dto/patchlike.nft.dto";
 
 @ApiHeader({
   name: 'auth_token',
@@ -247,5 +248,18 @@ export class NftMusicController {
            @Body() sortNftDto: SortNftDto)
     : Promise<any> {
     return this.nftMusicService.playList(authToken, sortNftDto);
+  }
+
+  /**
+   * 좋아요  추가/삭제
+   * @param nftLikeDto
+   */
+  @UseGuards(AuthGuard)
+  @Post('/patchLike')
+  @ApiOperation({summary: 'NFT 음악 즐겨찾기 추가'})
+  patchLike(@Headers("auth_token") authToken: string,
+                @Body() patchLikeNftDto: PatchLikeNftDto)
+    : Promise<boolean> {
+    return this.nftMusicService.patchLike(authToken, patchLikeNftDto);
   }
 }

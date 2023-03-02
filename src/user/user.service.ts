@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from "./repository/user.repository";
 import { UserEntity } from "./entity/user.entity";
 import { CreateUserDto } from "./dto/create.user.dto";
@@ -13,15 +12,12 @@ import { UserOtpRepository } from "./repository/user_otp.repository";
 import { ResponseOtpUserDto } from "./dto/response.otp.user.dto";
 import { ResponseCorpWalletDto } from "./dto/response.corp.wallet.dto";
 import { RuntimeException } from "@nestjs/core/errors/exceptions/runtime.exception";
-import { UserOtpEntity } from "./entity/user_otp.entity";
-import { UserFileEntity } from "./entity/user_file.entity";
-import { UserGenreEntity } from "./entity/user_genre.entity";
-import { UserSnsEntity } from "./entity/user_sns.entity";
 import { Rsa } from "../util/rsa";
-import { SortNftDto } from "../nftmusic/dto/sort.nft.dto";
 import { ShowtimeRepository } from "../showtime/repository/showtime.repository";
 import { ShowtimeHolderRepository } from "../showtime/repository/showtime_holder.repository";
 import { NftMusicRepository } from "../nftmusic/repository/nftmusic.repository";
+import { CreateUserFollowerDto } from "./dto/create.userfollower.dto";
+import { UserFollowerRepository } from "./repository/user_follower.repository";
 const crypto = require("crypto");
 const fs = require('fs');
 
@@ -33,6 +29,7 @@ export class UserService {
     private userGenreRepository: UserGenreRepository,
     private userSnsRepository: UserSnsRepository,
     private userOtpRepository: UserOtpRepository,
+    private userFollowerRepository: UserFollowerRepository,
     private showtimeRepository: ShowtimeRepository,
     private showtimeHolderRepository: ShowtimeHolderRepository,
     private nftMusicRepository: NftMusicRepository,
@@ -203,6 +200,16 @@ export class UserService {
     } catch (e) {
       throw new RuntimeException('createShowtimeIpfs Server Error. Please try again later.');
       // return false;
+    }
+  }
+
+  async patchFollower(authToken: string, createUserFollowerDto: CreateUserFollowerDto) {
+    try {
+      const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+      return await this.userFollowerRepository.patchFollower(userInfo.id, createUserFollowerDto);
+    } catch (e) {
+      throw new RuntimeException('Server Error. Please try again later.');
+      return false;
     }
   }
 

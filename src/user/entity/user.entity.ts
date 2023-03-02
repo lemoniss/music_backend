@@ -24,6 +24,7 @@ import { UserGenreEntity } from "./user_genre.entity";
 import { UserSnsEntity } from "./user_sns.entity";
 import { UserOtpEntity } from "./user_otp.entity";
 import { UserArtistEntity } from "./user_artist.entity";
+import { UserFollowerEntity } from "./user_follower.entity";
 
 @Entity({ name: 'user' })
 @Unique(['address', 'handle'])
@@ -72,4 +73,10 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(() => UserArtistEntity, userArtistEntity => userArtistEntity.userEntity)
   userArtistEntity: UserArtistEntity[];
+
+  @OneToMany(() => UserFollowerEntity, userFollowerEntity => userFollowerEntity.userEntity)
+  userFollowerEntity: UserFollowerEntity[];
+
+  @OneToMany(() => UserFollowerEntity, targetFollowerEntity => targetFollowerEntity.followerEntity)
+  targetFollowerEntity: UserFollowerEntity[];
 }

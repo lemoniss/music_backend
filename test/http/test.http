@@ -798,9 +798,7 @@ auth_token: CMje5kdz2lFCcIePGrKfdSglXyIPgWd81k4AhEFxtKKMO8Y3Zd8Llh9mJpAjnqzdjIbk
 Content-Type: application/json
 
 {
-  "query": "streamingTop",
-  "skip": 30,
-  "take": 60
+  "query": "streamingTop"
 }
 
 

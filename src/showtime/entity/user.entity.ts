@@ -12,12 +12,12 @@ import { ShowtimePurchaseHistoryEntity } from "./showtime_purchasehistory.entity
 import { ShowtimeCrewEntity } from "./showtime_crew.entity";
 import { ShowtimeLikeEntity } from "./showtime_like.entity";
 import { UserFileEntity } from "./user_file.entity";
-import { UserFollowerEntity } from "./user_follower.entity";
 import { UserGenreEntity } from "./user_genre.entity";
 import { ShowtimeHolderEntity } from "./showtime_holder.entity";
 import { NftMusicLikeEntity } from "./nftmusic_like.entity";
 import { BannerLikeEntity } from "./banner_like.entity";
 import { ShowtimeMovieEntity } from "./showtime_movie.entity";
+import { UserFollowerEntity } from "./user_follower.entity";
 
 @Entity({ name: 'user' })
 @Unique(['address', 'handle'])

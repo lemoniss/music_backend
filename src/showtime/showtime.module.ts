@@ -14,7 +14,6 @@ import { ShowtimeTierRepository } from "./repository/showtime_tier.repository";
 import { ShowtimePurchasehistoryRepository } from "./repository/showtime_purchasehistory.repository";
 import { ShowtimeCrewRepository } from "./repository/showtime_crew.repository";
 import { ShowtimeLikeRepository } from "./repository/showtime_like.repository";
-import { UserFollowerRepository } from "./repository/user_follower.repository";
 import { UserRepository } from "./repository/user.repository";
 import { UpcomingToRecentRepository } from "./repository/upcoming_to_recent.repository";
 import { UpcomingToRecentFileRepository } from "./repository/upcoming_to_recent_file.repository";
@@ -36,7 +35,6 @@ import { ShowtimeFileEntity } from "./entity/showtime_file.entity";
 import { ShowtimePurchaseHistoryEntity } from "./entity/showtime_purchasehistory.entity";
 import { ShowtimeCrewEntity } from "./entity/showtime_crew.entity";
 import { ShowtimeLikeEntity } from "./entity/showtime_like.entity";
-import { UserFollowerEntity } from "./entity/user_follower.entity";
 import { UserEntity } from "./entity/user.entity";
 import { ShowtimeHolderEntity } from "./entity/showtime_holder.entity";
 import { NftMusicEntity } from "./entity/nftmusic.entity";
@@ -65,7 +63,6 @@ import { BannerLikeEntity } from "./entity/banner_like.entity";
       ShowtimePurchaseHistoryEntity,
       ShowtimeCrewEntity,
       ShowtimeLikeEntity,
-      UserFollowerEntity,
       UserEntity,
       ShowtimeHolderEntity,
       NftMusicEntity,
@@ -91,7 +88,6 @@ import { BannerLikeEntity } from "./entity/banner_like.entity";
     ShowtimePurchasehistoryRepository,
     ShowtimeCrewRepository,
     ShowtimeLikeRepository,
-    UserFollowerRepository,
     UserRepository,
     ShowtimeHolderRepository,
     UpcomingToRecentRepository,

@@ -16,6 +16,7 @@ import { ApiHeader, ApiOperation } from "@nestjs/swagger";
 import { ResponseInfoUserDto } from "./dto/response.info.user.dto";
 import { ResponseOtpUserDto } from "./dto/response.otp.user.dto";
 import { ResponseCorpWalletDto } from "./dto/response.corp.wallet.dto";
+import { CreateUserFollowerDto } from "./dto/create.userfollower.dto";
 
 @Controller("users")
 export class UserController {
@@ -124,5 +125,14 @@ export class UserController {
   @Post("/corpWallet")
   getCorpWalletInfo(@Headers("auth_token") authToken: string) : Promise<ResponseCorpWalletDto> {
     return this.userService.getCorpWalletInfo();
+  }
+
+  @ApiOperation({summary: 'user Follower 갱신'})
+  @Post("/patchFollower")
+  @UseGuards(AuthGuard)
+  patchFollower(@Headers("auth_token") authToken: string,
+                @Body() createUserFollowerDto: CreateUserFollowerDto)
+    : Promise<boolean> {
+    return this.userService.patchFollower(authToken, createUserFollowerDto);
   }
 }

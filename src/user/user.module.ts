@@ -15,6 +15,8 @@ import { UserOtpEntity } from "./entity/user_otp.entity";
 import { ShowtimeRepository } from "../showtime/repository/showtime.repository";
 import { ShowtimeHolderRepository } from "../showtime/repository/showtime_holder.repository";
 import { NftMusicRepository } from "../nftmusic/repository/nftmusic.repository";
+import { UserFollowerEntity } from "./entity/user_follower.entity";
+import { UserFollowerRepository } from "./repository/user_follower.repository";
 
 @Module({
   imports: [TypeOrmModule.forFeature([
@@ -23,6 +25,7 @@ import { NftMusicRepository } from "../nftmusic/repository/nftmusic.repository";
     UserGenreEntity,
     UserSnsEntity,
     UserOtpEntity,
+    UserFollowerEntity,
   ])], //L2eRepository 등록
   controllers: [UserController],
   providers: [
@@ -32,6 +35,7 @@ import { NftMusicRepository } from "../nftmusic/repository/nftmusic.repository";
     UserGenreRepository,
     UserSnsRepository,
     UserOtpRepository,
+    UserFollowerRepository,
     ShowtimeRepository,
     ShowtimeHolderRepository,
     NftMusicRepository,

@@ -28,6 +28,8 @@ import { GenreService } from "../genre/genre.service";
 import { NftMusicDistributorRepository } from "./repository/nftmusic_distributor.repository";
 import { UploadRepository } from "../upload/repository/upload.repository";
 import { CreateUploadDto } from "../upload/dto/create.upload.dto";
+import { PatchLikeNftDto } from "./dto/patchlike.nft.dto";
+import { CreateShowTimeLikeDto } from "../showtime/dto/create.showtimelike.dto";
 @Injectable()
 export class NftMusicService {
   constructor(
@@ -263,4 +265,22 @@ export class NftMusicService {
     return response;
   }
 
+  async patchLike(authToken: string, patchLikeNftDto: PatchLikeNftDto): Promise<boolean> {
+    try {
+      const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+      if(patchLikeNftDto.source == 'showtime') {
+        const createShowTimeLikeDto = new CreateShowTimeLikeDto();
+        createShowTimeLikeDto.userId = userInfo.id;
+        createShowTimeLikeDto.showtimeId = patchLikeNftDto.nftMusicId;
+        return await this.showtimeService.patchLike(createShowTimeLikeDto);
+      } else {
+        return await this.nftMusicLikeRepository.patchLike(userInfo.id, patchLikeNftDto);
+      }
+    } catch (e) {
+      throw new RuntimeException('Server Error. Please try again later.');
+      return false;
+    }
+
+
+  }
 }
