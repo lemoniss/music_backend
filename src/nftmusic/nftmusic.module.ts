@@ -24,6 +24,7 @@ import { UserRepository } from "../user/repository/user.repository";
 import { GenreModule } from "../genre/genre.module";
 import { NftMusicDistributorEntity } from "./entity/nftmusic_distributor.entity";
 import { NftMusicDistributorRepository } from "./repository/nftmusic_distributor.repository";
+import { UploadRepository } from "../upload/repository/upload.repository";
 
 @Module({
   imports: [

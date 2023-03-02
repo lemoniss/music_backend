@@ -26,6 +26,8 @@ import { UserRepository } from "../user/repository/user.repository";
 import { Rsa } from "../util/rsa";
 import { GenreService } from "../genre/genre.service";
 import { NftMusicDistributorRepository } from "./repository/nftmusic_distributor.repository";
+import { UploadRepository } from "../upload/repository/upload.repository";
+import { CreateUploadDto } from "../upload/dto/create.upload.dto";
 @Injectable()
 export class NftMusicService {
   constructor(
@@ -260,4 +262,5 @@ export class NftMusicService {
     // return await this.nftMusicRepository.findNftList(sortNftDto);
     return response;
   }
+
 }

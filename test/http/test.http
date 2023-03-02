@@ -949,11 +949,12 @@ auth_token: CMje5kdz2lFCcIePGrKfdSglXyIPgWd81k4AhEFxtKKMO8Y3Zd8Llh9mJpAjnqzdjIbk
 
 
 ### searchResult
-GET http://localhost:23936/main/search?keyword={keyword}
-auth_token: {authToken // optional}
+GET http://localhost:23936/main/search?keyword=ja
+#auth_token: {authToken // optional}
 
 ### searchResult songs more
-GET http://localhost:23936/main/search/songs?keyword={keyword}&skip={skip}
+GET http://localhost:23936/main/search/songs?keyword=ja&skip=5
 
 ### searchResult artists more
 GET http://localhost:23936/main/search/artists?keyword={keyword}&skip={skip}
+
