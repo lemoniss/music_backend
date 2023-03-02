@@ -708,6 +708,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     infoNftDto.tokenId = nftInfo.tokenId;
     infoNftDto.source = nftInfo.source;
     infoNftDto.releaseDt = Formatter.dateFormatter(nftInfo.createdAt);
+    infoNftDto.likeCount = nftInfo.nftMusicLikeEntity.length;
 
     for(const nftFileEntity of nftInfo.nftMusicFileEntity) {
       switch (nftFileEntity.fileType) {
@@ -1062,5 +1063,50 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
 
     return responseList;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  async findNftInfoByName(name: string): Promise<any> {
+
+    const nftInfo = await getRepository(NftMusicEntity)
+      .createQueryBuilder('n')
+      .leftJoinAndSelect('n.nftMusicFileEntity', 'nf')
+      .leftJoinAndSelect('nf.fileEntity', 'f')
+      .where('n.name = :name', {name: name})
+      .getOne();
+
+    if (!nftInfo) {
+      // throw new RuntimeException('Music Not Found');
+      console.log(name + ' not found');
+      return false;
+    }
+
+    let resultList: any = [];
+
+    for(const nftMusicFile of nftInfo.nftMusicFileEntity) {
+      let result: any = {};
+      result.fileType = nftMusicFile.fileType;
+      result.name = nftMusicFile.fileEntity.name;
+      result.url = nftMusicFile.fileEntity.url;
+
+      resultList.push(result);
+    }
+
+    return resultList;
+  }
+
 }
 
