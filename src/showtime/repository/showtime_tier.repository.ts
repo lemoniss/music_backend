@@ -193,6 +193,7 @@ export class ShowtimeTierRepository extends Repository<ShowtimeTierEntity> {
       ')'
       , [Number(tierInfo.showtimeEntity.playTime), showtimeId]);
 
+    infoNftDto.showtimeId = Number(showtimeId);
     infoNftDto.nftMusicId = Number(showtimeId);
     infoNftDto.title = tierInfo.showtimeEntity.title;
     infoNftDto.name = tierInfo.showtimeEntity.name;
