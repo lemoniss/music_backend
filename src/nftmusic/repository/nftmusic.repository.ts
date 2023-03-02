@@ -83,6 +83,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       .leftJoinAndSelect('n.nftMusicGenreEntity', 'ng')
       .innerJoinAndSelect('ng.genreEntity', 'g')
       .innerJoinAndSelect('n.userNftMusicEntity', 'un')
+      .leftJoinAndSelect('n.nftMusicLikeEntity', 'nl')
       .where('un.user_id = :userId', {userId: userId})
       .orderBy('n.isOnSale', 'DESC')
       .addOrderBy('n.id', 'DESC')

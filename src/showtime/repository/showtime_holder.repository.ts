@@ -137,6 +137,7 @@ export class ShowtimeHolderRepository extends Repository<ShowtimeHolderEntity> {
       .leftJoinAndSelect('st.showtimeEntity', 's')
       .leftJoinAndSelect('s.showtimeGenreEntity', 'sg')
       .leftJoinAndSelect('sg.genreEntity', 'g')
+      .leftJoinAndSelect('s.showtimeLikeEntity', 'sl')
       .where('sh.user_id = :userId', {userId: userId})
       .orderBy('sh.isOnSale', 'DESC')
       .addOrderBy('sh.id', 'DESC')
