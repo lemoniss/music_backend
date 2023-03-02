@@ -144,6 +144,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       .leftJoinAndSelect('n.nftMusicGenreEntity', 'ng')
       .innerJoinAndSelect('ng.genreEntity', 'g')
       .innerJoinAndSelect('n.userNftMusicEntity', 'un')
+      .leftJoinAndSelect('n.showtimeEntity', 'ns')
       .where('un.user_id = :userId', {userId: userId})
       .orderBy('n.isOnSale', 'DESC')
       .addOrderBy('n.id', 'DESC')
@@ -201,7 +202,12 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
         genres += nftGenreEntity.genreEntity.name + ', '
       }
       infoNftDto.genres = genres.substring(0, genres.length-2);
-      infoNftDto.source = 'normal';
+      infoNftDto.source = nftEntity.source;
+
+      if(nftEntity.source == 'showtime') {
+        infoNftDto.showtimeId = nftEntity.showtimeEntity.id;
+      }
+
       infoNftDtos.push(infoNftDto);
     }
     return infoNftDtos;
@@ -426,6 +432,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
 
       if(infoNftDto.source == 'showtime') {
         infoNftDto.nftMusicId = nftEntity.showtimeEntity.id;
+        infoNftDto.showtimeId = nftEntity.showtimeEntity.id;
       }
 
       for(const nftFileEntity of nftEntity.nftMusicFileEntity) {
@@ -685,6 +692,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       .leftJoinAndSelect('mg.genreEntity', 'g')
       .leftJoinAndSelect('m.nftMusicLikeEntity', 'ml')
       .leftJoinAndSelect('ml.userEntity', 'u')
+      .leftJoinAndSelect('m.showtimeEntity', 'ms')
       .where('m.id = :musicId', {musicId: musicId})
       .getOne();
 
@@ -709,6 +717,10 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     infoNftDto.source = nftInfo.source;
     infoNftDto.releaseDt = Formatter.dateFormatter(nftInfo.createdAt);
     infoNftDto.likeCount = nftInfo.nftMusicLikeEntity.length;
+
+    if(nftInfo.source == 'showtime') {
+      infoNftDto.showtimeId = nftInfo.showtimeEntity.id;
+    }
 
     for(const nftFileEntity of nftInfo.nftMusicFileEntity) {
       switch (nftFileEntity.fileType) {
@@ -820,6 +832,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
           ')'
           , [Number(nftEntity.playTime), nftEntity.showtimeEntity.id]);
         infoNftDto.playCount = streamObj[0].totalStreams;
+        infoNftDto.showtimeId = nftEntity.showtimeEntity.id;
       } else {
         const streamObj = await entityManager.query(
           'select ceil(ifnull(sum(total_second)/?, 0)) as totalStreams from l2e where token_id in ' +
@@ -834,12 +847,12 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       infoNftDto.tokenId = nftEntity.tokenId;
       infoNftDto.source = nftEntity.source;
 
-      if(infoNftDto.source == 'showtime') {
-        const showtimeObj = await entityManager.query(
-          'select showtime_id as showtimeId from showtime_tier where token_id = ? ',
-          [nftEntity.tokenId]);
-        infoNftDto.showtimeId = showtimeObj[0].showtimeId;
-      }
+      // if(infoNftDto.source == 'showtime') {
+      //   const showtimeObj = await entityManager.query(
+      //     'select showtime_id as showtimeId from showtime_tier where token_id = ? ',
+      //     [nftEntity.tokenId]);
+      //   infoNftDto.showtimeId = showtimeObj[0].showtimeId;
+      // }
 
       for(const nftFileEntity of nftEntity.nftMusicFileEntity) {
         switch (nftFileEntity.fileType) {
@@ -1026,6 +1039,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       .createQueryBuilder('n')
       .leftJoinAndSelect('n.nftMusicFileEntity', 'nf')
       .leftJoinAndSelect('nf.fileEntity', 'f')
+      .leftJoinAndSelect('n.showtimeEntity', 'ns')
       .where('n.minter = :address', {address: address})
       .orderBy('n.id', 'DESC')
       .getMany();
@@ -1056,6 +1070,10 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       responseArtistDetailDto.imgFileUrl = imgFileUrl;
       responseArtistDetailDto.musicFileUrl = musicFileUrl;
       responseArtistDetailDto.source = minter.source;
+
+      if(minter.source == 'showtime') {
+        responseArtistDetailDto.showtimeId = Number(minter.showtimeEntity.id);
+      }
 
       responseList.push(responseArtistDetailDto);
     }

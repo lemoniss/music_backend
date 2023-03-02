@@ -174,6 +174,7 @@ export class ShowtimeHolderRepository extends Repository<ShowtimeHolderEntity> {
       infoNftDto.rareYn = holderEntity.showtimeTierEntity.rareYn;
       infoNftDto.tier = holderEntity.showtimeTierEntity.tier;
       infoNftDto.rareImgFileUrl = [];
+      infoNftDto.showtimeId = holderEntity.showtimeTierEntity.showtimeEntity.id;
 
       if(exchangeObj.length > 0) infoNftDto.price = exchangeObj[0].price;
 
