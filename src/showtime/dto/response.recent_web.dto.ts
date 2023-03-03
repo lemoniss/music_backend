@@ -46,4 +46,6 @@ export class ResponseRecentWebDto {
   isOnSale: string;
 
   isLike: boolean;
+
+  source: string;
 }

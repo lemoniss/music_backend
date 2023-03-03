@@ -775,6 +775,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
     responseRecentWebDto.releaseYn = recentInfo.releaseYn;
     responseRecentWebDto.releaseStartAt = Formatter.dateFormatter(recentInfo.releaseStartAt);
     responseRecentWebDto.releaseEndAt = Formatter.dateFormatter(recentInfo.releaseEndAt);
+    responseRecentWebDto.source = 'showtime';
 
     for(const file of recentInfo.showtimeTierEntity[0].showtimeFileEntity) {
       if(file.fileType == 'IMAGE') {

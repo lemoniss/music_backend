@@ -931,6 +931,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     responseRecentWebDto.lyrics = nftInfo.lyrics;
     responseRecentWebDto.releaseYn = 'Y';
     responseRecentWebDto.isOnSale = nftInfo.isOnSale;
+    responseRecentWebDto.source = nftInfo.source;
 
     for(const file of nftInfo.nftMusicFileEntity) {
       if(file.fileType == 'IMAGE') {
