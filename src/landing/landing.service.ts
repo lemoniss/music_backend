@@ -66,9 +66,9 @@ export class LandingService {
     let response: any = {};
 
     if(source == 'showtime') {
-      response = await this.showtimeRepository.getLandingRecent(musicId);
+      response = await this.showtimeRepository.getLandingRecent(0, musicId);
     } else {
-      response = await this.nftMusicRepository.getLandingNft(musicId);
+      response = await this.nftMusicRepository.getLandingNft(0, musicId);
     }
 
     response.serverTime = await this.showtimeRepository.getServertime();

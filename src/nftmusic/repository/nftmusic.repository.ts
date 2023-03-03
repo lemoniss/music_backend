@@ -901,13 +901,14 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     return infoNftDtos;
   }
 
-  async getLandingNft(nftMusicId: number): Promise<ResponseRecentWebDto> {
+  async getLandingNft(userId: number, nftMusicId: number): Promise<ResponseRecentWebDto> {
 
     const nftInfo = await getRepository(NftMusicEntity)
       .createQueryBuilder('n')
       .leftJoinAndSelect('n.nftMusicFileEntity', 'nf')
       .leftJoinAndSelect('nf.fileEntity', 'f')
       .leftJoinAndSelect('n.nftMusicLikeEntity', 'nl')
+      .leftJoinAndSelect('nl.userEntity', 'nlu')
       .leftJoinAndSelect('n.nftMusicGenreEntity', 'ng')
       .leftJoinAndSelect('ng.genreEntity', 'g')
       .leftJoinAndSelect('n.userNftMusicEntity', 'nun')
@@ -1039,6 +1040,14 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
     }
     contractInfoDto.splitStructure = splits;
     responseRecentWebDto.contractInfo = contractInfoDto;
+
+    responseRecentWebDto.isLike = false;
+
+    for(const likeEntity of nftInfo.nftMusicLikeEntity) {
+      if(likeEntity.userEntity.id == userId) {
+        responseRecentWebDto.isLike = true;
+      }
+    }
 
     return responseRecentWebDto;
   }

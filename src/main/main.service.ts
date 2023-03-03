@@ -188,6 +188,8 @@ export class MainService {
 
     let response: any = {};
 
+    let userId = 0;
+
     if(typeof authToken != 'undefined') {   // header 에 값이 있다. 로그인 검증해야함
       try {
         const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
@@ -197,6 +199,8 @@ export class MainService {
           return false;
         }
 
+        userId = userInfo.id;
+
         response.connectorInfo = userInfo;
       } catch (e) {
         throw new ForbiddenException();
@@ -205,9 +209,9 @@ export class MainService {
     }
 
     if(source == 'showtime') {
-      response.viewsongInfo = await this.showtimeRepository.getLandingRecent(musicId);
+      response.viewsongInfo = await this.showtimeRepository.getLandingRecent(userId, musicId);
     } else {
-      response.viewsongInfo = await this.nftMusicRepository.getLandingNft(musicId);
+      response.viewsongInfo = await this.nftMusicRepository.getLandingNft(userId, musicId);
     }
 
     response.serverTime = await this.showtimeRepository.getServertime();

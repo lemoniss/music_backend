@@ -44,4 +44,6 @@ export class ResponseRecentWebDto {
   musicFileUrl: string;
 
   isOnSale: string;
+
+  isLike: boolean;
 }

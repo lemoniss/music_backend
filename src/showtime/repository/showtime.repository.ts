@@ -735,7 +735,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
     return responseRecentDto;
   }
 
-  async getLandingRecent(showtimeId: number): Promise<ResponseRecentWebDto> {
+  async getLandingRecent(userId: number, showtimeId: number): Promise<ResponseRecentWebDto> {
     const recentInfo = await getRepository(ShowtimeEntity)
       .createQueryBuilder('s')
       .leftJoinAndSelect('s.showtimeCrewEntity', 'sc')
@@ -986,6 +986,14 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
 
     contractInfoDto.splitStructure = splits;
     responseRecentWebDto.contractInfo = contractInfoDto;
+
+    responseRecentWebDto.isLike = false;
+
+    for(const likeEntity of recentInfo.showtimeLikeEntity) {
+      if(likeEntity.userEntity.id == userId) {
+        responseRecentWebDto.isLike = true;
+      }
+    }
 
     return responseRecentWebDto;
   }
