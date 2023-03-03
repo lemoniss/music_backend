@@ -1115,6 +1115,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
         .leftJoinAndSelect('s.showtimeTierEntity', 'st')
         .leftJoinAndSelect('st.showtimeFileEntity', 'stf')
         .leftJoinAndSelect('stf.fileEntity', 'f')
+        .leftJoinAndSelect('s.showtimeLikeEntity', 'sl')
         .where('sc.id = uc.id')
         .where('uc.id = :userId', {userId: userId})
         .orderBy('sc.id', 'ASC')
@@ -1154,6 +1155,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
       responseArtistDetailDto.imgFileUrl = imgFileUrl;
       responseArtistDetailDto.musicFileUrl = musicFileUrl;
       responseArtistDetailDto.source = 'showtime';
+      responseArtistDetailDto.likeCount = song.showtimeLikeEntity.length;
 
       responseList.push(responseArtistDetailDto);
     }

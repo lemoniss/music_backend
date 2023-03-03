@@ -1060,6 +1060,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       .leftJoinAndSelect('n.nftMusicFileEntity', 'nf')
       .leftJoinAndSelect('nf.fileEntity', 'f')
       .leftJoinAndSelect('n.showtimeEntity', 'ns')
+      .leftJoinAndSelect('n.nftMusicLikeEntity', 'nl')
       .where('n.minter = :address', {address: address})
       .orderBy('n.id', 'DESC')
       .getMany();
@@ -1091,6 +1092,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       responseArtistDetailDto.musicFileUrl = musicFileUrl;
       responseArtistDetailDto.source = minter.source;
       responseArtistDetailDto.nftMusicId = minter.id;
+      responseArtistDetailDto.likeCount = minter.nftMusicLikeEntity.length;
 
       if(minter.source == 'showtime') {
         responseArtistDetailDto.showtimeId = Number(minter.showtimeEntity.id);

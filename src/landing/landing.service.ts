@@ -84,7 +84,11 @@ export class LandingService {
     response.artistInfo = await this.userRepository.findById(userId);
     response.followingInfo = {following: "N/A", follower: "N/A"};
 
-    response.releases = await this.showtimeRepository.getRecentByArtist(userId);
+    // response.releases = await this.showtimeRepository.getRecentByArtist(userId);
+    const showtimeRelease = await this.showtimeRepository.getRecentByArtist(userId);
+    const nftRelease = await this.nftMusicRepository.getRecentByMinter(handleResponse.address);
+    response.releases = showtimeRelease.concat(nftRelease);
+
     response.fellaz = await this.showtimeRepository.getFellazByArtist(userId, 0);
 
     const showtimeList = await this.showtimeHolderRepository.getLandingHolderShowtimes(userId);
