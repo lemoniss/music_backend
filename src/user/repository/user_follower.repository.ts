@@ -17,7 +17,7 @@ export class UserFollowerRepository extends Repository<UserFollowerEntity> {
       const userFollowerInfo = await getRepository(UserFollowerEntity)
         .createQueryBuilder('uf')
         .where('uf.userEntity = :userId', {userId: userId})
-        .andWhere('uf.followerEntity = :followerId', {userId: createUserFollowerDto.followerId})
+        .andWhere('uf.followerEntity = :followerId', {followerId: createUserFollowerDto.followerId})
         .getOne();
 
       if (!userFollowerInfo) {  // 데이터가 없으므로(팔로우 안했으므로) 팔로우 추가
