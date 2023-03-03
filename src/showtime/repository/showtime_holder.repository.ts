@@ -169,6 +169,7 @@ export class ShowtimeHolderRepository extends Repository<ShowtimeHolderEntity> {
       infoNftDto.lyrics = holderEntity.showtimeTierEntity.showtimeEntity.lyrics;
       infoNftDto.playTime = holderEntity.showtimeTierEntity.showtimeEntity.playTime;
       infoNftDto.isLike = holderEntity.showtimeTierEntity.showtimeEntity.showtimeLikeEntity.length > 0 ? true : false;
+      infoNftDto.likeCount = holderEntity.showtimeTierEntity.showtimeEntity.showtimeLikeEntity.length;
       infoNftDto.tokenId = holderEntity.showtimeTierEntity.tokenId;
       infoNftDto.isOnSale = holderEntity.isOnSale;
       // infoNftDto.price = holderEntity.showtimeTierEntity.price;

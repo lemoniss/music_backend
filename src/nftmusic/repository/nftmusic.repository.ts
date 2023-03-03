@@ -174,6 +174,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       infoNftDto.lyrics = nftEntity.lyrics;
       infoNftDto.playTime = nftEntity.playTime;
       infoNftDto.isLike = nftEntity.nftMusicLikeEntity.length > 0 ? true : false;
+      infoNftDto.likeCount = nftEntity.nftMusicLikeEntity.length;
       infoNftDto.tokenId = nftEntity.tokenId;
       infoNftDto.isOnSale = nftEntity.isOnSale;
 
