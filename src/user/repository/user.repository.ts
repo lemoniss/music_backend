@@ -186,6 +186,8 @@ export class UserRepository extends Repository<UserEntity> {
       .leftJoinAndSelect('ug.genreEntity', 'g')
       .leftJoinAndSelect('u.userSnsEntity', 'us')
       .leftJoinAndSelect('u.userFollowerEntity', 'ufw')
+      .leftJoinAndSelect('ufw.userEntity', 'ufwu')
+      .leftJoinAndSelect('ufw.followerEntity', 'ufwfu')
       .where('u.id = :artistId', {artistId: artistId})
       .getOne();
 

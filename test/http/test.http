@@ -999,3 +999,5 @@ auth_token: {authToken}
 }
 
 
+###
+GET http://localhost:23936/landing/artist/asdfg
