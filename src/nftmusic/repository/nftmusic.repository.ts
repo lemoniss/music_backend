@@ -545,6 +545,9 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
         .createQueryBuilder('u')
         .leftJoinAndSelect('u.userFileEntity', 'uf')
         .leftJoinAndSelect('uf.fileEntity', 'ff')
+        .leftJoinAndSelect('u.userFollowerEntity', 'ufw')
+        .leftJoinAndSelect('ufw.userEntity', 'ufwu')
+        .leftJoinAndSelect('ufw.followerEntity', 'ufwfu')
         .where('u.handle = :handle', {handle: nftInfo.handle})
         .getOne();
       if (!userInfo) {
