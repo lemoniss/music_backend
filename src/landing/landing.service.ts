@@ -79,15 +79,23 @@ export class LandingService {
   async getLandingArtistInfo(handle: string): Promise<any> {
     let response: any = {};
 
+    // const handleResponse = await this.userRepository.findByHandle(handle);
+    // const userId = handleResponse.id;
+    // response.artistInfo = await this.userRepository.findById(userId);
+    // response.followingInfo = {following: "N/A", follower: "N/A"};
+
+    let userId = 0;
+
     const handleResponse = await this.userRepository.findByHandle(handle);
-    const userId = handleResponse.id;
-    response.artistInfo = await this.userRepository.findById(userId);
-    response.followingInfo = {following: "N/A", follower: "N/A"};
+    const artistId = handleResponse.id;
+    response.artistInfo = await this.userRepository.findByUserIdAndArtistId(userId, artistId);
 
     // response.releases = await this.showtimeRepository.getRecentByArtist(userId);
-    const showtimeRelease = await this.showtimeRepository.getRecentByArtist(userId);
+    const showtimeRelease = await this.showtimeRepository.getRecentByArtist(artistId);
     const nftRelease = await this.nftMusicRepository.getRecentByMinter(handleResponse.address);
     response.releases = showtimeRelease.concat(nftRelease);
+
+
 
     response.fellaz = await this.showtimeRepository.getFellazByArtist(userId, 0);
 

@@ -101,11 +101,11 @@ export class UserService {
     const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
     let response: any = {};
 
-    const userId = userInfo.id;
+    let userId = 0;
 
     response.connectorInfo = userInfo;
     response.userInfo = await this.userRepository.findById(userId);
-    response.followingInfo = {following: "N/A", follower: "N/A"};
+    // response.followingInfo = {following: "N/A", follower: "N/A"};
 
     response.releases = await this.showtimeRepository.getRecentByArtist(userId);
     response.fellaz = await this.showtimeRepository.getFellazByArtist(userId, 0);

@@ -162,6 +162,18 @@ export class UserRepository extends Repository<UserEntity> {
     infoUserDto.followerCount = 0;
     infoUserDto.followingCount = 0;
 
+    for(const follow of userEntity.userFollowerEntity) {
+      if(follow.userEntity.id == id) {
+        infoUserDto.isFollowing = true;
+      }
+      if(follow.userEntity.id == id) {
+        infoUserDto.followingCount++;
+      }
+      if(follow.followerEntity.id == id) {
+        infoUserDto.followerCount++;
+      }
+    }
+
     return infoUserDto;
   }
 

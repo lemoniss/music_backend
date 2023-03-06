@@ -25,4 +25,10 @@ export class ResponseArtistDetailDto {
   nftMusicId: number;
 
   likeCount: number;
+
+  isFollowing: boolean;
+
+  followerCount: number;
+
+  followingCount: number;
 }

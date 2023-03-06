@@ -1122,6 +1122,7 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
         .createQueryBuilder('s')
         .leftJoinAndSelect('s.showtimeCrewEntity', 'sc')
         .leftJoinAndSelect('sc.userEntity', 'uc')
+        .leftJoinAndSelect('uc.userFollowerEntity', 'ufw')
         .leftJoinAndSelect('uc.userFileEntity', 'uf')
         .leftJoinAndSelect('uf.fileEntity', 'ff')
         .leftJoinAndSelect('s.showtimeTierEntity', 'st')
