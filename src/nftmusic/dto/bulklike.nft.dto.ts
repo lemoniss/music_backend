@@ -1,12 +1,9 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsOptional } from "class-validator";
+import { PatchLikeNftDto } from "./patchlike.nft.dto";
 
 export class BulkLikeNftDto {
 
   @IsOptional()
-  nftMusicId: number[];  // 음악생성 식별자
-
-  @IsString()
-  @IsNotEmpty()
-  source: string;
+  bulkLikeNfts: PatchLikeNftDto[];  // 음악생성 식별자
 
 }

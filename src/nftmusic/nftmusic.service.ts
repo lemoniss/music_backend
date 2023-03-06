@@ -283,25 +283,21 @@ export class NftMusicService {
     }
   }
 
-  async bulkLike(authToken: string, bulkLikeNftDto: BulkLikeNftDto): Promise<boolean> {
+  async bulkLike(authToken: string, bulkLikeNfts: BulkLikeNftDto): Promise<boolean> {
     try {
       const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
-      if(bulkLikeNftDto.source == 'showtime') {
-        for(const nftMusicId of bulkLikeNftDto.nftMusicId) {
+
+      for(const patchLikeNftDto of bulkLikeNfts.bulkLikeNfts) {
+        if(patchLikeNftDto.source == 'showtime') {
           const createShowTimeLikeDto = new CreateShowTimeLikeDto();
           createShowTimeLikeDto.userId = userInfo.id;
-          createShowTimeLikeDto.showtimeId = nftMusicId;
+          createShowTimeLikeDto.showtimeId = patchLikeNftDto.nftMusicId;
           await this.showtimeService.bulkLike(createShowTimeLikeDto);
-        }
-        return true;
-      } else {
-        for(const nftMusicId of bulkLikeNftDto.nftMusicId) {
-          const patchLikeNftDto = new PatchLikeNftDto();
-          patchLikeNftDto.nftMusicId = nftMusicId
+        } else {
           await this.nftMusicLikeRepository.bulkLike(userInfo.id, patchLikeNftDto);
         }
-        return true;
       }
+        return true;
     } catch (e) {
       throw new RuntimeException('Server Error. Please try again later.');
       return false;

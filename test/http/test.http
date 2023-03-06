@@ -979,10 +979,23 @@ auth_token: {authToken}
 ### BulkLike
 POST http://localhost:23936/nfts/bulkLike
 Content-Type: application/json
-auth_token: {authToken}
+auth_token: CMje5kdz2lFCcIePGrKfdSglXyIPgWd81k4AhEFxtKKMO8Y3Zd8Llh9mJpAjnqzdjIbks7q0E7MoshaDVapRTeSKerVo9a3WzhGxEOrAOvTqFEV6WTugwHkXP4bGsivbBwtkl0uILtd92MtobWdiTCZSHKWn2EpegHPOEoZCYuhBFkVWaxkiudb8MoaQQrVC4uwefpMZ6e7c2E8+aWCYjqY2Nhwee+vgNhm2MiiCImk5gG4JiDmdORWueLX+JqOJ7vOveZ/KVLsg8pVzyCrD7L7OeUQYOEcZ0SJlq3BS3iRVXcMHse6FEqxvwBeDenXyTukHdNw9oderBhQ373v4cg==
 
 {
-  "nftMusicId": [11,12,13],
-  "source": "showtime"
+  "bulkLikeNfts": [
+    {
+      "nftMusicId": 11,
+      "source": "showtime"
+    },
+    {
+      "nftMusicId": 12,
+      "source": "showtime"
+    },
+    {
+      "nftMusicId": 2004,
+      "source": "normal"
+    }
+  ]
 }
+
 
