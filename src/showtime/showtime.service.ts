@@ -344,6 +344,16 @@ export class ShowtimeService {
     }
   }
 
+  async bulkLike(createShowTimeLikeDto: CreateShowTimeLikeDto) {
+    try {
+      await this.showtimeLikeRepository.bulkLike(createShowTimeLikeDto);
+      return true;
+    } catch (e) {
+      throw new RuntimeException('Server Error. Please try again later.');
+      return false;
+    }
+  }
+
   async patchOnSale(tierId: number, isOnSale: string) {
     await this.showtimeHolderRepository.patchOnSale(tierId, isOnSale);
   }

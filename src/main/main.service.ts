@@ -222,6 +222,8 @@ export class MainService {
   async getMainArtistInfo(authToken: string, handle: string): Promise<any> {
     let response: any = {};
 
+    let userId = 0;
+
     if(typeof authToken != 'undefined') {   // header 에 값이 있다. 로그인 검증해야함
       try {
         const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
@@ -230,7 +232,7 @@ export class MainService {
           throw new ForbiddenException();
           return false;
         }
-
+        userId = userInfo.id;
         response.connectorInfo = userInfo;
       } catch (e) {
         throw new ForbiddenException();
@@ -239,11 +241,11 @@ export class MainService {
     }
 
     const handleResponse = await this.userRepository.findByHandle(handle);
-    const userId = handleResponse.id;
-    response.artistInfo = await this.userRepository.findById(userId);
-    response.followingInfo = {following: "N/A", follower: "N/A"};
+    const artistId = handleResponse.id;
+    response.artistInfo = await this.userRepository.findByUserIdAndArtistId(userId, artistId);
+    // response.followingInfo = {following: "N/A", follower: "N/A"};
 
-    const showtimeRelease = await this.showtimeRepository.getRecentByArtist(userId);
+    const showtimeRelease = await this.showtimeRepository.getRecentByArtist(artistId);
     const nftRelease = await this.nftMusicRepository.getRecentByMinter(handleResponse.address);
     response.releases = showtimeRelease.concat(nftRelease);
 

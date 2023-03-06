@@ -72,4 +72,10 @@ export class InfoUserDto {
     example: '2022-01-01 01:01:01',
   })
   createAt: string;
+
+  isFollowing: boolean;
+
+  followerCount: number;
+
+  followingCount: number;
 }

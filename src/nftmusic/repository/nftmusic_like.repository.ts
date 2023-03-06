@@ -66,11 +66,6 @@ export class NftMusicLikeRepository extends Repository<NftMusicLikeEntity> {
     }
   }
 
-
-
-
-
-
   async patchLike(userId: number, patchLikeNftDto: PatchLikeNftDto): Promise<boolean> {
     try {
 
@@ -112,5 +107,36 @@ export class NftMusicLikeRepository extends Repository<NftMusicLikeEntity> {
     }
   }
 
+  async bulkLike(userId: number, patchLikeNftDto: PatchLikeNftDto): Promise<boolean> {
+    try {
 
+      const nftLikeInfo = await getRepository(NftMusicLikeEntity)
+        .createQueryBuilder('nl')
+        .where('nl.nftMusicEntity = :nftMusicId', {nftMusicId: patchLikeNftDto.nftMusicId})
+        .andWhere('nl.userEntity = :userId', {userId: userId})
+        .getOne();
+
+      if (!nftLikeInfo) {  // 데이터가 없으므로(좋아요 안했으므로) 좋아요 추가
+        const nftMusicEntity = new NftMusicEntity();
+        nftMusicEntity.id = patchLikeNftDto.nftMusicId;
+
+        const userEntity = new UserEntity();
+        userEntity.id = userId;
+
+        await getConnection()
+          .createQueryBuilder()
+          .insert()
+          .into(NftMusicLikeEntity)
+          .values({
+            userEntity: userEntity,
+            nftMusicEntity: nftMusicEntity,
+          })
+          .execute();
+      }
+      return true;
+    } catch (e) {
+      throw new RuntimeException('Server Error. Please try again later.');
+      return false;
+    }
+  }
 }

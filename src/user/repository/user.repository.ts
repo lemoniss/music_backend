@@ -113,6 +113,7 @@ export class UserRepository extends Repository<UserEntity> {
       .leftJoinAndSelect('u.userGenreEntity', 'ug')
       .leftJoinAndSelect('ug.genreEntity', 'g')
       .leftJoinAndSelect('u.userSnsEntity', 'us')
+      .leftJoinAndSelect('u.userFollowerEntity', 'ufw')
       .where('u.id = :id', {id: id})
       .getOne();
 
@@ -155,6 +156,82 @@ export class UserRepository extends Repository<UserEntity> {
       userSnsDto.name = userSnsEntity.name;
       userSnsDto.snsHandle = userSnsEntity.snsHandle;
       infoUserDto.userSns.push(userSnsDto);
+    }
+
+    infoUserDto.isFollowing = false;
+    infoUserDto.followerCount = 0;
+    infoUserDto.followingCount = 0;
+
+    return infoUserDto;
+  }
+
+  async findByUserIdAndArtistId(userId: number, artistId: number): Promise<InfoUserDto> {
+    const userEntity = await getRepository(UserEntity)
+      .createQueryBuilder('u')
+      .leftJoinAndSelect('u.userFileEntity', 'uf')
+      .leftJoinAndSelect('uf.fileEntity', 'f')
+      .leftJoinAndSelect('u.userGenreEntity', 'ug')
+      .leftJoinAndSelect('ug.genreEntity', 'g')
+      .leftJoinAndSelect('u.userSnsEntity', 'us')
+      .leftJoinAndSelect('u.userFollowerEntity', 'ufw')
+      .where('u.id = :artistId', {artistId: artistId})
+      .getOne();
+
+    if (!userEntity) {
+      throw new RuntimeException('User Not Found');
+    }
+
+    const infoUserDto = new InfoUserDto();
+    infoUserDto.id = userEntity.id;
+    infoUserDto.address = userEntity.address;
+    infoUserDto.nickname = userEntity.nickname;
+    infoUserDto.handle = userEntity.handle;
+    infoUserDto.introduce = userEntity.introduce;
+    for(const userFile of userEntity.userFileEntity) {
+      if(userFile.fileType == 'PROFILE') {
+        infoUserDto.profileImgUrl = userFile.fileEntity.url;
+      } else if(userFile.fileType == 'BANNER') {
+        infoUserDto.bannerImgUrl = userFile.fileEntity.url;
+      } else {
+        infoUserDto.profileImgUrl = '';
+      }
+    }
+    infoUserDto.createAt = Formatter.dateFormatter(userEntity.createdAt);
+    // responseArtistDto.createAt = this.dateFormatter(artistInfo.createdAt);
+    let genres = '';
+    let genreIds = [];
+
+    for(const userGenreEntity of userEntity.userGenreEntity) {
+      genres += userGenreEntity.genreEntity.name + ', '
+      genreIds.push(userGenreEntity.genreEntity.id);
+    }
+
+    infoUserDto.genres = genres.substring(0, genres.length-2);
+    infoUserDto.genreIds = genreIds;
+
+    infoUserDto.userSns = [];
+
+    for(const userSnsEntity of userEntity.userSnsEntity) {
+      const userSnsDto = new UserSnsDto();
+      userSnsDto.name = userSnsEntity.name;
+      userSnsDto.snsHandle = userSnsEntity.snsHandle;
+      infoUserDto.userSns.push(userSnsDto);
+    }
+
+    infoUserDto.isFollowing = false;
+    infoUserDto.followerCount = 0;
+    infoUserDto.followingCount = 0;
+
+    for(const follow of userEntity.userFollowerEntity) {
+      if(follow.userEntity.id == userId) {
+        infoUserDto.isFollowing = true;
+      }
+      if(follow.userEntity.id == artistId) {
+        infoUserDto.followingCount++;
+      }
+      if(follow.followerEntity.id == artistId) {
+        infoUserDto.followerCount++;
+      }
     }
 
     return infoUserDto;

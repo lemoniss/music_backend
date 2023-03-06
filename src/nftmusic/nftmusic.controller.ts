@@ -20,6 +20,7 @@ import {FindByUserNftDto} from "./dto/findbyuser.nft.dto";
 import { NftProvenanceDto } from "./dto/nft.provenance.dto";
 import { CreateL2eDto } from "./dto/create.l2e.dto";
 import { PatchLikeNftDto } from "./dto/patchlike.nft.dto";
+import { BulkLikeNftDto } from "./dto/bulklike.nft.dto";
 
 @ApiHeader({
   name: 'auth_token',
@@ -261,5 +262,18 @@ export class NftMusicController {
                 @Body() patchLikeNftDto: PatchLikeNftDto)
     : Promise<boolean> {
     return this.nftMusicService.patchLike(authToken, patchLikeNftDto);
+  }
+
+  /**
+   * 다수 좋아요 추가 (삭제는 안됨)
+   * @param nftLikeDto
+   */
+  @UseGuards(AuthGuard)
+  @Post('/bulkLike')
+  @ApiOperation({summary: 'NFT 음악 즐겨찾기 다중 추가'})
+  bulkLike(@Headers("auth_token") authToken: string,
+            @Body() bulkLikeNftDto: BulkLikeNftDto)
+    : Promise<boolean> {
+    return this.nftMusicService.bulkLike(authToken, bulkLikeNftDto);
   }
 }

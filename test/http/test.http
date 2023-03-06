@@ -976,3 +976,13 @@ auth_token: {authToken}
   "source": "showtime"
 }
 
+### BulkLike
+POST http://localhost:23936/nfts/bulkLike
+Content-Type: application/json
+auth_token: {authToken}
+
+{
+  "nftMusicId": [11,12,13],
+  "source": "showtime"
+}
+

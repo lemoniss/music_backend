@@ -802,7 +802,19 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
           userInfoDto.imgFileUrl = '';
         }
       }
-      userInfoDto.followerCount = crew.userEntity.userFollowerEntity.length;
+      // userInfoDto.followerCount = crew.userEntity.userFollowerEntity.length;
+
+      userInfoDto.isFollowing = false;
+      userInfoDto.followerCount = 0;
+      for(const follow of crew.userEntity.userFollowerEntity) {
+        if(follow.userEntity.id == userId) {
+          userInfoDto.isFollowing = true;
+        }
+        if(follow.followerEntity.id == userInfoDto.userId) {
+          userInfoDto.followerCount++;
+        }
+      }
+
       if(crew.name == 'A') {
         responseRecentWebDto.artists.push(userInfoDto);
       } else if(crew.name == 'P') {

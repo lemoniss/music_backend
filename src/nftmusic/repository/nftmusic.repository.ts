@@ -565,7 +565,16 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
           userInfoDto.imgFileUrl = '';
         }
       }
-
+      userInfoDto.isFollowing = false;
+      userInfoDto.followerCount = 0;
+      for(const follow of userInfo.userFollowerEntity) {
+        if(follow.userEntity.id == userId) {
+          userInfoDto.isFollowing = true;
+        }
+        if(follow.followerEntity.id == userInfoDto.userId) {
+          userInfoDto.followerCount++;
+        }
+      }
       infoNftDto.artists.push(userInfoDto);
     }
 
@@ -950,6 +959,7 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
         .createQueryBuilder('u')
         .leftJoinAndSelect('u.userFileEntity', 'uf')
         .leftJoinAndSelect('uf.fileEntity', 'ff')
+        .leftJoinAndSelect('u.userFollowerEntity', 'ufw')
         .where('u.handle = :handle', {handle: nftInfo.handle})
         .getOne();
       if (!userInfo) {
@@ -971,6 +981,16 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
         }
       }
 
+      userInfoDto.isFollowing = false;
+      userInfoDto.followerCount = 0;
+      for(const follow of userInfo.userFollowerEntity) {
+        if(follow.userEntity.id == userId) {
+          userInfoDto.isFollowing = true;
+        }
+        if(follow.followerEntity.id == userInfoDto.userId) {
+          userInfoDto.followerCount++;
+        }
+      }
       responseRecentWebDto.artists.push(userInfoDto);
     }
 

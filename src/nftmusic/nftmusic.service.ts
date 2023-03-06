@@ -30,6 +30,7 @@ import { UploadRepository } from "../upload/repository/upload.repository";
 import { CreateUploadDto } from "../upload/dto/create.upload.dto";
 import { PatchLikeNftDto } from "./dto/patchlike.nft.dto";
 import { CreateShowTimeLikeDto } from "../showtime/dto/create.showtimelike.dto";
+import { BulkLikeNftDto } from "./dto/bulklike.nft.dto";
 @Injectable()
 export class NftMusicService {
   constructor(
@@ -280,7 +281,30 @@ export class NftMusicService {
       throw new RuntimeException('Server Error. Please try again later.');
       return false;
     }
+  }
 
-
+  async bulkLike(authToken: string, bulkLikeNftDto: BulkLikeNftDto): Promise<boolean> {
+    try {
+      const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+      if(bulkLikeNftDto.source == 'showtime') {
+        for(const nftMusicId of bulkLikeNftDto.nftMusicId) {
+          const createShowTimeLikeDto = new CreateShowTimeLikeDto();
+          createShowTimeLikeDto.userId = userInfo.id;
+          createShowTimeLikeDto.showtimeId = nftMusicId;
+          await this.showtimeService.bulkLike(createShowTimeLikeDto);
+        }
+        return true;
+      } else {
+        for(const nftMusicId of bulkLikeNftDto.nftMusicId) {
+          const patchLikeNftDto = new PatchLikeNftDto();
+          patchLikeNftDto.nftMusicId = nftMusicId
+          await this.nftMusicLikeRepository.bulkLike(userInfo.id, patchLikeNftDto);
+        }
+        return true;
+      }
+    } catch (e) {
+      throw new RuntimeException('Server Error. Please try again later.');
+      return false;
+    }
   }
 }
