@@ -52,11 +52,11 @@ export class MainController {
     return this.mainService.getMainArtistInfo(authToken, handle);
   }
 
-  @ApiOperation({summary: 'landing getLandingFellazByArtist data'})
+  @ApiOperation({summary: 'getFellazByArtist data'})
   @Get('/artist/fellaz/:handle/')
-  getLandingFellazByArtist(@Param("handle") handle: string,
+  getFellazByArtist(@Param("handle") handle: string,
                            @Query('skip') skip: number) : Promise<any> {
-    return this.mainService.getLandingFellazByArtist(handle, skip);
+    return this.mainService.getFellazByArtist(handle, skip);
   }
 
   @ApiOperation({summary: 'search result'})

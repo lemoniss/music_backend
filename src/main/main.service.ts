@@ -283,7 +283,7 @@ export class MainService {
 
   }
 
-  async getLandingFellazByArtist(handle: string, skip: number): Promise<any> {
+  async getFellazByArtist(handle: string, skip: number): Promise<any> {
 
     const handleResponse = await this.userRepository.findByHandle(handle);
     const userId = handleResponse.id;
