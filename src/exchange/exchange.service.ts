@@ -74,11 +74,14 @@ export class ExchangeService {
 
     let response: any = {};
 
+    let userId = 0;
+
     if(typeof authToken != 'undefined') {
       response.connectorInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+      userId = response.connectorInfo.id;
     }
 
-    response.exchangeInfo = await this.exchangeRepository.findExchangeInfo(exchangeId, response.myAddress);
+    response.exchangeInfo = await this.exchangeRepository.findExchangeInfo(exchangeId, userId);
 
     return response;
   }

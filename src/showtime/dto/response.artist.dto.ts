@@ -22,7 +22,7 @@ export class ResponseArtistDto {
 
   introduce: string;
 
-  isFollower: boolean;
+  isFollowing: boolean;
 
   songs: ResponseArtistSongDto[];
 

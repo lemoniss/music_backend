@@ -378,7 +378,7 @@ export class UserRepository extends Repository<UserEntity> {
       responseArtistDto.handle = artistInfo.handle;
       responseArtistDto.address = artistInfo.address;
       responseArtistDto.createAt = Formatter.dateFormatter(artistInfo.createdAt);
-      responseArtistDto.isFollower = false;
+      responseArtistDto.isFollowing = false;
       responseArtistDto.genres = [];
       responseArtistDto.isComingsoon = artistInfo.userArtistEntity[0].isComingsoon == 'Y' ? true : false;
       for(const genre of artistInfo.userGenreEntity) {

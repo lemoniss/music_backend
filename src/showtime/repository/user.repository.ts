@@ -53,7 +53,7 @@ export class UserRepository extends Repository<UserEntity> {
     responseArtistDto.handle = artistInfo.handle;
     responseArtistDto.address = artistInfo.address;
     responseArtistDto.createAt = Formatter.dateFormatter(artistInfo.createdAt);
-    responseArtistDto.isFollower = false;
+    responseArtistDto.isFollowing = false;
     responseArtistDto.genres = [];
     for(const genre of artistInfo.userGenreEntity) {
       responseArtistDto.genres.push(genre.genreEntity.name);
@@ -133,7 +133,7 @@ export class UserRepository extends Repository<UserEntity> {
     for(const userFollower of artistInfo.userFollowerEntity) {
       const followerDto = new ResponseArtistFollowerDto();
       if(userFollower.followerEntity.id == userId) {
-        responseArtistDto.isFollower = true;
+        responseArtistDto.isFollowing = true;
       }
       for(const userFile of userFollower.followerEntity.userFileEntity) {
         if(userFile.fileType == 'PROFILE') {

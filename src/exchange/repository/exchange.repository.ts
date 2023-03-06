@@ -167,7 +167,7 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
    * 거래소 음악 상세
    * @param id
    */
-  async findExchangeInfo(exchangeId: number, address: string): Promise<InfoExchangeDto> {
+  async findExchangeInfo(exchangeId: number, userId: number): Promise<InfoExchangeDto> {
 
     const exchangeInfo = await getRepository(ExchangeEntity)
       .createQueryBuilder('e')
@@ -263,7 +263,7 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
       .createQueryBuilder('nl')
       .leftJoinAndSelect('nl.userEntity', 'u')
       .where('nl.nftMusicEntity = :nftMusicId', {nftMusicId: exchangeInfo.nftMusicId})
-      .andWhere('u.address = :address', {address: address})
+      .andWhere('u.id = :userId', {userId: userId})
       .getOne()
 
     if (!nftLikeInfo) {
@@ -306,6 +306,7 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
         userInfoDto.handle = crew.userEntity.handle;
         userInfoDto.name = crew.userEntity.nickname;
         userInfoDto.address = crew.userEntity.address;
+        userInfoDto.isFollowing = false;
         for(const userFile of crew.userEntity.userFileEntity) {
           if(userFile.fileType == 'PROFILE') {
             userInfoDto.imgFileUrl = userFile.fileEntity.url;
@@ -316,6 +317,11 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
           }
         }
         userInfoDto.followerCount = crew.userEntity.userFollowerEntity.length;
+        for(const userFollower of crew.userEntity.userFollowerEntity) {
+          if(userFollower.followerEntity.id == userId) {
+            userInfoDto.isFollowing = true;
+          }
+        }
         if(crew.name == 'A') {
           infoExchangeDto.artists.push(userInfoDto);
         } else if(crew.name == 'P') {
@@ -453,6 +459,7 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
           .createQueryBuilder('u')
           .leftJoinAndSelect('u.userFileEntity', 'uf')
           .leftJoinAndSelect('uf.fileEntity', 'ff')
+          .leftJoinAndSelect('u.userFollowerEntity', 'ufw')
           .where('u.handle = :handle', {handle: nftInfo.handle})
           .getOne();
         if (!userInfo) {
@@ -464,6 +471,7 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
         userInfoDto.handle = userInfo.handle;
         userInfoDto.name = userInfo.nickname
         userInfoDto.address = userInfo.address
+        userInfoDto.isFollowing = false;
         for(const userFile of userInfo.userFileEntity) {
           if(userFile.fileType == 'PROFILE') {
             userInfoDto.imgFileUrl = userFile.fileEntity.url;
@@ -473,7 +481,12 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
             userInfoDto.imgFileUrl = '';
           }
         }
-
+        userInfoDto.followerCount = userInfo.userFollowerEntity.length;
+        for(const userFollower of userInfo.userFollowerEntity) {
+          if(userFollower.followerEntity.id == userId) {
+            userInfoDto.isFollowing = true;
+          }
+        }
         infoExchangeDto.artists.push(userInfoDto);
       }
 
