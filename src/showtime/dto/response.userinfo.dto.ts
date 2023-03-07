@@ -12,6 +12,8 @@ export class ResponseUserInfoDto {
 
   followerCount: number;
 
+  followingCount: number;
+
   isFollowing: boolean;
 
   address: string;

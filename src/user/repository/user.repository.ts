@@ -12,6 +12,7 @@ import { UserFileEntity } from "../entity/user_file.entity";
 import { UserShowtimeEntity } from "../../showtime/entity/user_showtime.entity";
 import { Formatter } from "../../util/formatter";
 import { SortNftDto } from "../../nftmusic/dto/sort.nft.dto";
+import { UserFollowerEntity } from "../entity/user_follower.entity";
 
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {
@@ -105,7 +106,7 @@ export class UserRepository extends Repository<UserEntity> {
     }
   }
 
-  async findById(id: number): Promise<InfoUserDto> {
+  async findById(userId: number): Promise<InfoUserDto> {
     const userEntity = await getRepository(UserEntity)
       .createQueryBuilder('u')
       .leftJoinAndSelect('u.userFileEntity', 'uf')
@@ -113,8 +114,7 @@ export class UserRepository extends Repository<UserEntity> {
       .leftJoinAndSelect('u.userGenreEntity', 'ug')
       .leftJoinAndSelect('ug.genreEntity', 'g')
       .leftJoinAndSelect('u.userSnsEntity', 'us')
-      .leftJoinAndSelect('u.userFollowerEntity', 'ufw')
-      .where('u.id = :id', {id: id})
+      .where('u.id = :userId', {userId: userId})
       .getOne();
 
     if (!userEntity) {
@@ -162,14 +162,22 @@ export class UserRepository extends Repository<UserEntity> {
     infoUserDto.followerCount = 0;
     infoUserDto.followingCount = 0;
 
-    for(const follow of userEntity.userFollowerEntity) {
-      if(follow.userEntity.id == id) {
+    const userFollowEntity = await getRepository(UserFollowerEntity)
+      .createQueryBuilder('uf')
+      .leftJoinAndSelect('uf.userEntity', 'ufu')
+      .leftJoinAndSelect('uf.followerEntity', 'uff')
+      .where('uf.userEntity = :userId', {userId: userId})
+      .orWhere('uf.followerEntity = :userId', {userId: userId})
+      .getMany();
+
+    for(const follow of userFollowEntity) {
+      if(follow.userEntity.id == userId) {
         infoUserDto.isFollowing = true;
       }
-      if(follow.userEntity.id == id) {
+      if(follow.userEntity.id == userId) {
         infoUserDto.followingCount++;
       }
-      if(follow.followerEntity.id == id) {
+      if(follow.followerEntity.id == userId) {
         infoUserDto.followerCount++;
       }
     }
@@ -186,10 +194,12 @@ export class UserRepository extends Repository<UserEntity> {
       .leftJoinAndSelect('ug.genreEntity', 'g')
       .leftJoinAndSelect('u.userSnsEntity', 'us')
       .leftJoinAndSelect('u.userFollowerEntity', 'ufw')
-      .leftJoinAndSelect('ufw.userEntity', 'ufwu')
-      .leftJoinAndSelect('ufw.followerEntity', 'ufwfu')
+      // .leftJoinAndSelect('ufw.userEntity', 'ufwu')
+      // .leftJoinAndSelect('ufw.followerEntity', 'ufwfu')
       .where('u.id = :artistId', {artistId: artistId})
       .getOne();
+
+      // TODO : leftjoin 으로 follower 가져오지 말고 별도로 쿼리를 날려야 하겠음
 
     if (!userEntity) {
       throw new RuntimeException('User Not Found');
@@ -236,7 +246,15 @@ export class UserRepository extends Repository<UserEntity> {
     infoUserDto.followerCount = 0;
     infoUserDto.followingCount = 0;
 
-    for(const follow of userEntity.userFollowerEntity) {
+    const userFollowEntity = await getRepository(UserFollowerEntity)
+      .createQueryBuilder('uf')
+      .leftJoinAndSelect('uf.userEntity', 'ufu')
+      .leftJoinAndSelect('uf.followerEntity', 'uff')
+      .where('uf.userEntity = :artistId', {artistId: artistId})
+      .orWhere('uf.followerEntity = :artistId', {artistId: artistId})
+      .getMany();
+
+    for(const follow of userFollowEntity) {
       if(follow.userEntity.id == userId) {
         infoUserDto.isFollowing = true;
       }
@@ -404,29 +422,4 @@ export class UserRepository extends Repository<UserEntity> {
     }
     return response;
   }
-
-  // paging(param: ArticleSearchRequest): Promise<[Article[], number]>{
-  //   const queryBuilder = createQueryBuilder()
-  //     .select([
-  //       "article.id",
-  //       "article.reservationDate",
-  //       "article.title",
-  //       "article.content"
-  //     ])
-  //     .from(Article, "article")
-  //     .limit(param.getLimit())
-  //     .offset(param.getOffset());
-  //
-  //   if(param.hasReservationDate()) {
-  //     queryBuilder.andWhere("article.reservationDate >= :reservationDate", {reservationDate: param.reservationDate})
-  //   }
-  //
-  //   if(param.hasTitle()) {
-  //     queryBuilder.andWhere("article.title ilike :title", {title: `%${param.title}%`});
-  //   }
-  //
-  //   return queryBuilder
-  //     .disableEscaping()
-  //     .getManyAndCount();
-  // }
 }

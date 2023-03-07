@@ -98,24 +98,27 @@ export class UserService {
   }
 
   async findMyInfo(authToken: string) : Promise<any> {
-    const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
-    let response: any = {};
+    try {
+      const userInfo = await this.userRepository.findByAddress(Rsa.decryptAddress(authToken));
+      let response: any = {};
 
-    let userId = 0;
+      response.connectorInfo = userInfo;
+      response.userInfo = await this.userRepository.findById(userInfo.id);
+      // response.followingInfo = {following: "N/A", follower: "N/A"};
 
-    response.connectorInfo = userInfo;
-    response.userInfo = await this.userRepository.findById(userId);
-    // response.followingInfo = {following: "N/A", follower: "N/A"};
+      response.releases = await this.showtimeRepository.getRecentByArtist(userInfo.id);
+      response.fellaz = await this.showtimeRepository.getFellazByArtist(userInfo.id, 0);
 
-    response.releases = await this.showtimeRepository.getRecentByArtist(userId);
-    response.fellaz = await this.showtimeRepository.getFellazByArtist(userId, 0);
+      const showtimeList = await this.showtimeHolderRepository.getLandingHolderShowtimes(userInfo.id);
+      const nftList = await this.nftMusicRepository.getLandingMyNftList(userInfo.id); //TODO: playCount 수정
+      response.collection = showtimeList.concat(nftList);
 
-    const showtimeList = await this.showtimeHolderRepository.getLandingHolderShowtimes(userId);
-    const nftList = await this.nftMusicRepository.getLandingMyNftList(userId); //TODO: playCount 수정
-    response.collection = showtimeList.concat(nftList);
+      return response;
+      // return await this.userRepository.findMyInfo(userInfo.id);
+    } catch (e) {
+      console.log(e);
+    }
 
-    return response;
-    // return await this.userRepository.findMyInfo(userInfo.id);
   }
 
 

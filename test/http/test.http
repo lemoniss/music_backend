@@ -756,22 +756,22 @@ auth_token: HRKMeWYyLXnETKoiU9OczRFXkCXRShWAAt7sEvd+sNkGtTrFb64WIygvHl2KjNna67BI
 
 
 ### myNftDetail
-GET http://localhost:23936/nfts/details/normal/1975
+GET http://localhost:23936/nfts/details/showtime/11
 auth_token: HRKMeWYyLXnETKoiU9OczRFXkCXRShWAAt7sEvd+sNkGtTrFb64WIygvHl2KjNna67BI/46B9zRqEkO+7ZwD9s1qMhmgM3/GI9M+d+eiClVGzNTLOmL2+5ZLPqR4sGub6C6eeH+gmwMFpWCQx3UZHrcRqqao3aIWOxVN7yMJ/Twtrmt80eMxnXvlIJlnSIOXEIH6PqtPZtDzxjzHdA2ur2/e7kuF90v8QqhnHcmJ3RzHiwm71vYLLqY6QZh9xbiC/zWzRBBhfV+p2lwDq0UJoPJkudyCANxzwvrD0+I5wmN8VnwiaW8YYFORjKaBNspp39mtzMG6HyTXNjtHV71ZSQ==
 
 ### me
 GET http://localhost:23936/users/me
-auth_token: HRKMeWYyLXnETKoiU9OczRFXkCXRShWAAt7sEvd+sNkGtTrFb64WIygvHl2KjNna67BI/46B9zRqEkO+7ZwD9s1qMhmgM3/GI9M+d+eiClVGzNTLOmL2+5ZLPqR4sGub6C6eeH+gmwMFpWCQx3UZHrcRqqao3aIWOxVN7yMJ/Twtrmt80eMxnXvlIJlnSIOXEIH6PqtPZtDzxjzHdA2ur2/e7kuF90v8QqhnHcmJ3RzHiwm71vYLLqY6QZh9xbiC/zWzRBBhfV+p2lwDq0UJoPJkudyCANxzwvrD0+I5wmN8VnwiaW8YYFORjKaBNspp39mtzMG6HyTXNjtHV71ZSQ==
+auth_token: UYY0bXugqBKY87ixxz9rzMQyv2nHk/5niHUut8B2xqc4zrwar4xnGpgtyE2JiDTN4Rvne1+NzSilhGCVE3GRGNl/ZjlyBGhVtGzovrqqtDx58sA8cfNw9gv+oFR08FPFYIndPS0pCqpZyl6tAL1Ble0ZkufCfwSHeQzjto8kPaaj/3uhVBGBfp8TPA+15DdeHdBQvVAEbiXpYiRQMe34JcXzqM68O+kKlHMJ0cHqNYhQJMljWHhTREYGU5ifpzOkQDgCKHm669kMSSCZq3VBL7mnSfyjc5PgxNcqwCrG+u3XqfFXoz5n2jeA8o+wUBghZ1yJGJG0u0U6q4MbVX7ytw==
 
 
 ### landing get dev
 GET http://localhost:23936/landing
 
 ### viewsong showtime
-GET http://localhost:23936/landing/viewsong/showtime/13
+GET http://localhost:23936/landing/viewsong/showtime/11
 
 ### viewsong showtime
-GET http://localhost:23936/landing/viewsong/showtime/331
+GET http://localhost:23936/landing/viewsong/catalog/143
 
 
 ### viewsong catalog
@@ -940,10 +940,12 @@ auth_token: CMje5kdz2lFCcIePGrKfdSglXyIPgWd81k4AhEFxtKKMO8Y3Zd8Llh9mJpAjnqzdjIbk
 
 
 ###
-GET http://localhost:23936/nfts/details/normal/2003
+GET http://localhost:23936/nfts/details/showtime/11
 auth_token: CMje5kdz2lFCcIePGrKfdSglXyIPgWd81k4AhEFxtKKMO8Y3Zd8Llh9mJpAjnqzdjIbks7q0E7MoshaDVapRTeSKerVo9a3WzhGxEOrAOvTqFEV6WTugwHkXP4bGsivbBwtkl0uILtd92MtobWdiTCZSHKWn2EpegHPOEoZCYuhBFkVWaxkiudb8MoaQQrVC4uwefpMZ6e7c2E8+aWCYjqY2Nhwee+vgNhm2MiiCImk5gG4JiDmdORWueLX+JqOJ7vOveZ/KVLsg8pVzyCrD7L7OeUQYOEcZ0SJlq3BS3iRVXcMHse6FEqxvwBeDenXyTukHdNw9oderBhQ373v4cg==
 
-
+###
+GET http://localhost:23936/main/viewsong/showtime/11
+auth_token: CMje5kdz2lFCcIePGrKfdSglXyIPgWd81k4AhEFxtKKMO8Y3Zd8Llh9mJpAjnqzdjIbks7q0E7MoshaDVapRTeSKerVo9a3WzhGxEOrAOvTqFEV6WTugwHkXP4bGsivbBwtkl0uILtd92MtobWdiTCZSHKWn2EpegHPOEoZCYuhBFkVWaxkiudb8MoaQQrVC4uwefpMZ6e7c2E8+aWCYjqY2Nhwee+vgNhm2MiiCImk5gG4JiDmdORWueLX+JqOJ7vOveZ/KVLsg8pVzyCrD7L7OeUQYOEcZ0SJlq3BS3iRVXcMHse6FEqxvwBeDenXyTukHdNw9oderBhQ373v4cg==
 
 
 ### searchResult
@@ -1000,4 +1002,11 @@ auth_token: {authToken}
 
 
 ###
-GET http://localhost:23936/landing/artist/asdfg
+GET http://localhost:23936/main/artist/mezzryhere
+auth_token: fsbZfdPtKLtTeLzLqDXjZLmbg7QWfPmqH4o1cS2owcOUYvTi4m+c/Yt29jvV39QSnsRY4L8O4Lf5rFAx7r22SoqDihGmiP9MA2504EX1o9dSo/+9itqKVMnbZJL3FHrD7JSKyZ1bbUQhvaISrvbzBGxEUP72mp9txh+PhGmp8VGVPFB5rYrPQKw5oxwkAZkV8t1vlZDfHwT121JPF7d2aH1c/G5oPYdPnQOT0O2cHY7tmkQ+KttdS+42REUVahJMz8L5UV5weP9JvdW5kf+ei8OHGJFdCTTFet8Skjl9yeiorIFuUSBYE8+ARrJXcebsdKoYKh7oRZHYtVmVs3P8+A==
+
+###
+GET http://localhost:23936/landing/artist/mezzryhere
+
+###
+GET http://localhost:23936/landing/artist/mezzryhere

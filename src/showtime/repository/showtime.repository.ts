@@ -25,6 +25,7 @@ import { BannerEntity } from "../entity/banner.entity";
 import { Formatter } from "../../util/formatter";
 import { SortNftDto } from "../../nftmusic/dto/sort.nft.dto";
 import { InfoNftDto } from "../../nftmusic/dto/info.nft.dto";
+import { UserFollowerEntity } from "../../user/entity/user_follower.entity";
 
 @EntityRepository(ShowtimeEntity)
 export class ShowtimeRepository extends Repository<ShowtimeEntity> {
@@ -742,7 +743,6 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
       .leftJoinAndSelect('sc.userEntity', 'u')
       .leftJoinAndSelect('u.userFileEntity', 'uf')
       .leftJoinAndSelect('uf.fileEntity', 'ff')
-      .leftJoinAndSelect('u.userFollowerEntity', 'ufw')
       .leftJoinAndSelect('s.showtimeLikeEntity', 'sl')
       .leftJoinAndSelect('sl.userEntity', 'ul')
       .leftJoinAndSelect('s.showtimeGenreEntity', 'sg')
@@ -802,13 +802,25 @@ export class ShowtimeRepository extends Repository<ShowtimeEntity> {
           userInfoDto.imgFileUrl = '';
         }
       }
-      // userInfoDto.followerCount = crew.userEntity.userFollowerEntity.length;
 
       userInfoDto.isFollowing = false;
       userInfoDto.followerCount = 0;
-      for(const follow of crew.userEntity.userFollowerEntity) {
+      userInfoDto.followingCount = 0;
+
+      const userFollowEntity = await getRepository(UserFollowerEntity)
+        .createQueryBuilder('uf')
+        .leftJoinAndSelect('uf.userEntity', 'ufu')
+        .leftJoinAndSelect('uf.followerEntity', 'uff')
+        .where('uf.userEntity = :artistId', {artistId: userInfoDto.userId})
+        .orWhere('uf.followerEntity = :artistId', {artistId: userInfoDto.userId})
+        .getMany();
+
+      for(const follow of userFollowEntity) {
         if(follow.userEntity.id == userId) {
           userInfoDto.isFollowing = true;
+        }
+        if(follow.userEntity.id == userInfoDto.userId) {
+          userInfoDto.followingCount++;
         }
         if(follow.followerEntity.id == userInfoDto.userId) {
           userInfoDto.followerCount++;

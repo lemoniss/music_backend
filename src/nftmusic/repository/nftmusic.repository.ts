@@ -18,6 +18,7 @@ import { ShowtimeTierRepository } from "../../showtime/repository/showtime_tier.
 import { Formatter } from "../../util/formatter";
 import { ResponseArtistDetailDto } from "../../landing/dto/response.artistrelease.dto";
 import { ResponseSplitStructureDto } from "../../showtime/dto/response.splitstructure.dto";
+import { UserFollowerEntity } from "../../user/entity/user_follower.entity";
 
 @EntityRepository(NftMusicEntity)
 export class NftMusicRepository extends Repository<NftMusicEntity> {
@@ -545,9 +546,6 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
         .createQueryBuilder('u')
         .leftJoinAndSelect('u.userFileEntity', 'uf')
         .leftJoinAndSelect('uf.fileEntity', 'ff')
-        .leftJoinAndSelect('u.userFollowerEntity', 'ufw')
-        .leftJoinAndSelect('ufw.userEntity', 'ufwu')
-        .leftJoinAndSelect('ufw.followerEntity', 'ufwfu')
         .where('u.handle = :handle', {handle: nftInfo.handle})
         .getOne();
       if (!userInfo) {
@@ -570,14 +568,28 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
       }
       userInfoDto.isFollowing = false;
       userInfoDto.followerCount = 0;
-      for(const follow of userInfo.userFollowerEntity) {
+      userInfoDto.followingCount = 0;
+
+      const userFollowEntity = await getRepository(UserFollowerEntity)
+        .createQueryBuilder('uf')
+        .leftJoinAndSelect('uf.userEntity', 'ufu')
+        .leftJoinAndSelect('uf.followerEntity', 'uff')
+        .where('uf.userEntity = :artistId', {artistId: infoNftDto.userId})
+        .orWhere('uf.followerEntity = :artistId', {artistId: infoNftDto.userId})
+        .getMany();
+
+      for(const follow of userFollowEntity) {
         if(follow.userEntity.id == userId) {
           userInfoDto.isFollowing = true;
         }
-        if(follow.followerEntity.id == userInfoDto.userId) {
+        if(follow.userEntity.id == infoNftDto.userId) {
+          userInfoDto.followingCount++;
+        }
+        if(follow.followerEntity.id == infoNftDto.userId) {
           userInfoDto.followerCount++;
         }
       }
+
       infoNftDto.artists.push(userInfoDto);
     }
 
@@ -962,7 +974,6 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
         .createQueryBuilder('u')
         .leftJoinAndSelect('u.userFileEntity', 'uf')
         .leftJoinAndSelect('uf.fileEntity', 'ff')
-        .leftJoinAndSelect('u.userFollowerEntity', 'ufw')
         .where('u.handle = :handle', {handle: nftInfo.handle})
         .getOne();
       if (!userInfo) {
@@ -986,9 +997,22 @@ export class NftMusicRepository extends Repository<NftMusicEntity> {
 
       userInfoDto.isFollowing = false;
       userInfoDto.followerCount = 0;
-      for(const follow of userInfo.userFollowerEntity) {
+      userInfoDto.followingCount = 0;
+
+      const userFollowEntity = await getRepository(UserFollowerEntity)
+        .createQueryBuilder('uf')
+        .leftJoinAndSelect('uf.userEntity', 'ufu')
+        .leftJoinAndSelect('uf.followerEntity', 'uff')
+        .where('uf.userEntity = :artistId', {artistId: userInfoDto.userId})
+        .orWhere('uf.followerEntity = :artistId', {artistId: userInfoDto.userId})
+        .getMany();
+
+      for(const follow of userFollowEntity) {
         if(follow.userEntity.id == userId) {
           userInfoDto.isFollowing = true;
+        }
+        if(follow.userEntity.id == userInfoDto.userId) {
+          userInfoDto.followingCount++;
         }
         if(follow.followerEntity.id == userInfoDto.userId) {
           userInfoDto.followerCount++;
