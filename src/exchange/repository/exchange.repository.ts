@@ -510,6 +510,9 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
         //     userInfoDto.isFollowing = true;
         //   }
         // }
+        userInfoDto.isFollowing = false;
+        userInfoDto.followerCount = 0;
+        userInfoDto.followingCount = 0;
 
         const userFollowEntity = await getRepository(UserFollowerEntity)
           .createQueryBuilder('uf')
