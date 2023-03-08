@@ -16,6 +16,7 @@ import { NftMusicEntity } from "../../nftmusic/entity/nftmusic.entity";
 import { ResponseUserInfoDto } from "../../showtime/dto/response.userinfo.dto";
 import { ResponseRecentWebDto } from "../../showtime/dto/response.recent_web.dto";
 import { ResponseSplitStructureDto } from "../../showtime/dto/response.splitstructure.dto";
+import { UserFollowerEntity } from "../../user/entity/user_follower.entity";
 
 @EntityRepository(ExchangeEntity)
 export class ExchangeRepository extends Repository<ExchangeEntity> {
@@ -316,12 +317,36 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
             userInfoDto.imgFileUrl = '';
           }
         }
-        userInfoDto.followerCount = crew.userEntity.userFollowerEntity.length;
-        for(const userFollower of crew.userEntity.userFollowerEntity) {
-          if(userFollower.followerEntity.id == userId) {
+        // userInfoDto.followerCount = crew.userEntity.userFollowerEntity.length;
+        // for(const userFollower of crew.userEntity.userFollowerEntity) {
+        //   if(userFollower.followerEntity.id == userId) {
+        //     userInfoDto.isFollowing = true;
+        //   }
+        // }
+        userInfoDto.isFollowing = false;
+        userInfoDto.followerCount = 0;
+        userInfoDto.followingCount = 0;
+
+        const userFollowEntity = await getRepository(UserFollowerEntity)
+          .createQueryBuilder('uf')
+          .leftJoinAndSelect('uf.userEntity', 'ufu')
+          .leftJoinAndSelect('uf.followerEntity', 'uff')
+          .where('uf.userEntity = :artistId', {artistId: userInfoDto.userId})
+          .orWhere('uf.followerEntity = :artistId', {artistId: userInfoDto.userId})
+          .getMany();
+
+        for(const follow of userFollowEntity) {
+          if(follow.userEntity.id == userId) {
             userInfoDto.isFollowing = true;
           }
+          if(follow.userEntity.id == userInfoDto.userId) {
+            userInfoDto.followingCount++;
+          }
+          if(follow.followerEntity.id == userInfoDto.userId) {
+            userInfoDto.followerCount++;
+          }
         }
+
         if(crew.name == 'A') {
           infoExchangeDto.artists.push(userInfoDto);
         } else if(crew.name == 'P') {
@@ -459,7 +484,6 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
           .createQueryBuilder('u')
           .leftJoinAndSelect('u.userFileEntity', 'uf')
           .leftJoinAndSelect('uf.fileEntity', 'ff')
-          .leftJoinAndSelect('u.userFollowerEntity', 'ufw')
           .where('u.handle = :handle', {handle: nftInfo.handle})
           .getOne();
         if (!userInfo) {
@@ -471,7 +495,6 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
         userInfoDto.handle = userInfo.handle;
         userInfoDto.name = userInfo.nickname
         userInfoDto.address = userInfo.address
-        userInfoDto.isFollowing = false;
         for(const userFile of userInfo.userFileEntity) {
           if(userFile.fileType == 'PROFILE') {
             userInfoDto.imgFileUrl = userFile.fileEntity.url;
@@ -481,12 +504,33 @@ export class ExchangeRepository extends Repository<ExchangeEntity> {
             userInfoDto.imgFileUrl = '';
           }
         }
-        userInfoDto.followerCount = userInfo.userFollowerEntity.length;
-        for(const userFollower of userInfo.userFollowerEntity) {
-          if(userFollower.followerEntity.id == userId) {
+        // userInfoDto.followerCount = userInfo.userFollowerEntity.length;
+        // for(const userFollower of userInfo.userFollowerEntity) {
+        //   if(userFollower.followerEntity.id == userId) {
+        //     userInfoDto.isFollowing = true;
+        //   }
+        // }
+
+        const userFollowEntity = await getRepository(UserFollowerEntity)
+          .createQueryBuilder('uf')
+          .leftJoinAndSelect('uf.userEntity', 'ufu')
+          .leftJoinAndSelect('uf.followerEntity', 'uff')
+          .where('uf.userEntity = :artistId', {artistId: userInfoDto.userId})
+          .orWhere('uf.followerEntity = :artistId', {artistId: userInfoDto.userId})
+          .getMany();
+
+        for(const follow of userFollowEntity) {
+          if(follow.userEntity.id == userId) {
             userInfoDto.isFollowing = true;
           }
+          if(follow.userEntity.id == userInfoDto.userId) {
+            userInfoDto.followingCount++;
+          }
+          if(follow.followerEntity.id == userInfoDto.userId) {
+            userInfoDto.followerCount++;
+          }
         }
+
         infoExchangeDto.artists.push(userInfoDto);
       }
 
