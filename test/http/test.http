@@ -389,12 +389,6 @@ user_id: 1
 
 
 ###
-GET https://devstage.millimx.com:444/exchange/details/89
-address: 0x913c770f77f0aaae8ba94f29492a6784d16e1da1
-user_id: 1
-
-
-###
 GET https://play.google.com/store/apps/details?id=io.musit.app.millimx&hl=ko
 
 ###
@@ -1014,4 +1008,9 @@ GET http://localhost:23936/landing/artist/mezzryhere
 
 ###
 GET http://localhost:23936/nfts/myNft
+auth_token: MPxGaEuS4p8l+KYKTcUDJeD1erKo5jmwgr2iuB2MhjlrSziIma152pcGY7xqS4JhxZFRiabDKFrrmnWwTDoXjuWArL7dvvz1g2+OHtBeG1fLj4zK7I7sSeIDSMtbVtR/4VMTfhsdjaZZ3lN2wzsrDBbhSyphWNotfJcpSbNx6Yocrbgsiv9UekTI/lunOg/bUTo/5ykRo9YCg+pAR4DGR7bfLF7+iST/p7KLkXX3K7zbpiWMHivVcHkCqQKEQdGHgGedKFlDcNhcPWS/i+vikhNDsjqwLbXHJs0VnuHxDE3o7NBxP2EE/n6i5HhQw6xPYyDNehAlLofthSHiq4cJ3A==
+
+
+###
+GET http://localhost:23936/exchange/details/147
 auth_token: MPxGaEuS4p8l+KYKTcUDJeD1erKo5jmwgr2iuB2MhjlrSziIma152pcGY7xqS4JhxZFRiabDKFrrmnWwTDoXjuWArL7dvvz1g2+OHtBeG1fLj4zK7I7sSeIDSMtbVtR/4VMTfhsdjaZZ3lN2wzsrDBbhSyphWNotfJcpSbNx6Yocrbgsiv9UekTI/lunOg/bUTo/5ykRo9YCg+pAR4DGR7bfLF7+iST/p7KLkXX3K7zbpiWMHivVcHkCqQKEQdGHgGedKFlDcNhcPWS/i+vikhNDsjqwLbXHJs0VnuHxDE3o7NBxP2EE/n6i5HhQw6xPYyDNehAlLofthSHiq4cJ3A==
